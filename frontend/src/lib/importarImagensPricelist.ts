@@ -3,7 +3,7 @@
 // Sistema WG Easy - Busca automática de imagens para produtos
 // ============================================================
 
-import { supabase } from "./supabaseClient";
+import { supabase, supabaseUrl } from "./supabaseClient";
 
 export interface ProdutoSemImagem {
   id: string;
@@ -24,7 +24,7 @@ export interface ResultadoBuscaImagem {
 }
 
 // URL da Edge Function
-const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/buscar-produto-ia`;
+const EDGE_FUNCTION_URL = `${supabaseUrl}/functions/v1/buscar-produto-ia`;
 
 /**
  * Busca produtos da pricelist que não possuem imagem
@@ -72,7 +72,8 @@ export async function buscarProdutosSemImagem(
 }
 
 /**
- * Busca imagem para um produto específico usando IA
+ * Busca imagem para um produto específico
+ * Prioridade: 1. Link do produto, 2. Busca na Leroy Merlin, 3. IA
  */
 export async function buscarImagemProduto(
   produto: ProdutoSemImagem
@@ -82,55 +83,76 @@ export async function buscarImagemProduto(
     const { data: { session } } = await supabase.auth.getSession();
     const token = session?.access_token;
 
-    if (!token) {
-      throw new Error("Usuário não autenticado");
-    }
-
-    // Primeiro tentar extrair imagem do link do produto, se existir
+    // 1. Primeiro tentar extrair imagem do link do produto, se existir
     if (produto.link_produto) {
-      const resultadoExtracao = await extrairImagemDeUrl(produto.link_produto, token);
-      if (resultadoExtracao.imagem_url) {
+      console.log(`[BuscarImagem] Tentando extrair de URL: ${produto.link_produto}`);
+      const imagemUrl = await extrairImagemDePaginaProduto(produto.link_produto);
+      if (imagemUrl) {
         return {
           id: produto.id,
           nome: produto.nome,
-          imagem_url: resultadoExtracao.imagem_url,
-          fonte: resultadoExtracao.fonte || "link_produto",
+          imagem_url: imagemUrl,
+          fonte: "link_produto",
           sucesso: true,
         };
       }
     }
 
-    // Fallback: buscar imagem via IA
-    const termoBusca = JSON.stringify({
-      nome: produto.nome,
-      fabricante: produto.fabricante,
-      url_referencia: produto.link_produto,
-    });
-
-    const response = await fetch(EDGE_FUNCTION_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        termoBusca,
-        tipo: "buscar_imagem",
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Falha na busca de imagem");
+    // 2. Buscar na Leroy Merlin usando o nome do produto
+    console.log(`[BuscarImagem] Buscando na Leroy Merlin: ${produto.nome}`);
+    const imagemLeroy = await buscarImagemNaLeroyMerlin(produto.nome, produto.fabricante);
+    if (imagemLeroy) {
+      return {
+        id: produto.id,
+        nome: produto.nome,
+        imagem_url: imagemLeroy,
+        fonte: "leroy_merlin",
+        sucesso: true,
+      };
     }
 
-    const data = await response.json();
+    // 3. Fallback: buscar imagem via IA (Edge Function)
+    if (token) {
+      console.log(`[BuscarImagem] Tentando via IA para: ${produto.nome}`);
+      const termoBusca = JSON.stringify({
+        nome: produto.nome,
+        fabricante: produto.fabricante,
+        url_referencia: produto.link_produto,
+      });
 
+      const response = await fetch(EDGE_FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          termoBusca,
+          tipo: "buscar_imagem",
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.imagem_url) {
+          return {
+            id: produto.id,
+            nome: produto.nome,
+            imagem_url: data.imagem_url,
+            fonte: data.fonte || "ia",
+            sucesso: true,
+          };
+        }
+      }
+    }
+
+    // Nenhuma imagem encontrada
     return {
       id: produto.id,
       nome: produto.nome,
-      imagem_url: data.imagem_url || null,
-      fonte: data.fonte || "ia",
-      sucesso: !!data.imagem_url,
+      imagem_url: null,
+      fonte: null,
+      sucesso: false,
     };
   } catch (error: any) {
     console.error(`Erro ao buscar imagem para ${produto.nome}:`, error);
@@ -146,34 +168,249 @@ export async function buscarImagemProduto(
 }
 
 /**
- * Extrai imagem diretamente de uma URL de produto
+ * Busca imagem na Leroy Merlin pelo nome do produto
  */
-async function extrairImagemDeUrl(
-  url: string,
-  token: string
-): Promise<{ imagem_url: string | null; fonte: string | null }> {
+async function buscarImagemNaLeroyMerlin(
+  nomeProduto: string,
+  fabricante?: string
+): Promise<string | null> {
   try {
-    const response = await fetch(EDGE_FUNCTION_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        termoBusca: url,
-        tipo: "extrair_imagem_url",
-      }),
-    });
-
-    if (!response.ok) {
-      return { imagem_url: null, fonte: null };
+    // Construir termo de busca
+    let termoBusca = nomeProduto;
+    if (fabricante && !nomeProduto.toLowerCase().includes(fabricante.toLowerCase())) {
+      termoBusca = `${nomeProduto} ${fabricante}`;
     }
 
-    return await response.json();
-  } catch {
-    return { imagem_url: null, fonte: null };
+    // Limpar termo mas manter caracteres especiais relevantes (como ")
+    termoBusca = termoBusca.trim();
+
+    // URL correta da Leroy Merlin (formato /search?term=)
+    const termoEncoded = encodeURIComponent(termoBusca);
+    const urlBusca = `https://www.leroymerlin.com.br/search?term=${termoEncoded}&searchTerm=${termoEncoded}&searchType=default`;
+    console.log(`[BuscarImagem] URL de busca Leroy: ${urlBusca}`);
+
+    // Tentar múltiplos proxies CORS
+    const proxies = [
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(urlBusca)}`,
+      `https://corsproxy.io/?${encodeURIComponent(urlBusca)}`,
+      `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(urlBusca)}`,
+    ];
+
+    for (const proxyUrl of proxies) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(proxyUrl, {
+          signal: controller.signal,
+          headers: {
+            Accept: "text/html,application/xhtml+xml",
+          },
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) continue;
+
+        const html = await response.text();
+        const imagemUrl = extrairImagemDoResultadoLeroy(html);
+
+        if (imagemUrl) {
+          console.log(`[BuscarImagem] Imagem encontrada via proxy: ${imagemUrl}`);
+          return imagemUrl;
+        }
+      } catch (e) {
+        console.log(`[BuscarImagem] Proxy falhou, tentando próximo...`);
+        continue;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error("[BuscarImagem] Erro na busca Leroy Merlin:", error);
+    return null;
   }
 }
+
+/**
+ * Extrai URL da imagem do HTML de resultados da Leroy Merlin
+ * IMPORTANTE: Filtra apenas imagens de produtos (pasta /products/)
+ */
+function extrairImagemDoResultadoLeroy(html: string): string | null {
+  // Padrões para IGNORAR (não são imagens de produtos)
+  const ignorarPatterns = [
+    /\/assets\//i,
+    /\/footer\//i,
+    /\/icons?\//i,
+    /\/logos?\//i,
+    /\/banners?\//i,
+    /\/header\//i,
+    /sustentabilidade/i,
+    /selo[_-]/i,
+    /badge/i,
+    /sprite/i,
+    /placeholder/i,
+  ];
+
+  const isImagemValida = (url: string): boolean => {
+    // Deve conter /products/ no caminho
+    if (!url.includes("/products/")) return false;
+    // Não deve conter padrões de não-produto
+    for (const pattern of ignorarPatterns) {
+      if (pattern.test(url)) return false;
+    }
+    return true;
+  };
+
+  // Método 1: Buscar imagens APENAS da pasta /products/ do CDN
+  const productPattern = /https:\/\/cdn\.leroymerlin\.com\.br\/products\/[^"'\s]+\.(?:jpg|jpeg|png|webp)/gi;
+  const matches = html.match(productPattern);
+
+  if (matches && matches.length > 0) {
+    // Filtrar apenas imagens válidas de produtos
+    const imagensValidas = matches.filter(isImagemValida);
+
+    if (imagensValidas.length > 0) {
+      // Priorizar imagens 600x600
+      const imagem600 = imagensValidas.find(url => url.includes("600x600"));
+      if (imagem600) {
+        // Garantir que termina com .jpg
+        return imagem600.includes(".jpg") || imagem600.includes(".jpeg") || imagem600.includes(".png") || imagem600.includes(".webp")
+          ? imagem600
+          : imagem600 + ".jpg";
+      }
+
+      // Se não encontrar 600x600, pegar a primeira e converter
+      let primeiraImagem = imagensValidas[0];
+      // Tentar converter para versão 600x600
+      primeiraImagem = primeiraImagem.replace(/_\d+x\d+/, "_600x600");
+      // Garantir extensão
+      if (!primeiraImagem.match(/\.(jpg|jpeg|png|webp)$/i)) {
+        primeiraImagem = primeiraImagem + ".jpg";
+      }
+      return primeiraImagem;
+    }
+  }
+
+  // Método 2: Buscar via og:image (geralmente tem imagem do produto)
+  const ogImage = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"/i);
+  if (ogImage && ogImage[1] && ogImage[1].includes("/products/")) {
+    return ogImage[1];
+  }
+
+  // Método 3: Buscar via JSON-LD (Schema.org Product)
+  const jsonLdMatch = html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi);
+  if (jsonLdMatch) {
+    for (const match of jsonLdMatch) {
+      try {
+        const jsonContent = match.replace(/<[^>]*>/g, "");
+        const data = JSON.parse(jsonContent);
+        // Procurar por Product ou ItemList
+        const product = data["@type"] === "Product" ? data :
+          (Array.isArray(data["@graph"]) ? data["@graph"].find((item: any) => item["@type"] === "Product") : null);
+
+        if (product?.image) {
+          const img = Array.isArray(product.image) ? product.image[0] : product.image;
+          const imgUrl = typeof img === "string" ? img : img?.url;
+          if (imgUrl && imgUrl.includes("/products/")) return imgUrl;
+        }
+      } catch {
+        continue;
+      }
+    }
+  }
+
+  // Método 4: Buscar imagem de produto em tags img
+  const imgMatches = html.match(/<img[^>]*src="(https:\/\/cdn\.leroymerlin\.com\.br\/products\/[^"]+)"/gi);
+  if (imgMatches) {
+    for (const imgTag of imgMatches) {
+      const srcMatch = imgTag.match(/src="([^"]+)"/);
+      if (srcMatch && srcMatch[1] && isImagemValida(srcMatch[1])) {
+        let url = srcMatch[1];
+        // Converter para 600x600
+        url = url.replace(/_\d+x\d+/, "_600x600");
+        return url;
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Extrai imagem diretamente de uma página de produto
+ */
+async function extrairImagemDePaginaProduto(url: string): Promise<string | null> {
+  try {
+    const proxies = [
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+      `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    ];
+
+    for (const proxyUrl of proxies) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(proxyUrl, {
+          signal: controller.signal,
+          headers: {
+            Accept: "text/html,application/xhtml+xml",
+          },
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) continue;
+
+        const html = await response.text();
+
+        // Buscar via JSON-LD (mais confiável)
+        const jsonLdRegex = /<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi;
+        let jsonLdMatch;
+        while ((jsonLdMatch = jsonLdRegex.exec(html)) !== null) {
+          try {
+            const jsonData = JSON.parse(jsonLdMatch[1]);
+            const product = Array.isArray(jsonData)
+              ? jsonData.find((item) => item["@type"] === "Product")
+              : jsonData["@type"] === "Product"
+              ? jsonData
+              : null;
+
+            if (product?.image) {
+              const img = Array.isArray(product.image) ? product.image[0] : product.image;
+              if (typeof img === "string") return img;
+            }
+          } catch {
+            continue;
+          }
+        }
+
+        // Buscar via og:image
+        const ogImage = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"/i);
+        if (ogImage && ogImage[1]) {
+          return ogImage[1];
+        }
+
+        // Buscar imagem CDN Leroy
+        if (url.includes("leroymerlin")) {
+          const imagemLeroy = extrairImagemDoResultadoLeroy(html);
+          if (imagemLeroy) return imagemLeroy;
+        }
+
+        return null;
+      } catch {
+        continue;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error("[BuscarImagem] Erro ao extrair imagem da página:", error);
+    return null;
+  }
+}
+
 
 /**
  * Atualiza a imagem de um produto no banco de dados
@@ -282,9 +519,9 @@ export async function buscarImagemLeroy(
   nomeProduto: string
 ): Promise<string | null> {
   try {
-    // Construir URL de busca na Leroy Merlin
+    // Construir URL de busca na Leroy Merlin (formato correto /search?term=)
     const termoBusca = encodeURIComponent(nomeProduto);
-    const url = `https://www.leroymerlin.com.br/busca?term=${termoBusca}`;
+    const url = `https://www.leroymerlin.com.br/search?term=${termoBusca}&searchTerm=${termoBusca}&searchType=default`;
 
     const { data: { session } } = await supabase.auth.getSession();
     const token = session?.access_token;

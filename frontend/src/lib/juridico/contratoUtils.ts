@@ -497,6 +497,74 @@ export async function buscarDadosContrato(
   return resultado;
 }
 
+/* ==================== BUSCAR MODELO POR NÚCLEO ==================== */
+
+export type ModeloContratoResumo = {
+  id: string;
+  codigo: string;
+  nome: string;
+  nucleo: string;
+  versao: number;
+  versao_texto: string;
+  empresa_id: string | null;
+  empresa_nome?: string;
+};
+
+/**
+ * Busca modelos de contrato publicados para um núcleo específico
+ */
+export async function buscarModelosPorNucleo(
+  nucleo: string
+): Promise<ModeloContratoResumo[]> {
+  try {
+    const { data, error } = await supabase
+      .from("juridico_modelos_contrato")
+      .select(`
+        id,
+        codigo,
+        nome,
+        nucleo,
+        versao,
+        versao_texto,
+        empresa_id,
+        empresas(nome_fantasia)
+      `)
+      .eq("nucleo", nucleo)
+      .eq("status", "publicado")
+      .eq("ativo", true)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Erro ao buscar modelos:", error);
+      return [];
+    }
+
+    return (data || []).map((m: any) => ({
+      id: m.id,
+      codigo: m.codigo,
+      nome: m.nome,
+      nucleo: m.nucleo,
+      versao: m.versao,
+      versao_texto: m.versao_texto,
+      empresa_id: m.empresa_id,
+      empresa_nome: m.empresas?.nome_fantasia,
+    }));
+  } catch (error) {
+    console.error("Erro ao buscar modelos por núcleo:", error);
+    return [];
+  }
+}
+
+/**
+ * Busca o modelo padrão (mais recente) para um núcleo
+ */
+export async function buscarModeloPadraoPorNucleo(
+  nucleo: string
+): Promise<ModeloContratoResumo | null> {
+  const modelos = await buscarModelosPorNucleo(nucleo);
+  return modelos.length > 0 ? modelos[0] : null;
+}
+
 /* ==================== GERAÇÃO DE CONTRATO ==================== */
 
 /**
@@ -525,7 +593,7 @@ export async function gerarContratoFinal(
     // Buscar dados
     const dados = await buscarDadosContrato(contratoId, modelo.empresa_id);
 
-    // Validar
+    // Validar campos obrigatórios
     const erros = validarDadosContrato(dados, modelo.variaveis_obrigatorias || []);
     if (erros.length > 0) {
       return { sucesso: false, erros };

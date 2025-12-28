@@ -10,34 +10,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { DateInputBR } from '@/components/ui/DateInputBR';
 
-type UnidadeNegocio = 'arquitetura' | 'engenharia' | 'marcenaria' | 'produtos' | 'materiais' | 'grupo';
-
-const NUCLEOS_LABELS: Record<UnidadeNegocio, string> = {
-  arquitetura: 'Arquitetura',
-  engenharia: 'Engenharia',
-  marcenaria: 'Marcenaria',
-  produtos: 'Produtos',
-  materiais: 'Materiais',
-  grupo: 'Empresas do Grupo',
-};
-
 const ReembolsosPage = () => {
   const { toast } = useToast();
   const [reembolsos, setReembolsos] = useState<any[]>([]);
   const [obras, setObras] = useState<any[]>([]);
   const [categorias, setCategorias] = useState<any[]>([]);
-  const [pessoas, setPessoas] = useState<any[]>([]);
   const [contratos, setContratos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   // Filtros
-  const [filterFavorecido, setFilterFavorecido] = useState('');
   const [filterDataInicio, setFilterDataInicio] = useState('');
   const [filterDataFim, setFilterDataFim] = useState('');
-  const [filterCentroCusto, setFilterCentroCusto] = useState('');
-  const [filterNucleo, setFilterNucleo] = useState<UnidadeNegocio | ''>('');
+  const [filterContrato, setFilterContrato] = useState('');
+  const [filterObra, setFilterObra] = useState('');
+  const [filterCategoria, setFilterCategoria] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
 
   const [newReembolso, setNewReembolso] = useState({
@@ -46,31 +34,23 @@ const ReembolsosPage = () => {
     valor: '',
     data: new Date().toISOString().split('T')[0],
     status: 'Pendente',
-    favorecido_id: '',
-    nucleo: '' as UnidadeNegocio | '',
-    centro_custo_id: '',
+    contrato_id: '',
     descricao: ''
   });
 
   // Estados para busca nos selects
-  const [searchFavorecido, setSearchFavorecido] = useState('');
-  const [searchCentroCusto, setSearchCentroCusto] = useState('');
+  const [searchContrato, setSearchContrato] = useState('');
   const [searchObra, setSearchObra] = useState('');
   const [searchCategoria, setSearchCategoria] = useState('');
 
   // Listas filtradas para os selects
-  const pessoasFiltradas = useMemo(() => {
-    if (!searchFavorecido) return pessoas;
-    return pessoas.filter(p => p.nome?.toLowerCase().includes(searchFavorecido.toLowerCase()));
-  }, [pessoas, searchFavorecido]);
-
   const contratosFiltrados = useMemo(() => {
-    if (!searchCentroCusto) return contratos;
+    if (!searchContrato) return contratos;
     return contratos.filter(c =>
-      c.numero?.toLowerCase().includes(searchCentroCusto.toLowerCase()) ||
-      c.titulo?.toLowerCase().includes(searchCentroCusto.toLowerCase())
+      c.numero?.toLowerCase().includes(searchContrato.toLowerCase()) ||
+      c.titulo?.toLowerCase().includes(searchContrato.toLowerCase())
     );
-  }, [contratos, searchCentroCusto]);
+  }, [contratos, searchContrato]);
 
   const obrasFiltradas = useMemo(() => {
     if (!searchObra) return obras;
@@ -85,19 +65,18 @@ const ReembolsosPage = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      // Buscar reembolsos com joins
+      // Buscar reembolsos com joins corretos
       const { data: reembolsosData, error: reembolsosError } = await supabase
         .from('reembolsos')
-        .select('*, obras(nome), fin_categories(name), pessoas:favorecido_id(nome), contratos:centro_custo_id(numero, titulo)')
+        .select('*, obras(nome), fin_categories(name), contratos(numero, titulo)')
         .range(0, 49999)
         .order('data', { ascending: false });
 
       // Buscar dados auxiliares em paralelo
-      const [obrasRes, categoriasRes, pessoasRes, contratosRes] = await Promise.all([
+      const [obrasRes, categoriasRes, contratosRes] = await Promise.all([
         supabase.from('obras').select('id, nome'),
         supabase.from('fin_categories').select('id, name'),
-        supabase.from('pessoas').select('id, nome').eq('ativo', true).order('nome'),
-        supabase.from('contratos').select('id, numero, titulo, unidade_negocio').order('numero', { ascending: false })
+        supabase.from('contratos').select('id, numero, titulo').order('numero', { ascending: false })
       ]);
 
       if (reembolsosError) throw reembolsosError;
@@ -105,7 +84,6 @@ const ReembolsosPage = () => {
       setReembolsos(reembolsosData || []);
       setObras(obrasRes.data || []);
       setCategorias(categoriasRes.data || []);
-      setPessoas(pessoasRes.data || []);
       setContratos(contratosRes.data || []);
     } catch (error: any) {
       toast({ variant: 'destructive', title: 'Erro ao buscar dados', description: error.message });
@@ -118,15 +96,15 @@ const ReembolsosPage = () => {
   // Filtrar reembolsos
   const filteredReembolsos = useMemo(() => {
     return reembolsos.filter(r => {
-      if (filterFavorecido && r.favorecido_id !== filterFavorecido) return false;
       if (filterDataInicio && r.data < filterDataInicio) return false;
       if (filterDataFim && r.data > filterDataFim) return false;
-      if (filterCentroCusto && r.centro_custo_id !== filterCentroCusto) return false;
-      if (filterNucleo && r.nucleo !== filterNucleo) return false;
+      if (filterContrato && r.contrato_id !== filterContrato) return false;
+      if (filterObra && r.obra_id !== filterObra) return false;
+      if (filterCategoria && r.categoria_id !== filterCategoria) return false;
       if (filterStatus && r.status !== filterStatus) return false;
       return true;
     });
-  }, [reembolsos, filterFavorecido, filterDataInicio, filterDataFim, filterCentroCusto, filterNucleo, filterStatus]);
+  }, [reembolsos, filterDataInicio, filterDataFim, filterContrato, filterObra, filterCategoria, filterStatus]);
 
   // Totais
   const totais = useMemo(() => {
@@ -137,22 +115,22 @@ const ReembolsosPage = () => {
   }, [filteredReembolsos]);
 
   const limparFiltros = () => {
-    setFilterFavorecido('');
     setFilterDataInicio('');
     setFilterDataFim('');
-    setFilterCentroCusto('');
-    setFilterNucleo('');
+    setFilterContrato('');
+    setFilterObra('');
+    setFilterCategoria('');
     setFilterStatus('');
   };
 
-  const filtrosAtivos = [filterFavorecido, filterDataInicio, filterDataFim, filterCentroCusto, filterNucleo, filterStatus].filter(Boolean).length;
+  const filtrosAtivos = [filterDataInicio, filterDataFim, filterContrato, filterObra, filterCategoria, filterStatus].filter(Boolean).length;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setNewReembolso(prev => ({ ...prev, [e.target.name]: e.target.value }));
   const handleSelectChange = (name: string, value: string) => setNewReembolso(prev => ({ ...prev, [name]: value }));
 
   const handleAddReembolso = async () => {
-    if (!newReembolso.valor || !newReembolso.favorecido_id) {
-      toast({ variant: 'destructive', title: 'Erro', description: 'Preencha o favorecido e o valor.' });
+    if (!newReembolso.valor) {
+      toast({ variant: 'destructive', title: 'Erro', description: 'Preencha o valor do reembolso.' });
       return;
     }
 
@@ -162,9 +140,7 @@ const ReembolsosPage = () => {
       valor: parseFloat(newReembolso.valor),
       data: newReembolso.data,
       status: newReembolso.status,
-      favorecido_id: newReembolso.favorecido_id || null,
-      nucleo: newReembolso.nucleo || null,
-      centro_custo_id: newReembolso.centro_custo_id || null,
+      contrato_id: newReembolso.contrato_id || null,
       descricao: newReembolso.descricao || null
     };
 
@@ -180,14 +156,11 @@ const ReembolsosPage = () => {
         valor: '',
         data: new Date().toISOString().split('T')[0],
         status: 'Pendente',
-        favorecido_id: '',
-        nucleo: '' as UnidadeNegocio | '',
-        centro_custo_id: '',
+        contrato_id: '',
         descricao: ''
       });
       // Limpar buscas
-      setSearchFavorecido('');
-      setSearchCentroCusto('');
+      setSearchContrato('');
       setSearchObra('');
       setSearchCategoria('');
       fetchData();
@@ -196,11 +169,10 @@ const ReembolsosPage = () => {
 
   // Exportar para CSV
   const exportarCSV = () => {
-    const headers = ['Data', 'Favorecido', 'Núcleo', 'Centro de Custo', 'Categoria', 'Descrição', 'Valor', 'Status'];
+    const headers = ['Data', 'Obra', 'Contrato', 'Categoria', 'Descrição', 'Valor', 'Status'];
     const rows = filteredReembolsos.map(r => [
       new Date(r.data).toLocaleDateString('pt-BR'),
-      r.pessoas?.nome || '-',
-      r.nucleo ? NUCLEOS_LABELS[r.nucleo as UnidadeNegocio] || r.nucleo : '-',
+      r.obras?.nome || '-',
       r.contratos?.numero || '-',
       r.fin_categories?.name || '-',
       r.descricao || '-',
@@ -300,20 +272,6 @@ const ReembolsosPage = () => {
         {showFilters && (
           <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
             <div>
-              <label className="block text-[10px] font-medium text-gray-500 mb-1">Favorecido</label>
-              <select
-                value={filterFavorecido}
-                onChange={(e) => setFilterFavorecido(e.target.value)}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded bg-white"
-                title="Filtrar por favorecido"
-              >
-                <option value="">Todos</option>
-                {pessoas.map((p) => (
-                  <option key={p.id} value={p.id}>{p.nome}</option>
-                ))}
-              </select>
-            </div>
-            <div>
               <label className="block text-[10px] font-medium text-gray-500 mb-1">Data De</label>
               <DateInputBR
                 value={filterDataInicio}
@@ -334,12 +292,12 @@ const ReembolsosPage = () => {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-medium text-gray-500 mb-1">Centro Custo</label>
+              <label className="block text-[10px] font-medium text-gray-500 mb-1">Contrato</label>
               <select
-                value={filterCentroCusto}
-                onChange={(e) => setFilterCentroCusto(e.target.value)}
+                value={filterContrato}
+                onChange={(e) => setFilterContrato(e.target.value)}
                 className="w-full px-2 py-1 text-xs border border-gray-200 rounded bg-white"
-                title="Filtrar por centro de custo"
+                title="Filtrar por contrato"
               >
                 <option value="">Todos</option>
                 {contratos.map((c) => (
@@ -348,16 +306,30 @@ const ReembolsosPage = () => {
               </select>
             </div>
             <div>
-              <label className="block text-[10px] font-medium text-gray-500 mb-1">Núcleo</label>
+              <label className="block text-[10px] font-medium text-gray-500 mb-1">Obra</label>
               <select
-                value={filterNucleo}
-                onChange={(e) => setFilterNucleo(e.target.value as UnidadeNegocio | '')}
+                value={filterObra}
+                onChange={(e) => setFilterObra(e.target.value)}
                 className="w-full px-2 py-1 text-xs border border-gray-200 rounded bg-white"
-                title="Filtrar por núcleo"
+                title="Filtrar por obra"
               >
-                <option value="">Todos</option>
-                {Object.entries(NUCLEOS_LABELS).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
+                <option value="">Todas</option>
+                {obras.map((o) => (
+                  <option key={o.id} value={o.id}>{o.nome}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] font-medium text-gray-500 mb-1">Categoria</label>
+              <select
+                value={filterCategoria}
+                onChange={(e) => setFilterCategoria(e.target.value)}
+                className="w-full px-2 py-1 text-xs border border-gray-200 rounded bg-white"
+                title="Filtrar por categoria"
+              >
+                <option value="">Todas</option>
+                {categorias.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
             </div>
@@ -390,9 +362,8 @@ const ReembolsosPage = () => {
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Data</th>
-                  <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Favorecido</th>
-                  <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Núcleo</th>
-                  <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Centro Custo</th>
+                  <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Obra</th>
+                  <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Contrato</th>
                   <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Categoria</th>
                   <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Descrição</th>
                   <th className="px-3 py-2 text-right text-[10px] font-semibold text-gray-500 uppercase">Valor</th>
@@ -402,7 +373,7 @@ const ReembolsosPage = () => {
               <tbody className="divide-y divide-gray-50">
                 {filteredReembolsos.length === 0 ? (
                   <tr>
-                    <td className="px-3 py-8 text-center text-gray-400" colSpan={8}>
+                    <td className="px-3 py-8 text-center text-gray-400" colSpan={7}>
                       Nenhum reembolso encontrado
                     </td>
                   </tr>
@@ -410,8 +381,7 @@ const ReembolsosPage = () => {
                   filteredReembolsos.map((r) => (
                     <tr key={r.id} className="hover:bg-gray-50/50">
                       <td className="px-3 py-2 text-gray-600">{new Date(r.data).toLocaleDateString('pt-BR')}</td>
-                      <td className="px-3 py-2 font-medium text-gray-800">{r.pessoas?.nome || '-'}</td>
-                      <td className="px-3 py-2 text-gray-600">{r.nucleo ? NUCLEOS_LABELS[r.nucleo as UnidadeNegocio] || r.nucleo : '-'}</td>
+                      <td className="px-3 py-2 font-medium text-gray-800">{r.obras?.nome || '-'}</td>
                       <td className="px-3 py-2 text-gray-600">{r.contratos?.numero || '-'}</td>
                       <td className="px-3 py-2 text-gray-600">{r.fin_categories?.name || '-'}</td>
                       <td className="px-3 py-2 text-gray-600 max-w-[200px] truncate" title={r.descricao}>{r.descricao || '-'}</td>
@@ -440,82 +410,7 @@ const ReembolsosPage = () => {
             <DialogDescription>Registre um novo pedido de reembolso.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            {/* Favorecido */}
-            <div>
-              <Label className="text-xs">Favorecido *</Label>
-              <Select value={newReembolso.favorecido_id} onValueChange={(v) => handleSelectChange('favorecido_id', v)}>
-                <SelectTrigger><SelectValue placeholder="Selecione o Favorecido" /></SelectTrigger>
-                <SelectContent>
-                  <div className="p-2 border-b sticky top-0 bg-white">
-                    <div className="relative">
-                      <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Buscar favorecido..."
-                        value={searchFavorecido}
-                        onChange={(e) => setSearchFavorecido(e.target.value)}
-                        className="w-full pl-7 pr-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:border-[#F25C26]"
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => e.stopPropagation()}
-                      />
-                    </div>
-                  </div>
-                  <div className="max-h-[200px] overflow-y-auto">
-                    {pessoasFiltradas.length === 0 ? (
-                      <div className="py-2 px-3 text-xs text-gray-400 text-center">Nenhum resultado</div>
-                    ) : (
-                      pessoasFiltradas.map(p => <SelectItem key={p.id} value={p.id}>{p.nome}</SelectItem>)
-                    )}
-                  </div>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Núcleo e Centro de Custo */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-xs">Núcleo</Label>
-                <Select value={newReembolso.nucleo} onValueChange={(v) => handleSelectChange('nucleo', v)}>
-                  <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(NUCLEOS_LABELS).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-xs">Centro de Custo</Label>
-                <Select value={newReembolso.centro_custo_id} onValueChange={(v) => handleSelectChange('centro_custo_id', v)}>
-                  <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
-                  <SelectContent>
-                    <div className="p-2 border-b sticky top-0 bg-white">
-                      <div className="relative">
-                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                        <input
-                          type="text"
-                          placeholder="Buscar contrato..."
-                          value={searchCentroCusto}
-                          onChange={(e) => setSearchCentroCusto(e.target.value)}
-                          className="w-full pl-7 pr-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:border-[#F25C26]"
-                          onClick={(e) => e.stopPropagation()}
-                          onKeyDown={(e) => e.stopPropagation()}
-                        />
-                      </div>
-                    </div>
-                    <div className="max-h-[200px] overflow-y-auto">
-                      {contratosFiltrados.length === 0 ? (
-                        <div className="py-2 px-3 text-xs text-gray-400 text-center">Nenhum resultado</div>
-                      ) : (
-                        contratosFiltrados.map(c => <SelectItem key={c.id} value={c.id}>{c.numero} - {c.titulo}</SelectItem>)
-                      )}
-                    </div>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Obra e Categoria */}
+            {/* Obra e Contrato */}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label className="text-xs">Obra</Label>
@@ -547,8 +442,8 @@ const ReembolsosPage = () => {
                 </Select>
               </div>
               <div>
-                <Label className="text-xs">Categoria</Label>
-                <Select value={newReembolso.categoria_id} onValueChange={(v) => handleSelectChange('categoria_id', v)}>
+                <Label className="text-xs">Contrato</Label>
+                <Select value={newReembolso.contrato_id} onValueChange={(v) => handleSelectChange('contrato_id', v)}>
                   <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
                   <SelectContent>
                     <div className="p-2 border-b sticky top-0 bg-white">
@@ -556,9 +451,9 @@ const ReembolsosPage = () => {
                         <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                         <input
                           type="text"
-                          placeholder="Buscar categoria..."
-                          value={searchCategoria}
-                          onChange={(e) => setSearchCategoria(e.target.value)}
+                          placeholder="Buscar contrato..."
+                          value={searchContrato}
+                          onChange={(e) => setSearchContrato(e.target.value)}
                           className="w-full pl-7 pr-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:border-[#F25C26]"
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={(e) => e.stopPropagation()}
@@ -566,15 +461,46 @@ const ReembolsosPage = () => {
                       </div>
                     </div>
                     <div className="max-h-[200px] overflow-y-auto">
-                      {categoriasFiltradas.length === 0 ? (
+                      {contratosFiltrados.length === 0 ? (
                         <div className="py-2 px-3 text-xs text-gray-400 text-center">Nenhum resultado</div>
                       ) : (
-                        categoriasFiltradas.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)
+                        contratosFiltrados.map(c => <SelectItem key={c.id} value={c.id}>{c.numero} - {c.titulo}</SelectItem>)
                       )}
                     </div>
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            {/* Categoria */}
+            <div>
+              <Label className="text-xs">Categoria</Label>
+              <Select value={newReembolso.categoria_id} onValueChange={(v) => handleSelectChange('categoria_id', v)}>
+                <SelectTrigger><SelectValue placeholder="Selecione a categoria" /></SelectTrigger>
+                <SelectContent>
+                  <div className="p-2 border-b sticky top-0 bg-white">
+                    <div className="relative">
+                      <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Buscar categoria..."
+                        value={searchCategoria}
+                        onChange={(e) => setSearchCategoria(e.target.value)}
+                        className="w-full pl-7 pr-2 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:border-[#F25C26]"
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </div>
+                  <div className="max-h-[200px] overflow-y-auto">
+                    {categoriasFiltradas.length === 0 ? (
+                      <div className="py-2 px-3 text-xs text-gray-400 text-center">Nenhum resultado</div>
+                    ) : (
+                      categoriasFiltradas.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)
+                    )}
+                  </div>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Valor e Data */}
@@ -586,10 +512,10 @@ const ReembolsosPage = () => {
               <div>
                 <Label className="text-xs">Data</Label>
                 <DateInputBR
-                value={newReembolso.data}
-                onChange={(val) => setNewReembolso((prev) => ({ ...prev, data: val }))}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              />
+                  value={newReembolso.data}
+                  onChange={(val) => setNewReembolso((prev) => ({ ...prev, data: val }))}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
               </div>
             </div>
 

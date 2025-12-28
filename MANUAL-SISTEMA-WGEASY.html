@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual do Sistema WG Easy - Grupo WG Almeida</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --laranja-wg: #F25C26;
+      --verde-mineral: #5E9B94;
+      --azul-tecnico: #2B4580;
+      --marrom-carvalho: #8B5E3C;
+      --cinza-texto: #2E2E2E;
+      --cinza-secundario: #4C4C4C;
+      --cinza-claro: #F5F5F5;
+      --verde-sucesso: #10B981;
+      --vermelho: #EF4444;
+      --amarelo: #F59E0B;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      color: var(--cinza-texto);
+      background: #fff;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Capa */
+    .capa {
+      text-align: center;
+      padding: 80px 40px;
+      background: linear-gradient(135deg, var(--laranja-wg) 0%, #e04a1a 100%);
+      color: white;
+      border-radius: 16px;
+      margin-bottom: 60px;
+      page-break-after: always;
+    }
+
+    .capa h1 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .capa .subtitulo {
+      font-size: 24px;
+      font-weight: 300;
+      opacity: 0.95;
+      margin-bottom: 40px;
+    }
+
+    .capa .versao {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 60px;
+    }
+
+    /* Sumário */
+    .sumario {
+      background: var(--cinza-claro);
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 60px;
+      page-break-after: always;
+    }
+
+    .sumario h2 {
+      color: var(--laranja-wg);
+      font-size: 28px;
+      margin-bottom: 24px;
+      border-bottom: 3px solid var(--laranja-wg);
+      padding-bottom: 12px;
+    }
+
+    .sumario ol {
+      columns: 2;
+      column-gap: 40px;
+    }
+
+    .sumario li {
+      padding: 8px 0;
+      font-size: 15px;
+      break-inside: avoid;
+    }
+
+    .sumario a {
+      color: var(--cinza-texto);
+      text-decoration: none;
+    }
+
+    .sumario a:hover {
+      color: var(--laranja-wg);
+    }
+
+    /* Seções */
+    h2 {
+      color: var(--laranja-wg);
+      font-size: 28px;
+      margin: 48px 0 24px 0;
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--laranja-wg);
+      page-break-after: avoid;
+    }
+
+    h3 {
+      color: var(--azul-tecnico);
+      font-size: 20px;
+      margin: 32px 0 16px 0;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      color: var(--cinza-secundario);
+      font-size: 16px;
+      margin: 24px 0 12px 0;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    /* Tabelas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--laranja-wg);
+      color: white;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    tr:nth-child(even) {
+      background: var(--cinza-claro);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-arquitetura { background: var(--verde-mineral); color: white; }
+    .badge-engenharia { background: var(--azul-tecnico); color: white; }
+    .badge-marcenaria { background: var(--marrom-carvalho); color: white; }
+    .badge-laranja { background: var(--laranja-wg); color: white; }
+
+    /* Cards */
+    .card {
+      background: white;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      font-size: 24px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--cinza-texto);
+    }
+
+    /* Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    /* Listas */
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* Código/Rotas */
+    code {
+      background: var(--cinza-claro);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      color: var(--laranja-wg);
+    }
+
+    /* Fluxogramas */
+    .fluxo {
+      background: #1a1a2e;
+      color: #e5e5e5;
+      padding: 24px;
+      border-radius: 12px;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre;
+      margin: 20px 0;
+    }
+
+    /* Alertas */
+    .alerta {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid;
+    }
+
+    .alerta-info {
+      background: #EFF6FF;
+      border-color: var(--azul-tecnico);
+      color: var(--azul-tecnico);
+    }
+
+    .alerta-sucesso {
+      background: #ECFDF5;
+      border-color: var(--verde-sucesso);
+      color: #047857;
+    }
+
+    .alerta-atencao {
+      background: #FFFBEB;
+      border-color: var(--amarelo);
+      color: #92400E;
+    }
+
+    /* Cores */
+    .cores-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .cor-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cor-amostra {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid #e5e5e5;
+    }
+
+    /* Rodapé */
+    .rodape {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 2px solid var(--cinza-claro);
+      text-align: center;
+      color: var(--cinza-secundario);
+      font-size: 14px;
+    }
+
+    /* Print */
+    @media print {
+      body {
+        padding: 20px;
+      }
+      .capa {
+        page-break-after: always;
+      }
+      h2 {
+        page-break-after: avoid;
+      }
+      .card, .fluxo, table {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="capa">
+  <h1>MANUAL DO SISTEMA WG EASY</h1>
+  <div class="subtitulo">Grupo WG Almeida</div>
+  <p>Sistema de Gestao Integrada para Arquitetura, Engenharia e Marcenaria</p>
+  <div class="versao">
+    <p>Identidade Visual 2026</p>
+    <p>Versao 2026.1 | Dezembro 2024</p>
+  </div>
+</div>
+
+<!-- SUMARIO -->
+<div class="sumario">
+  <h2>SUMARIO</h2>
+  <ol>
+    <li><a href="#visao-geral">Visao Geral do Sistema</a></li>
+    <li><a href="#dashboard">Dashboard Principal</a></li>
+    <li><a href="#pessoas">Modulo Pessoas</a></li>
+    <li><a href="#oportunidades">Modulo Oportunidades</a></li>
+    <li><a href="#comercial">Modulo Comercial</a></li>
+    <li><a href="#nucleos">Modulo Nucleos</a></li>
+    <li><a href="#planejamento">Modulo Planejamento</a></li>
+    <li><a href="#cronograma">Modulo Cronograma</a></li>
+    <li><a href="#financeiro">Modulo Financeiro</a></li>
+    <li><a href="#juridico">Modulo Juridico</a></li>
+    <li><a href="#wgxperience">Area WGXperience</a></li>
+    <li><a href="#pos-vendas">Pos-Vendas</a></li>
+    <li><a href="#onboarding">Onboarding</a></li>
+    <li><a href="#wg-store">WG Store</a></li>
+    <li><a href="#deposito">Deposito WG</a></li>
+    <li><a href="#sistema">Modulo Sistema</a></li>
+    <li><a href="#fluxos">Fluxos de Trabalho</a></li>
+    <li><a href="#banco-dados">Banco de Dados</a></li>
+  </ol>
+</div>
+
+<!-- 1. VISAO GERAL -->
+<h2 id="visao-geral">1. VISAO GERAL DO SISTEMA</h2>
+
+<h3>1.1 Descricao</h3>
+<p>O <strong>WG Easy</strong> e o sistema de gestao integrada do Grupo WG Almeida, desenvolvido para gerenciar todas as operacoes da empresa, desde a captacao de clientes ate a entrega final dos projetos nos nucleos de Arquitetura, Engenharia e Marcenaria.</p>
+
+<h3>1.2 Arquitetura Tecnica</h3>
+<div class="card">
+  <table>
+    <tr><th>Componente</th><th>Tecnologia</th></tr>
+    <tr><td>Frontend</td><td>React + TypeScript + Vite</td></tr>
+    <tr><td>Backend</td><td>Supabase (PostgreSQL + Auth + Storage)</td></tr>
+    <tr><td>Estilizacao</td><td>Tailwind CSS</td></tr>
+    <tr><td>Graficos</td><td>Recharts</td></tr>
+    <tr><td>Drag & Drop</td><td>@hello-pangea/dnd</td></tr>
+    <tr><td>PDFs</td><td>jsPDF + html2canvas</td></tr>
+  </table>
+</div>
+
+<h3>1.3 Identidade Visual - Cores</h3>
+<div class="cores-grid">
+  <div class="cor-item">
+    <div class="cor-amostra" style="background: #F25C26;"></div>
+    <div><strong>Laranja WG</strong><br><code>#F25C26</code></div>
+  </div>
+  <div class="cor-item">
+    <div class="cor-amostra" style="background: #5E9B94;"></div>
+    <div><strong>Verde Mineral</strong><br><code>#5E9B94</code></div>
+  </div>
+  <div class="cor-item">
+    <div class="cor-amostra" style="background: #2B4580;"></div>
+    <div><strong>Azul Tecnico</strong><br><code>#2B4580</code></div>
+  </div>
+  <div class="cor-item">
+    <div class="cor-amostra" style="background: #8B5E3C;"></div>
+    <div><strong>Marrom Carvalho</strong><br><code>#8B5E3C</code></div>
+  </div>
+  <div class="cor-item">
+    <div class="cor-amostra" style="background: #2E2E2E;"></div>
+    <div><strong>Cinza Texto</strong><br><code>#2E2E2E</code></div>
+  </div>
+  <div class="cor-item">
+    <div class="cor-amostra" style="background: #4C4C4C;"></div>
+    <div><strong>Cinza Secundario</strong><br><code>#4C4C4C</code></div>
+  </div>
+</div>
+
+<h3>1.4 Tipos de Usuario</h3>
+<table>
+  <tr><th>Tipo</th><th>Permissoes</th></tr>
+  <tr><td><span class="badge badge-laranja">MASTER</span></td><td>Acesso total, gerenciamento de comissoes de indicados</td></tr>
+  <tr><td><span class="badge badge-laranja">ADMIN</span></td><td>Acesso administrativo completo</td></tr>
+  <tr><td>GESTOR</td><td>Gerenciamento de equipes e projetos</td></tr>
+  <tr><td>COLABORADOR</td><td>Acesso as funcionalidades operacionais</td></tr>
+  <tr><td>JURIDICO</td><td>Acesso ao modulo juridico e contratos</td></tr>
+  <tr><td>FINANCEIRO</td><td>Acesso ao modulo financeiro</td></tr>
+</table>
+
+<!-- 2. DASHBOARD -->
+<h2 id="dashboard">2. DASHBOARD PRINCIPAL</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">📊</span>
+    <span class="card-title">Dashboard</span>
+    <code>/</code>
+  </div>
+  <p>Tela inicial do sistema com visao executiva de todas as metricas importantes.</p>
+  <h4>Funcionalidades:</h4>
+  <ul>
+    <li>KPIs principais (Faturamento, Projetos Ativos, Clientes)</li>
+    <li>Graficos de desempenho mensal</li>
+    <li>Oportunidades em andamento</li>
+    <li>Proximas entregas do cronograma</li>
+    <li>Alertas e notificacoes</li>
+  </ul>
+</div>
+
+<!-- 3. PESSOAS -->
+<h2 id="pessoas">3. MODULO PESSOAS</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">👥</span>
+    <span class="card-title">Pessoas</span>
+    <code>/pessoas</code>
+  </div>
+  <p>Gerenciamento centralizado de todos os cadastros de pessoas do sistema.</p>
+</div>
+
+<h3>3.1 Clientes</h3>
+<p><strong>Rota:</strong> <code>/pessoas/clientes</code></p>
+<div class="grid-2">
+  <div>
+    <h4>Campos Principais:</h4>
+    <ul>
+      <li>Nome completo</li>
+      <li>CPF/CNPJ</li>
+      <li>E-mail e Telefones</li>
+      <li>Endereco (integracao ViaCEP)</li>
+      <li>Data de nascimento</li>
+      <li>Profissao / Estado civil</li>
+      <li>Foto/Avatar</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Funcionalidades:</h4>
+    <ul>
+      <li>Cadastro completo</li>
+      <li>Busca e filtros avancados</li>
+      <li>Importacao via Excel</li>
+      <li>Ficha em PDF</li>
+      <li>Historico de propostas e contratos</li>
+      <li>Documentos anexados</li>
+    </ul>
+  </div>
+</div>
+
+<h3>3.2 Colaboradores</h3>
+<p><strong>Rota:</strong> <code>/pessoas/colaboradores</code></p>
+<ul>
+  <li>Dados pessoais e profissionais</li>
+  <li>Cargo e departamento</li>
+  <li>Data de admissao</li>
+  <li>Dados bancarios</li>
+  <li>Documentos (RG, CPF, etc.)</li>
+  <li>Ficha do colaborador em PDF</li>
+</ul>
+
+<h3>3.3 Especificadores</h3>
+<p><strong>Rota:</strong> <code>/pessoas/especificadores</code></p>
+<div class="alerta alerta-info">
+  <strong>Importante:</strong> Especificadores sao arquitetos, designers e profissionais que indicam clientes para a WG. Possuem sistema de comissionamento vinculado.
+</div>
+<ul>
+  <li>Dados cadastrais</li>
+  <li>Area de atuacao</li>
+  <li>Percentual de comissao por indicacao</li>
+  <li>Vinculo com usuario MASTER (comissionamento em cascata)</li>
+  <li>Rastreamento de clientes indicados</li>
+</ul>
+
+<h3>3.4 Fornecedores</h3>
+<p><strong>Rota:</strong> <code>/pessoas/fornecedores</code></p>
+<ul>
+  <li>Razao social / Nome</li>
+  <li>CNPJ (validacao automatica)</li>
+  <li>Contatos</li>
+  <li>Categorias de fornecimento</li>
+  <li>Historico de compras</li>
+</ul>
+
+<h3>3.5 Painel da Pessoa</h3>
+<p><strong>Rota:</strong> <code>/pessoas/:tipo/:id</code></p>
+<p>Cada pessoa possui um painel completo com as seguintes abas:</p>
+<table>
+  <tr><th>Aba</th><th>Conteudo</th></tr>
+  <tr><td>Info</td><td>Dados cadastrais completos</td></tr>
+  <tr><td>Documentos</td><td>Arquivos anexados (RG, contratos, etc.)</td></tr>
+  <tr><td>Propostas</td><td>Propostas comerciais vinculadas</td></tr>
+  <tr><td>Contratos</td><td>Contratos ativos e historico</td></tr>
+  <tr><td>Obras</td><td>Projetos e obras em andamento</td></tr>
+  <tr><td>Historico</td><td>Timeline de todas as atividades</td></tr>
+</table>
+
+<!-- 4. OPORTUNIDADES -->
+<h2 id="oportunidades">4. MODULO OPORTUNIDADES</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🎯</span>
+    <span class="card-title">Oportunidades</span>
+    <code>/oportunidades</code>
+  </div>
+  <p>Pipeline comercial em formato Kanban para acompanhamento de leads e negociacoes.</p>
+</div>
+
+<h3>4.1 Estagios do Pipeline</h3>
+<table>
+  <tr><th>Estagio</th><th>Descricao</th><th>Cor</th></tr>
+  <tr><td>Lead</td><td>Primeiro contato recebido</td><td style="background:#6B7280;color:white;">Cinza</td></tr>
+  <tr><td>Qualificacao</td><td>Analise de perfil e necessidades</td><td style="background:#3B82F6;color:white;">Azul</td></tr>
+  <tr><td>Proposta</td><td>Proposta em elaboracao</td><td style="background:#8B5CF6;color:white;">Roxo</td></tr>
+  <tr><td>Negociacao</td><td>Negociacao ativa com cliente</td><td style="background:#F59E0B;color:white;">Amarelo</td></tr>
+  <tr><td>Fechamento</td><td>Aguardando assinatura</td><td style="background:#10B981;color:white;">Verde</td></tr>
+  <tr><td>Ganho</td><td>Oportunidade convertida</td><td style="background:#059669;color:white;">Verde Escuro</td></tr>
+  <tr><td>Perdido</td><td>Oportunidade nao convertida</td><td style="background:#EF4444;color:white;">Vermelho</td></tr>
+</table>
+
+<h3>4.2 Funcionalidades</h3>
+<ul>
+  <li><strong>Drag & Drop:</strong> Arrastar cards entre estagios</li>
+  <li><strong>Filtros:</strong> Por nucleo, valor, responsavel</li>
+  <li><strong>Modal de Detalhes:</strong> Edicao inline de todos os campos</li>
+  <li><strong>Checklist:</strong> Tarefas por oportunidade com percentual</li>
+  <li><strong>Valores por Nucleo:</strong> Arquitetura, Engenharia, Marcenaria</li>
+  <li><strong>Previsao:</strong> Data estimada de fechamento</li>
+</ul>
+
+<h3>4.3 Checklist de Oportunidades</h3>
+<div class="alerta alerta-atencao">
+  <strong>Regra:</strong> Itens obrigatorios do checklist devem estar concluidos para avancar a oportunidade para o proximo estagio.
+</div>
+
+<!-- 5. COMERCIAL -->
+<h2 id="comercial">5. MODULO COMERCIAL</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">💼</span>
+    <span class="card-title">Comercial</span>
+  </div>
+  <p>Gestao de analises, propostas e contratos comerciais.</p>
+</div>
+
+<h3>5.1 Analise de Projeto</h3>
+<p><strong>Rota:</strong> <code>/analise-projeto</code></p>
+<ul>
+  <li>Analise tecnica com suporte de IA</li>
+  <li>Upload de plantas e documentos</li>
+  <li>Avaliacao de viabilidade</li>
+  <li>Sugestoes de escopo por nucleo</li>
+</ul>
+
+<h3>5.2 Propostas</h3>
+<p><strong>Rota:</strong> <code>/propostas</code></p>
+
+<h4>Campos:</h4>
+<ul>
+  <li>Numero da proposta (automatico)</li>
+  <li>Cliente vinculado</li>
+  <li>Itens detalhados</li>
+  <li>Valores por nucleo</li>
+  <li>Condicoes de pagamento</li>
+  <li>Validade da proposta</li>
+</ul>
+
+<h4>Status:</h4>
+<table>
+  <tr><th>Status</th><th>Descricao</th></tr>
+  <tr><td style="color:#6B7280;">Rascunho</td><td>Em elaboracao</td></tr>
+  <tr><td style="color:#3B82F6;">Enviada</td><td>Enviada ao cliente</td></tr>
+  <tr><td style="color:#10B981;">Aprovada</td><td>Cliente aprovou</td></tr>
+  <tr><td style="color:#EF4444;">Recusada</td><td>Cliente recusou</td></tr>
+  <tr><td style="color:#F59E0B;">Expirada</td><td>Passou da validade</td></tr>
+</table>
+
+<h4>Funcionalidades:</h4>
+<ul>
+  <li>Geracao de PDF profissional</li>
+  <li>Envio por e-mail</li>
+  <li>Link para aprovacao online</li>
+  <li>Conversao automatica em contrato</li>
+</ul>
+
+<h3>5.3 Contratos</h3>
+<p><strong>Rota:</strong> <code>/contratos</code></p>
+
+<h4>Campos:</h4>
+<ul>
+  <li>Numero do contrato (automatico)</li>
+  <li>Cliente vinculado</li>
+  <li>Unidade de negocio (nucleo)</li>
+  <li>Valor total</li>
+  <li>Especificador (para comissao de indicacao)</li>
+  <li>Status do contrato</li>
+</ul>
+
+<h4>Status:</h4>
+<table>
+  <tr><th>Status</th><th>Descricao</th></tr>
+  <tr><td>Rascunho</td><td>Em elaboracao</td></tr>
+  <tr><td>Aguardando Assinatura</td><td>Enviado para cliente assinar</td></tr>
+  <tr><td>Ativo</td><td>Assinado e em vigor</td></tr>
+  <tr><td>Em Execucao</td><td>Obra/projeto iniciado</td></tr>
+  <tr><td>Concluido</td><td>Projeto entregue</td></tr>
+  <tr><td>Cancelado</td><td>Contrato cancelado</td></tr>
+</table>
+
+<div class="alerta alerta-sucesso">
+  <strong>Integracao:</strong> O botao "Emitir Contrato" identifica automaticamente o nucleo do contrato e busca o modelo apropriado no modulo Juridico.
+</div>
+
+<!-- 6. NUCLEOS -->
+<h2 id="nucleos">6. MODULO NUCLEOS</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🏗️</span>
+    <span class="card-title">Nucleos de Negocio</span>
+  </div>
+  <p>Tres unidades de negocio especializadas do Grupo WG Almeida.</p>
+</div>
+
+<div class="grid-3">
+  <div class="card" style="border-top: 4px solid #5E9B94;">
+    <h4 style="color: #5E9B94;">🏛️ Arquitetura</h4>
+    <p><code>/oportunidades/kanban/arquitetura</code></p>
+    <ul>
+      <li>Projetos arquitetonicos</li>
+      <li>Design de interiores</li>
+      <li>Paisagismo</li>
+      <li>Regularizacao</li>
+    </ul>
+  </div>
+  <div class="card" style="border-top: 4px solid #2B4580;">
+    <h4 style="color: #2B4580;">⚙️ Engenharia</h4>
+    <p><code>/oportunidades/kanban/engenharia</code></p>
+    <ul>
+      <li>Construcao civil</li>
+      <li>Reformas estruturais</li>
+      <li>Instalacoes</li>
+      <li>Gerenciamento de obras</li>
+    </ul>
+  </div>
+  <div class="card" style="border-top: 4px solid #8B5E3C;">
+    <h4 style="color: #8B5E3C;">🪵 Marcenaria</h4>
+    <p><code>/oportunidades/kanban/marcenaria</code></p>
+    <ul>
+      <li>Moveis planejados</li>
+      <li>Marcenaria sob medida</li>
+      <li>Ambientes personalizados</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 7. PLANEJAMENTO -->
+<h2 id="planejamento">7. MODULO PLANEJAMENTO</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">📋</span>
+    <span class="card-title">Planejamento</span>
+  </div>
+  <p>Gestao de orcamentos, composicoes e processo de compras.</p>
+</div>
+
+<h3>7.1 Submenu</h3>
+<table>
+  <tr><th>Item</th><th>Rota</th><th>Descricao</th></tr>
+  <tr><td>Orcamento de Materiais</td><td><code>/planejamento/orcamentos/materiais</code></td><td>Catalogo com precos atualizados</td></tr>
+  <tr><td>Composicoes</td><td><code>/planejamento/orcamentos/composicoes</code></td><td>Composicoes de custo unitario</td></tr>
+  <tr><td>Modelos de Orcamento</td><td><code>/planejamento/orcamentos/modelos</code></td><td>Templates pre-definidos</td></tr>
+  <tr><td>Orcamentos</td><td><code>/planejamento/orcamentos</code></td><td>Criacao de orcamentos detalhados</td></tr>
+  <tr><td>Aprovacoes</td><td><code>/planejamento/aprovacoes</code></td><td>Workflow de aprovacao</td></tr>
+  <tr><td>Compras</td><td><code>/compras</code></td><td>Solicitacoes e pedidos</td></tr>
+</table>
+
+<h3>7.2 Fluxo de Compras</h3>
+<div class="fluxo">
+1. Necessidade identificada (obra/projeto)
+         |
+         v
+2. Solicitacao de compra criada
+         |
+         v
+3. Aprovacao do gestor
+         |
+         v
+4. Cotacao com fornecedores
+         |
+         v
+5. Selecao do melhor preco
+         |
+         v
+6. Pedido de compra gerado
+         |
+         v
+7. Acompanhamento de entrega
+         |
+         v
+8. Recebimento e conferencia
+         |
+         v
+9. Lancamento financeiro
+</div>
+
+<!-- 8. CRONOGRAMA -->
+<h2 id="cronograma">8. MODULO CRONOGRAMA</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">📅</span>
+    <span class="card-title">Cronograma</span>
+    <code>/cronograma</code>
+  </div>
+  <p>Gestao de projetos, tarefas e prazos.</p>
+</div>
+
+<h3>8.1 Visoes Disponiveis</h3>
+<table>
+  <tr><th>Visao</th><th>Rota</th><th>Descricao</th></tr>
+  <tr><td>Dashboard</td><td><code>/cronograma</code></td><td>Visao geral de todos os projetos</td></tr>
+  <tr><td>Projetos</td><td><code>/cronograma/projects</code></td><td>Lista de projetos com status</td></tr>
+  <tr><td>Kanban</td><td><code>/cronograma/kanban</code></td><td>Quadro de tarefas</td></tr>
+  <tr><td>Timeline</td><td><code>/cronograma/timeline</code></td><td>Grafico de Gantt</td></tr>
+</table>
+
+<h3>8.2 Colunas do Kanban</h3>
+<ul>
+  <li>A Fazer</li>
+  <li>Em Andamento</li>
+  <li>Em Revisao</li>
+  <li>Concluido</li>
+</ul>
+
+<h3>8.3 Funcionalidades Avancadas</h3>
+<ul>
+  <li>Calculo de caminho critico</li>
+  <li>Controle de dias uteis (excluindo feriados)</li>
+  <li>Dependencias entre tarefas</li>
+  <li>Integracao com financeiro</li>
+  <li>Exportacao de cronograma</li>
+</ul>
+
+<!-- 9. FINANCEIRO -->
+<h2 id="financeiro">9. MODULO FINANCEIRO</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">💰</span>
+    <span class="card-title">Financeiro</span>
+    <code>/financeiro</code>
+  </div>
+  <p>Controle financeiro completo com dashboard executivo.</p>
+</div>
+
+<h3>9.1 Dashboard Financeiro</h3>
+<div class="grid-2">
+  <div>
+    <h4>KPIs Principais:</h4>
+    <ul>
+      <li>Receita Total</li>
+      <li>Despesa Total</li>
+      <li>Lucro / Resultado</li>
+      <li>Margem (%)</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Graficos:</h4>
+    <ul>
+      <li>Curva S (acumulado)</li>
+      <li>Despesas por Centro de Custo</li>
+      <li>Fluxo de Caixa Mensal</li>
+    </ul>
+  </div>
+</div>
+
+<h3>9.2 Submodulos</h3>
+<table>
+  <tr><th>Modulo</th><th>Rota</th><th>Funcao</th></tr>
+  <tr><td>Projetos</td><td><code>/financeiro/obras</code></td><td>Controle por projeto/obra</td></tr>
+  <tr><td>Lancamentos</td><td><code>/financeiro/lancamentos</code></td><td>Entradas e saidas</td></tr>
+  <tr><td>SDP</td><td><code>/financeiro/solicitacoes</code></td><td>Solicitacoes de pagamento</td></tr>
+  <tr><td>Reembolsos</td><td><code>/financeiro/reembolsos</code></td><td>Reembolsos de colaboradores</td></tr>
+  <tr><td>Cobrancas</td><td><code>/financeiro/cobrancas</code></td><td>Parcelas a receber</td></tr>
+  <tr><td>Relatorios</td><td><code>/financeiro/relatorios</code></td><td>DRE, Fluxo de Caixa</td></tr>
+  <tr><td>Comissoes</td><td><code>/financeiro/comissionamento</code></td><td>Calculo de comissoes</td></tr>
+</table>
+
+<h3>9.3 Sistema de Comissoes</h3>
+<div class="fluxo">
+                    FLUXO DE COMISSOES
++----------------------------------------------------------+
+|                                                          |
+|  VENDA FECHADA                                           |
+|       |                                                  |
+|       v                                                  |
+|  +-----------+     +-----------+     +-----------+       |
+|  | Vendedor  |---->| Especif.  |---->|  Master   |       |
+|  | (% direto)|     |(% indica.)|     |(% cascata)|       |
+|  +-----------+     +-----------+     +-----------+       |
+|                                                          |
++----------------------------------------------------------+
+</div>
+
+<ul>
+  <li><strong>Faixas de VGV:</strong> Volume Geral de Vendas determina percentuais</li>
+  <li><strong>Categorias:</strong> Diferentes cargos tem diferentes percentuais</li>
+  <li><strong>Cascata:</strong> Master recebe % sobre vendas de seus indicados</li>
+</ul>
+
+<!-- 10. JURIDICO -->
+<h2 id="juridico">10. MODULO JURIDICO</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">⚖️</span>
+    <span class="card-title">Juridico</span>
+    <code>/juridico</code>
+  </div>
+  <p>Gestao de contratos e documentacao legal.</p>
+</div>
+
+<h3>10.1 Dashboard Juridico</h3>
+<p><strong>Rota:</strong> <code>/juridico</code></p>
+<ul>
+  <li>Contratos ativos por status</li>
+  <li>Clientes com contratos vigentes</li>
+  <li>Filtros por nucleo e status</li>
+  <li>Busca por cliente</li>
+  <li>Valor total dos contratos</li>
+</ul>
+
+<h3>10.2 Empresas do Grupo WG</h3>
+<p><strong>Rota:</strong> <code>/juridico/empresas</code></p>
+<ul>
+  <li>Cadastro das empresas do grupo</li>
+  <li>CNPJ, Razao Social, Nome Fantasia</li>
+  <li>Dados bancarios</li>
+  <li>Responsaveis legais</li>
+  <li>Documentos societarios</li>
+</ul>
+
+<h3>10.3 Modelos de Contrato</h3>
+<p><strong>Rota:</strong> <code>/juridico/modelos</code></p>
+
+<h4>Funcionalidades:</h4>
+<ul>
+  <li>Criacao de templates de contrato</li>
+  <li>Variaveis dinamicas para substituicao</li>
+  <li>Versionamento de modelos</li>
+  <li>Publicacao por nucleo</li>
+</ul>
+
+<h4>Variaveis Disponiveis:</h4>
+<table>
+  <tr><th>Variavel</th><th>Descricao</th></tr>
+  <tr><td><code>{{empresa.nome}}</code></td><td>Nome da empresa contratada</td></tr>
+  <tr><td><code>{{empresa.cnpj}}</code></td><td>CNPJ da empresa</td></tr>
+  <tr><td><code>{{pessoa.nome}}</code></td><td>Nome do cliente</td></tr>
+  <tr><td><code>{{pessoa.cpf}}</code></td><td>CPF do cliente</td></tr>
+  <tr><td><code>{{contrato.numero}}</code></td><td>Numero do contrato</td></tr>
+  <tr><td><code>{{contrato.valor}}</code></td><td>Valor total formatado</td></tr>
+  <tr><td><code>{{data.atual}}</code></td><td>Data de geracao</td></tr>
+</table>
+
+<h3>10.4 Fluxo de Emissao de Contrato</h3>
+<div class="fluxo">
+              FLUXO: EMISSAO DE CONTRATO
++----------------------------------------------------------+
+|                                                          |
+|  1. Contrato Criado (Comercial)                          |
+|           |                                              |
+|           v                                              |
+|  2. Identificar Nucleo (automatico)                      |
+|           |                                              |
+|           v                                              |
+|  3. Buscar Modelo Publicado do Nucleo                    |
+|           |                                              |
+|           v                                              |
+|  4. Substituir Variaveis                                 |
+|           |                                              |
+|           v                                              |
+|  5. Gerar Documento Final                                |
+|           |                                              |
+|           v                                              |
+|  6. Abrir para Impressao/Download                        |
+|                                                          |
++----------------------------------------------------------+
+</div>
+
+<!-- 11. WGXPERIENCE -->
+<h2 id="wgxperience">11. AREA WGXPERIENCE</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">⭐</span>
+    <span class="card-title">WGXperience</span>
+  </div>
+  <p>Experiencia do cliente com portal exclusivo.</p>
+</div>
+
+<h3>11.1 Portal do Cliente</h3>
+<p><strong>Rota:</strong> <code>/portal-cliente</code></p>
+<ul>
+  <li>Area exclusiva para cada cliente</li>
+  <li>Acompanhamento de obra em tempo real</li>
+  <li>Documentos compartilhados</li>
+  <li>Comunicacao direta com a equipe</li>
+  <li>Aprovacoes online</li>
+</ul>
+
+<h3>11.2 Cadastro de Clientes</h3>
+<p><strong>Rota:</strong> <code>/sistema/area-cliente/clientes</code></p>
+<ul>
+  <li>Liberacao de acesso ao portal</li>
+  <li>Credenciais do cliente</li>
+  <li>Configuracoes de visualizacao</li>
+</ul>
+
+<h3>11.3 Drive Compartilhado</h3>
+<p><strong>Rota:</strong> <code>/sistema/area-cliente/drive</code></p>
+<ul>
+  <li>Upload de arquivos para cliente</li>
+  <li>Organizacao por pastas/projeto</li>
+  <li>Controle de acesso</li>
+  <li>Historico de downloads</li>
+</ul>
+
+<!-- 12. POS-VENDAS -->
+<h2 id="pos-vendas">12. POS-VENDAS</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🛠️</span>
+    <span class="card-title">Pos-Vendas</span>
+  </div>
+  <p>Suporte e garantia apos entrega do projeto.</p>
+</div>
+
+<h3>12.1 Assistencia</h3>
+<p><strong>Rota:</strong> <code>/assistencia</code></p>
+<table>
+  <tr><th>Status</th><th>Descricao</th></tr>
+  <tr><td>Aberta</td><td>Solicitacao registrada</td></tr>
+  <tr><td>Em Atendimento</td><td>Tecnico designado</td></tr>
+  <tr><td>Aguardando Peca</td><td>Dependendo de material</td></tr>
+  <tr><td>Resolvida</td><td>Problema solucionado</td></tr>
+  <tr><td>Encerrada</td><td>Chamado finalizado</td></tr>
+</table>
+
+<h3>12.2 Termo de Aceite</h3>
+<p><strong>Rota:</strong> <code>/termo-aceite</code></p>
+<ul>
+  <li>Geracao de termo de entrega</li>
+  <li>Assinatura digital</li>
+  <li>Fotos do estado de entrega</li>
+  <li>Registro de ressalvas</li>
+</ul>
+
+<h3>12.3 Garantia</h3>
+<p><strong>Rota:</strong> <code>/garantia</code></p>
+<ul>
+  <li>Controle de garantias por item</li>
+  <li>Prazos e vencimentos</li>
+  <li>Solicitacoes de garantia</li>
+  <li>Historico de manutencoes</li>
+</ul>
+
+<!-- 13. ONBOARDING -->
+<h2 id="onboarding">13. ONBOARDING</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🚀</span>
+    <span class="card-title">Onboarding</span>
+    <code>/onboarding</code>
+  </div>
+  <p>Jornada de integracao de novos clientes.</p>
+</div>
+
+<ul>
+  <li>Etapas de boas-vindas</li>
+  <li>Documentos necessarios</li>
+  <li>Checklist de integracao</li>
+  <li>Apresentacao da equipe</li>
+  <li>Primeiros passos no portal</li>
+</ul>
+
+<!-- 14. WG STORE -->
+<h2 id="wg-store">14. WG STORE</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🛒</span>
+    <span class="card-title">WG Store</span>
+  </div>
+  <p>Loja virtual e catalogo de produtos.</p>
+</div>
+
+<h3>14.1 Loja Virtual</h3>
+<p><strong>Rota:</strong> <code>/wg-store</code></p>
+<ul>
+  <li>Catalogo de produtos</li>
+  <li>Acabamentos e materiais</li>
+  <li>Precos atualizados</li>
+  <li>Carrinho de compras</li>
+</ul>
+
+<h3>14.2 Memorial de Acabamentos</h3>
+<p><strong>Rota:</strong> <code>/memorial-acabamentos</code></p>
+<ul>
+  <li>Memorial descritivo por projeto</li>
+  <li>Especificacoes por ambiente</li>
+  <li>Imagens de referencia</li>
+  <li>Aprovacao do cliente</li>
+</ul>
+
+<!-- 15. DEPOSITO -->
+<h2 id="deposito">15. DEPOSITO WG</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">📦</span>
+    <span class="card-title">Deposito WG</span>
+    <code>/deposito</code>
+  </div>
+  <p>Controle de estoque e materiais.</p>
+</div>
+
+<ul>
+  <li>Entrada e saida de materiais</li>
+  <li>Inventario</li>
+  <li>Localizacao de itens</li>
+  <li>Requisicoes de material</li>
+  <li>Transferencias entre obras</li>
+</ul>
+
+<!-- 16. SISTEMA -->
+<h2 id="sistema">16. MODULO SISTEMA</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🔧</span>
+    <span class="card-title">Sistema</span>
+  </div>
+  <p>Configuracoes e administracao do sistema.</p>
+</div>
+
+<h3>16.1 Funcionalidades</h3>
+<table>
+  <tr><th>Item</th><th>Rota</th><th>Descricao</th></tr>
+  <tr><td>Cadastros Pendentes</td><td><code>/sistema/cadastros-pendentes</code></td><td>Aprovacao de novos cadastros</td></tr>
+  <tr><td>Central de Links</td><td><code>/sistema/central-links</code></td><td>Links uteis da empresa</td></tr>
+  <tr><td>Import/Export</td><td><code>/sistema/importar-exportar</code></td><td>Importacao e exportacao de dados</td></tr>
+  <tr><td>Empresas</td><td><code>/empresas</code></td><td>Empresas do grupo</td></tr>
+  <tr><td>Modelos Contrato</td><td><code>/modelos-contrato</code></td><td>Templates de contratos</td></tr>
+  <tr><td>Planta do Sistema</td><td><code>/sistema/planta</code></td><td>Mapa de funcionalidades</td></tr>
+  <tr><td>Precificacao</td><td><code>/sistema/precificacao</code></td><td>Markup e BDI</td></tr>
+  <tr><td>Price List</td><td><code>/pricelist</code></td><td>Catalogo de precos</td></tr>
+  <tr><td>Saude do Sistema</td><td><code>/sistema/saude</code></td><td>Monitoramento e logs</td></tr>
+  <tr><td>Checklists</td><td><code>/sistema/checklists</code></td><td>Templates de checklists</td></tr>
+  <tr><td>Usuarios</td><td><code>/usuarios</code></td><td>Gestao de usuarios</td></tr>
+</table>
+
+<h3>16.2 Sessao</h3>
+<p><strong>Rota:</strong> <code>/logout</code></p>
+<p>Encerramento seguro da sessao do usuario.</p>
+
+<!-- 17. FLUXOS -->
+<h2 id="fluxos">17. FLUXOS DE TRABALHO</h2>
+
+<h3>17.1 Jornada Completa do Cliente</h3>
+<div class="fluxo">
+                    JORNADA DO CLIENTE
++------------------------------------------------------------------+
+|                                                                  |
+|  CAPTACAO                                                        |
+|  --------                                                        |
+|  1. Lead recebido (site, indicacao, presencial)                  |
+|  2. Cadastro na tabela PESSOAS (tipo: cliente)                   |
+|  3. Criacao de OPORTUNIDADE vinculada                            |
+|                                                                  |
+|  QUALIFICACAO                                                    |
+|  ------------                                                    |
+|  4. Analise de projeto (upload de plantas)                       |
+|  5. Definicao de nucleos envolvidos                              |
+|  6. Orcamento preliminar                                         |
+|                                                                  |
+|  PROPOSTA                                                        |
+|  --------                                                        |
+|  7. Criacao da PROPOSTA detalhada                                |
+|  8. Aprovacao interna                                            |
+|  9. Envio ao cliente                                             |
+|  10. Negociacao (ajustes de escopo/valor)                        |
+|                                                                  |
+|  FECHAMENTO                                                      |
+|  ----------                                                      |
+|  11. Aprovacao da proposta pelo cliente                          |
+|  12. Geracao do CONTRATO                                         |
+|  13. Vinculacao com especificador (se houver)                    |
+|  14. Emissao de contrato via Juridico                            |
+|  15. Assinatura digital                                          |
+|                                                                  |
+|  EXECUCAO                                                        |
+|  --------                                                        |
+|  16. Criacao do projeto no CRONOGRAMA                            |
+|  17. Lancamentos no FINANCEIRO                                   |
+|  18. Acompanhamento via WGXperience                              |
+|                                                                  |
+|  ENTREGA                                                         |
+|  -------                                                         |
+|  19. Termo de aceite                                             |
+|  20. Ativacao da garantia                                        |
+|  21. Pos-venda                                                   |
+|                                                                  |
++------------------------------------------------------------------+
+</div>
+
+<h3>17.2 Fluxo de Reembolso</h3>
+<div class="fluxo">
+                    FLUXO DE REEMBOLSO
++----------------------------------------------------------+
+|                                                          |
+|  1. Colaborador realiza despesa                          |
+|           |                                              |
+|           v                                              |
+|  2. Cadastra reembolso no sistema                        |
+|     - Valor                                              |
+|     - Categoria                                          |
+|     - Comprovante (foto/PDF)                             |
+|     - Justificativa                                      |
+|           |                                              |
+|           v                                              |
+|  3. Gestor analisa e aprova/rejeita                      |
+|           |                                              |
+|           v                                              |
+|  4. Se aprovado -> Financeiro agenda pagamento           |
+|           |                                              |
+|           v                                              |
+|  5. Pagamento realizado                                  |
+|           |                                              |
+|           v                                              |
+|  6. Colaborador confirma recebimento                     |
+|                                                          |
++----------------------------------------------------------+
+</div>
+
+<!-- 18. BANCO DE DADOS -->
+<h2 id="banco-dados">18. BANCO DE DADOS</h2>
+
+<h3>18.1 Tabelas Principais</h3>
+<table>
+  <tr><th>Tabela</th><th>Descricao</th></tr>
+  <tr><td><code>pessoas</code></td><td>Clientes, colaboradores, fornecedores, especificadores</td></tr>
+  <tr><td><code>oportunidades</code></td><td>Oportunidades comerciais</td></tr>
+  <tr><td><code>oportunidades_nucleos</code></td><td>Nucleos vinculados as oportunidades</td></tr>
+  <tr><td><code>propostas</code></td><td>Propostas comerciais</td></tr>
+  <tr><td><code>contratos</code></td><td>Contratos ativos</td></tr>
+  <tr><td><code>financeiro</code></td><td>Lancamentos financeiros</td></tr>
+  <tr><td><code>financeiro_reembolsos</code></td><td>Solicitacoes de reembolso</td></tr>
+  <tr><td><code>financeiro_cobrancas</code></td><td>Cobrancas e parcelas</td></tr>
+  <tr><td><code>projetos</code></td><td>Projetos de cronograma</td></tr>
+  <tr><td><code>tarefas</code></td><td>Tarefas dos projetos</td></tr>
+  <tr><td><code>compras</code></td><td>Pedidos de compra</td></tr>
+  <tr><td><code>assistencias</code></td><td>Chamados de assistencia</td></tr>
+  <tr><td><code>juridico_modelos_contrato</code></td><td>Templates de contratos</td></tr>
+  <tr><td><code>empresas</code></td><td>Empresas do grupo</td></tr>
+  <tr><td><code>usuarios</code></td><td>Usuarios do sistema</td></tr>
+  <tr><td><code>categorias_comissao</code></td><td>Categorias para comissionamento</td></tr>
+  <tr><td><code>faixas_vgv</code></td><td>Faixas de volume de vendas</td></tr>
+  <tr><td><code>percentuais_comissao</code></td><td>Percentuais por faixa/categoria</td></tr>
+</table>
+
+<h3>18.2 Integracoes</h3>
+<table>
+  <tr><th>API</th><th>Funcao</th></tr>
+  <tr><td>ViaCEP</td><td>Busca automatica de endereco por CEP</td></tr>
+  <tr><td>ReceitaWS</td><td>Consulta de dados por CNPJ</td></tr>
+  <tr><td>Supabase Auth</td><td>Autenticacao de usuarios</td></tr>
+  <tr><td>Supabase Storage</td><td>Armazenamento de arquivos</td></tr>
+</table>
+
+<!-- RODAPE -->
+<div class="rodape">
+  <p><strong>Manual do Sistema WG Easy</strong></p>
+  <p>Grupo WG Almeida</p>
+  <p>Versao 2026.1 | Dezembro 2024</p>
+  <p style="margin-top: 20px; color: #999;">Para suporte tecnico, entre em contato com a equipe de TI.</p>
+</div>
+
+</body>
+</html>

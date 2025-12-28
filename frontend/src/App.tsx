@@ -65,6 +65,7 @@ const PricelistCategoriasPage = lazy(() => import("@/pages/pricelist/PricelistCa
 const PricelistSubcategoriasPage = lazy(() => import("@/pages/pricelist/PricelistSubcategoriasPage"));
 const ExportarImportarPricelistPage = lazy(() => import("@/pages/pricelist/ExportarImportarPricelistPage"));
 const ImportarImagensPage = lazy(() => import("@/pages/pricelist/ImportarImagensPage"));
+const ImportarLotePage = lazy(() => import("@/pages/pricelist/ImportarLotePage"));
 
 /* ===================== LAZY IMPORTS - MEMORIAL DE ACABAMENTOS ===================== */
 const MemorialAcabamentosPage = lazy(() => import("@/pages/MemorialAcabamentosPage"));
@@ -113,6 +114,8 @@ const SuperCronogramaGanttPage = lazy(() => import("@/pages/cronograma/SuperCron
 /* ===================== LAZY IMPORTS - PLANEJAMENTO / ORÇAMENTOS ===================== */
 const OrcamentosPageNew = lazy(() => import("@/pages/planejamento/OrcamentosPage"));
 const AprovacoesPage = lazy(() => import("@/pages/planejamento/AprovacoesPage"));
+const ComposicoesPage = lazy(() => import("@/pages/planejamento/ComposicoesPage"));
+const OrcamentoMateriaisPage = lazy(() => import("@/pages/planejamento/OrcamentoMateriaisPage"));
 const QuantitativosListPage = lazy(() => import("@/pages/quantitativos/QuantitativosListPage"));
 const QuantitativoFormPage = lazy(() => import("@/pages/quantitativos/QuantitativoFormPage"));
 const QuantitativoEditorPage = lazy(() => import("@/pages/quantitativos/QuantitativoEditorPage"));
@@ -396,6 +399,8 @@ export default function App() {
             <Route path="/quantitativos/:id/editor" element={<QuantitativoEditorPage />} />
             <Route path="/planejamento/orcamentos" element={<OrcamentosPageNew />} />
             <Route path="/planejamento/orcamentos/modelos" element={<ModelosOrcamentoPage />} />
+            <Route path="/planejamento/orcamentos/composicoes" element={<ComposicoesPage />} />
+            <Route path="/planejamento/orcamentos/materiais" element={<OrcamentoMateriaisPage />} />
             <Route path="/planejamento/orcamentos/novo" element={<NovoOrcamentoPage />} />
             <Route path="/planejamento/orcamentos/:id" element={<OrcamentoDetalhePage />} />
             <Route path="/planejamento/orcamentos/:id/itens" element={<OrcamentoItensPage />} />
@@ -433,6 +438,7 @@ export default function App() {
 
             {/* JURÍDICO */}
             <Route path="/juridico" element={<JuridicoDashboardPage />} />
+            <Route path="/juridico/empresas" element={<EmpresasPage />} />
             <Route path="/juridico/modelos" element={<JuridicoPage />} />
             <Route path="/juridico/novo" element={<ModeloContratoFormPage />} />
             <Route path="/juridico/editar/:id" element={<ModeloContratoFormPage />} />
@@ -461,7 +467,15 @@ export default function App() {
             <Route path="/pricelist/importar-catalogo" element={<ImportarCatalogoIAPage />} />
             <Route path="/pricelist/importar-catalogo-excel" element={<ImportarCatalogoExcelPage />} />
             <Route path="/pricelist/importar-imagens" element={<ImportarImagensPage />} />
+            <Route path="/pricelist/importar-lote" element={<ImportarLotePage />} />
             <Route path="/pricelist/exportar-importar" element={<ExportarImportarPricelistPage />} />
+
+            {/* PORTAL DO CLIENTE - PREVIEW ADMIN (dentro do MainLayout) */}
+            <Route path="/portal-cliente" element={<AreaClientePage />} />
+            <Route path="/portal-cliente/arquivos" element={<ClienteArquivosPage />} />
+            <Route path="/portal-cliente/cronograma" element={<CronogramaClientePage />} />
+            <Route path="/portal-cliente/financeiro" element={<FinanceiroClientePage />} />
+            <Route path="/portal-cliente/pos-vendas" element={<PosVendasPage />} />
 
             {/* OUTROS */}
             <Route path="/wg-experience/clientes" element={<WGExperienceClientesPage />} />

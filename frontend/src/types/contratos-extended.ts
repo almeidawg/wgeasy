@@ -267,6 +267,12 @@ export interface ContratoMultiNucleoFormData {
   // Dados do imóvel
   dados_imovel: ContratoDadosImovel;
 
+  // Dados do especificador/indicação
+  especificador_id?: string;
+  tem_especificador?: boolean;
+  codigo_rastreamento?: string;
+  observacoes_indicacao?: string;
+
   // Itens por núcleo (do memorial da proposta)
   itens_por_nucleo?: Record<UnidadeNegocio, ContratoItemExtendido[]>;
 

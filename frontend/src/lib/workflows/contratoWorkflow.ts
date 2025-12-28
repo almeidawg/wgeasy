@@ -69,7 +69,7 @@ export async function garantirFinanceiroContratoAtivo(
 
   await supabase.from("financeiro_lancamentos").insert({
     tipo: "entrada",
-    status: "previsto",
+    status: "pendente",
     descricao: `Receita do contrato ${contrato.numero}${
       contrato.unidade_negocio ? ` - ${contrato.unidade_negocio.toUpperCase()}` : ""
     }`,
@@ -163,6 +163,13 @@ export async function ativarContrato(
       }
     }
 
+    // NOVO: Criar registro na tabela obras (para módulo financeiro/obras)
+    try {
+      await criarObraContrato(contrato_id, contrato);
+    } catch (error: any) {
+      resultado.avisos?.push(`Erro ao criar obra: ${error.message}`);
+    }
+
     if (gerar_compras) {
       try {
         const pedido = await gerarPedidoDeContrato(contrato_id);
@@ -240,7 +247,7 @@ async function gerarFinanceiroContrato(
   if (valorEntrada > 0) {
     lancamentos.push({
       tipo: "entrada",
-      status: "previsto",
+      status: "pendente",
       descricao: `Entrada contrato ${contrato.numero}${
         contrato.unidade_negocio ? ` - ${contrato.unidade_negocio.toUpperCase()}` : ""
       }`,
@@ -261,7 +268,7 @@ async function gerarFinanceiroContrato(
 
     lancamentos.push({
       tipo: "entrada",
-      status: "previsto",
+      status: "pendente",
       descricao: `Parcela ${i + 1}/${numParcelas} contrato ${contrato.numero}${
         contrato.unidade_negocio ? ` - ${contrato.unidade_negocio.toUpperCase()}` : ""
       }`,
@@ -273,6 +280,25 @@ async function gerarFinanceiroContrato(
       categoria_id: null,  // ✅ Categoria opcional
       data_competencia: venc.toISOString().split("T")[0],
       vencimento: venc.toISOString().split("T")[0],
+    });
+  }
+
+  // Se não tem entrada nem parcelas, criar lançamento único com valor total
+  if (lancamentos.length === 0 && total > 0) {
+    lancamentos.push({
+      tipo: "entrada",
+      status: "pendente",
+      descricao: `Receita contrato ${contrato.numero}${
+        contrato.unidade_negocio ? ` - ${contrato.unidade_negocio.toUpperCase()}` : ""
+      }`,
+      valor_total: total,
+      pessoa_id: contrato.cliente_id,
+      contrato_id,
+      nucleo: contrato.unidade_negocio,
+      unidade_negocio: contrato.unidade_negocio,
+      categoria_id: null,
+      data_competencia: baseDate.toISOString().split("T")[0],
+      vencimento: baseDate.toISOString().split("T")[0],
     });
   }
 
@@ -654,4 +680,66 @@ export async function concluirContrato(
       mensagem: `Erro ao concluir contrato: ${error.message}`,
     };
   }
+}
+
+// ============================================================
+// CRIACAO DE OBRA (financeiro/obras)
+// ============================================================
+
+/**
+ * Criar registro na tabela obras para integração com módulo financeiro/obras
+ */
+async function criarObraContrato(
+  contrato_id: string,
+  contrato: any
+): Promise<{ obra_id: string }> {
+  // Verificar se já existe obra com o mesmo nome/contrato
+  const nomeObra = `Obra ${contrato.numero} - ${contrato.cliente?.nome || contrato.cliente_nome || "Cliente"}`;
+
+  const { data: obraExistente } = await supabase
+    .from("obras")
+    .select("id")
+    .eq("nome", nomeObra)
+    .maybeSingle();
+
+  if (obraExistente) {
+    console.log(`⚠️ Obra já existe: ${nomeObra}`);
+    return { obra_id: obraExistente.id };
+  }
+
+  // Obter user_id do criador do contrato
+  const { data: session } = await supabase.auth.getSession();
+  const userId = session?.session?.user?.id || contrato.created_by;
+
+  // Extrair endereço dos dados do imóvel se disponível
+  let endereco = contrato.endereco_obra || null;
+  if (!endereco && contrato.dados_imovel_json) {
+    const dadosImovel = typeof contrato.dados_imovel_json === "string"
+      ? JSON.parse(contrato.dados_imovel_json)
+      : contrato.dados_imovel_json;
+    endereco = dadosImovel?.endereco || dadosImovel?.endereco_completo || null;
+  }
+
+  // Criar obra
+  const { data: obra, error: obraError } = await supabase
+    .from("obras")
+    .insert({
+      user_id: userId,
+      nome: nomeObra,
+      endereco: endereco,
+      data_prevista_entrega: contrato.data_previsao_termino
+        ? contrato.data_previsao_termino.split("T")[0]
+        : null,
+      status: "em_andamento",
+    })
+    .select()
+    .single();
+
+  if (obraError) {
+    console.error("Erro ao criar obra:", obraError);
+    throw new Error(`Erro ao criar obra: ${obraError.message}`);
+  }
+
+  console.log(`✅ Obra criada: ${obra.nome}`);
+  return { obra_id: obra.id };
 }

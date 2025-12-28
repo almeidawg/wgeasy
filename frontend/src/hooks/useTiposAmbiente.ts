@@ -85,7 +85,7 @@ export function useTiposAmbiente(): UseTiposAmbienteReturn {
     verificarPermissao();
   }, [carregarTipos, verificarPermissao]);
 
-  // Converter para formato de opções
+  // Converter para formato de opções (ordenado alfabeticamente)
   const tipos: TipoAmbienteOption[] = usandoBanco
     ? tiposDB.map((t) => ({
         id: t.id,
@@ -93,11 +93,13 @@ export function useTiposAmbiente(): UseTiposAmbienteReturn {
         nome: t.nome,
         ordem: t.ordem,
       }))
-    : Object.entries(TIPO_AMBIENTE_LABELS).map(([codigo, nome], index) => ({
-        codigo,
-        nome,
-        ordem: index + 1,
-      }));
+    : Object.entries(TIPO_AMBIENTE_LABELS)
+        .map(([codigo, nome], index) => ({
+          codigo,
+          nome,
+          ordem: index + 1,
+        }))
+        .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')); // Ordenação alfabética
 
   // Adicionar novo tipo
   const adicionar = useCallback(async (nome: string): Promise<TipoAmbienteOption> => {

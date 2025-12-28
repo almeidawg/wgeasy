@@ -614,6 +614,12 @@ Equipe WG Easy
                             <Calendar className="w-3 h-3" />
                             {new Date(cadastro.criado_em).toLocaleDateString("pt-BR")}
                           </span>
+                          {cadastro.enviado_por_nome && (
+                            <span className="flex items-center gap-1 text-orange-600 font-medium">
+                              <ExternalLink className="w-3 h-3" />
+                              via {cadastro.enviado_por_nome}
+                            </span>
+                          )}
                         </div>
                       </div>
 
@@ -708,6 +714,44 @@ Equipe WG Easy
                   </div>
                 )}
               </div>
+
+              {/* Informações de Rastreamento */}
+              {(selectedCadastro.enviado_por_nome || selectedCadastro.reutilizavel || selectedCadastro.total_usos) && (
+                <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <Label className="text-xs font-semibold text-orange-700 uppercase">
+                    Rastreamento do Link
+                  </Label>
+                  <div className="mt-2 space-y-1 text-sm">
+                    {selectedCadastro.enviado_por_nome && (
+                      <p>
+                        <span className="text-gray-600">Enviado por:</span>{" "}
+                        <span className="font-medium text-gray-900">
+                          {selectedCadastro.enviado_por_nome}
+                        </span>
+                        {selectedCadastro.enviado_por_tipo && (
+                          <span className="text-xs text-gray-500 ml-1">
+                            ({selectedCadastro.enviado_por_tipo})
+                          </span>
+                        )}
+                      </p>
+                    )}
+                    {selectedCadastro.reutilizavel && (
+                      <p>
+                        <span className="text-gray-600">Link reutilizável:</span>{" "}
+                        <span className="font-medium">
+                          {selectedCadastro.total_usos || 0} uso(s)
+                          {selectedCadastro.uso_maximo && ` de ${selectedCadastro.uso_maximo}`}
+                        </span>
+                      </p>
+                    )}
+                    {selectedCadastro.link_pai_id && (
+                      <p className="text-xs text-orange-600">
+                        Cadastro criado a partir de link reutilizável
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
@@ -723,6 +767,20 @@ Equipe WG Easy
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Informação de rastreamento do link */}
+            {selectedCadastro?.enviado_por_nome && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-800">
+                  <span className="font-medium">Link rastreável confirmado!</span>
+                  <br />
+                  Enviado por: <strong>{selectedCadastro.enviado_por_nome}</strong>
+                  {selectedCadastro.enviado_por_tipo && (
+                    <span className="text-xs ml-1">({selectedCadastro.enviado_por_tipo})</span>
+                  )}
+                </p>
+              </div>
+            )}
+
             <div>
               <Label>Tipo de Usuário</Label>
               <Select value={tipoUsuarioAprovacao} onValueChange={setTipoUsuarioAprovacao}>

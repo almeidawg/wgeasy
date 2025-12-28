@@ -71,7 +71,24 @@ const menus = [
   },
   {
     section: "Financeiro",
-    items: [{ label: "Financeiro", icon: "??", path: "/financeiro" }],
+    items: [
+      {
+        label: "Financeiro",
+        icon: "??",
+        path: "/financeiro",
+        children: [
+          { label: "Dashboard", path: "/financeiro" },
+          { label: "Lancamentos", path: "/financeiro/lancamentos" },
+          { label: "Cobrancas", path: "/financeiro/cobrancas" },
+          { label: "Reembolsos", path: "/financeiro/reembolsos" },
+          { label: "Comissionamento", path: "/financeiro/comissionamento" },
+          { label: "Obras", path: "/financeiro/obras" },
+          { label: "Categorias", path: "/financeiro/categorias" },
+          { label: "Importar Extrato", path: "/financeiro/importar-extrato" },
+          { label: "Relatorios", path: "/financeiro/relatorios" },
+        ],
+      },
+    ],
   },
   {
     section: "Sistema",

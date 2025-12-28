@@ -185,6 +185,13 @@ export default function ContratoFormPage() {
   // Estado para contas bancárias disponíveis
   const [contasBancarias, setContasBancarias] = useState<any[]>([]);
 
+  // Estado para especificadores (indicadores/parceiros)
+  const [especificadores, setEspecificadores] = useState<any[]>([]);
+  const [temEspecificador, setTemEspecificador] = useState(false);
+  const [especificadorId, setEspecificadorId] = useState<string>("");
+  const [codigoRastreamento, setCodigoRastreamento] = useState<string>("");
+  const [observacoesIndicacao, setObservacoesIndicacao] = useState<string>("");
+
   const {
     register,
     handleSubmit,
@@ -277,6 +284,30 @@ export default function ContratoFormPage() {
     }
 
     carregarContasBancarias();
+  }, []);
+
+  // Carregar especificadores (parceiros/indicadores)
+  useEffect(() => {
+    async function carregarEspecificadores() {
+      try {
+        const { data, error } = await supabase
+          .from("pessoas")
+          .select("id, nome, email, telefone")
+          .eq("tipo", "ESPECIFICADOR")
+          .eq("ativo", true)
+          .order("nome");
+
+        if (error) {
+          console.error("Erro ao carregar especificadores:", error);
+          return;
+        }
+        setEspecificadores(data || []);
+      } catch (error) {
+        console.error("Erro ao carregar especificadores:", error);
+      }
+    }
+
+    carregarEspecificadores();
   }, []);
 
   // Handler para auto-preenchimento quando cliente é selecionado
@@ -921,6 +952,12 @@ export default function ContratoFormPage() {
           horario_sabado: data.imovel_horario_sabado,
         },
 
+        // Dados do especificador/indicação
+        especificador_id: temEspecificador && especificadorId ? especificadorId : undefined,
+        tem_especificador: temEspecificador,
+        codigo_rastreamento: temEspecificador && codigoRastreamento ? codigoRastreamento : undefined,
+        observacoes_indicacao: temEspecificador && observacoesIndicacao ? observacoesIndicacao : undefined,
+
         // Itens por núcleo (do memorial da proposta)
         itens_por_nucleo: data.nucleos_selecionados.reduce(
           (acc, nucleo) => {
@@ -1076,6 +1113,85 @@ export default function ContratoFormPage() {
               </select>
               {errors.cliente_id && (
                 <p className="text-sm text-red-600 mt-1">{errors.cliente_id.message}</p>
+              )}
+            </div>
+
+            {/* Seção: Especificador/Indicação */}
+            <div className="col-span-2 mt-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-lg">
+              <div className="flex items-center gap-3 mb-3">
+                <input
+                  type="checkbox"
+                  id="temEspecificador"
+                  checked={temEspecificador}
+                  onChange={(e) => {
+                    setTemEspecificador(e.target.checked);
+                    if (!e.target.checked) {
+                      setEspecificadorId("");
+                      setCodigoRastreamento("");
+                      setObservacoesIndicacao("");
+                    }
+                  }}
+                  className="w-4 h-4 text-[#F25C26] border-gray-300 rounded focus:ring-[#F25C26]"
+                />
+                <label htmlFor="temEspecificador" className="text-sm font-semibold text-gray-700">
+                  Este cliente foi indicado por um Especificador/Parceiro?
+                </label>
+              </div>
+
+              {temEspecificador && (
+                <div className="grid grid-cols-2 gap-4 mt-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                      Especificador/Parceiro *
+                    </label>
+                    <select
+                      value={especificadorId}
+                      onChange={(e) => setEspecificadorId(e.target.value)}
+                      className="w-full px-3 py-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F25C26] bg-white"
+                    >
+                      <option value="">Selecione o especificador</option>
+                      {especificadores.map((esp) => (
+                        <option key={esp.id} value={esp.id}>
+                          {esp.nome} {esp.email ? `- ${esp.email}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                    {especificadores.length === 0 && (
+                      <p className="text-xs text-amber-600 mt-1">
+                        Nenhum especificador cadastrado. Cadastre em Pessoas → Especificadores.
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                      Código de Rastreamento
+                    </label>
+                    <input
+                      type="text"
+                      value={codigoRastreamento}
+                      onChange={(e) => setCodigoRastreamento(e.target.value)}
+                      placeholder="Ex: LINK-001, PARCEIRO-ABC"
+                      className="w-full px-3 py-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F25C26]"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Código do link rastreável usado na indicação
+                    </p>
+                  </div>
+
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-600 mb-1">
+                      Observações sobre a indicação
+                    </label>
+                    <input
+                      type="text"
+                      value={observacoesIndicacao}
+                      onChange={(e) => setObservacoesIndicacao(e.target.value)}
+                      placeholder="Como o cliente chegou até nós..."
+                      className="w-full px-3 py-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F25C26]"
+                    />
+                  </div>
+                </div>
               )}
             </div>
 

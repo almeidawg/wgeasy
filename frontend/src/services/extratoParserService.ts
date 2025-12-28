@@ -438,23 +438,222 @@ async function parseOFX(file: File): Promise<ResultadoParsing> {
 }
 
 // ========================================
-// PARSER PDF (básico - extrai texto)
+// PARSER PDF (com IA Vision)
+// Converte páginas em imagens e usa GPT-4o para extrair dados
 // ========================================
 async function parsePDF(file: File): Promise<ResultadoParsing> {
-  // Para PDF, vamos retornar um erro pedindo para usar Excel/CSV
-  // Implementação completa requer biblioteca como pdf.js ou pdf-parse
+  const linhas: LinhaExtrato[] = [];
+  const erros: string[] = [];
 
-  return {
-    sucesso: false,
-    linhas: [],
-    erros: [
-      'PDF requer processamento especial.',
-      'Por favor, exporte o extrato em formato Excel ou CSV.',
-      'A maioria dos bancos oferece essa opção no internet banking.',
-    ],
-    tipoArquivo: 'pdf',
-    totalLinhas: 0,
-  };
+  try {
+    // Importar pdf.js
+    const pdfjsLib = await import('pdfjs-dist');
+
+    // Configurar worker da pasta public
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+
+    // Carregar PDF
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+    console.log(`[PDF Parser] PDF carregado: ${pdf.numPages} páginas`);
+
+    // Processar cada página (máximo 10 páginas para não estourar limites)
+    const maxPages = Math.min(pdf.numPages, 10);
+    const paginasBase64: string[] = [];
+
+    for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+      try {
+        const page = await pdf.getPage(pageNum);
+        const scale = 2; // Escala para melhor qualidade
+        const viewport = page.getViewport({ scale });
+
+        // Criar canvas
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        if (!context) {
+          erros.push(`Página ${pageNum}: Erro ao criar canvas`);
+          continue;
+        }
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        // Renderizar página
+        await page.render({
+          canvasContext: context,
+          viewport: viewport,
+        }).promise;
+
+        // Converter para base64 (JPEG para menor tamanho)
+        const base64 = canvas.toDataURL('image/jpeg', 0.8);
+        paginasBase64.push(base64);
+
+        console.log(`[PDF Parser] Página ${pageNum} renderizada`);
+      } catch (pageError: any) {
+        erros.push(`Página ${pageNum}: ${pageError.message}`);
+      }
+    }
+
+    if (paginasBase64.length === 0) {
+      return {
+        sucesso: false,
+        linhas: [],
+        erros: ['Não foi possível renderizar nenhuma página do PDF'],
+        tipoArquivo: 'pdf',
+        totalLinhas: 0,
+      };
+    }
+
+    // Enviar para IA Vision extrair dados
+    console.log(`[PDF Parser] Enviando ${paginasBase64.length} páginas para IA...`);
+    const linhasExtraidas = await extrairDadosPDFComIA(paginasBase64);
+
+    if (linhasExtraidas.length > 0) {
+      linhas.push(...linhasExtraidas);
+    } else {
+      erros.push('A IA não conseguiu extrair transações do PDF.');
+      erros.push('Verifique se o PDF contém um extrato bancário legível.');
+    }
+
+    return {
+      sucesso: linhas.length > 0,
+      linhas,
+      erros,
+      tipoArquivo: 'pdf',
+      totalLinhas: linhas.length,
+      dataInicio: linhas[0]?.data,
+      dataFim: linhas[linhas.length - 1]?.data,
+    };
+
+  } catch (error: any) {
+    console.error('[PDF Parser] Erro:', error);
+    return {
+      sucesso: false,
+      linhas: [],
+      erros: [
+        `Erro ao processar PDF: ${error.message}`,
+        'Tente exportar o extrato em formato Excel ou CSV.',
+      ],
+      tipoArquivo: 'pdf',
+      totalLinhas: 0,
+    };
+  }
+}
+
+// ========================================
+// EXTRAIR DADOS DO PDF COM IA VISION
+// ========================================
+async function extrairDadosPDFComIA(paginasBase64: string[]): Promise<LinhaExtrato[]> {
+  const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+
+  if (!OPENAI_API_KEY) {
+    console.error('[PDF Parser] Chave OpenAI não configurada');
+    return [];
+  }
+
+  const linhas: LinhaExtrato[] = [];
+
+  // Preparar mensagens com imagens
+  const content: any[] = [
+    {
+      type: 'text',
+      text: `Você é um especialista em extrair dados de extratos bancários.
+
+Analise as imagens do extrato bancário e extraia TODAS as transações encontradas.
+
+Para CADA transação, extraia:
+- Data (formato YYYY-MM-DD)
+- Descrição (texto da transação)
+- Valor (número positivo)
+- Tipo: "entrada" para créditos/depósitos, "saida" para débitos/pagamentos
+
+IMPORTANTE:
+- Extraia TODAS as transações visíveis
+- Use valores absolutos (sempre positivos)
+- Identifique corretamente se é entrada ou saída pelo contexto (crédito/débito, +/-, etc)
+- Ignore linhas de saldo, cabeçalhos e rodapés
+
+Retorne APENAS um array JSON válido, sem explicações:
+[
+  {"data": "2025-01-15", "descricao": "PIX RECEBIDO FULANO", "valor": 1500.00, "tipo": "entrada"},
+  {"data": "2025-01-16", "descricao": "PAGTO BOLETO LUZ", "valor": 250.50, "tipo": "saida"}
+]
+
+Se não encontrar transações, retorne: []`
+    }
+  ];
+
+  // Adicionar imagens das páginas
+  for (const base64 of paginasBase64) {
+    content.push({
+      type: 'image_url',
+      image_url: {
+        url: base64,
+        detail: 'high'
+      }
+    });
+  }
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'user',
+            content: content
+          }
+        ],
+        max_tokens: 4096,
+        temperature: 0.1,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[PDF Parser] Erro OpenAI:', errorText);
+      return [];
+    }
+
+    const data = await response.json();
+    const responseText = data.choices?.[0]?.message?.content || '[]';
+
+    console.log('[PDF Parser] Resposta da IA:', responseText.substring(0, 500));
+
+    // Extrair JSON da resposta
+    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.error('[PDF Parser] Não encontrou JSON na resposta');
+      return [];
+    }
+
+    const transacoes = JSON.parse(jsonMatch[0]);
+
+    for (const t of transacoes) {
+      if (t.data && t.descricao && t.valor !== undefined) {
+        linhas.push({
+          data: t.data,
+          descricao: String(t.descricao).trim(),
+          valor: Math.abs(parseFloat(t.valor)),
+          tipo: t.tipo === 'entrada' ? 'entrada' : 'saida',
+        });
+      }
+    }
+
+    console.log(`[PDF Parser] ${linhas.length} transações extraídas`);
+    return linhas;
+
+  } catch (error: any) {
+    console.error('[PDF Parser] Erro ao chamar IA:', error);
+    return [];
+  }
 }
 
 // ========================================

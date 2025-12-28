@@ -44,38 +44,74 @@ export default function ControleCobrancas({ clienteId, contratoId }: ControleCob
     try {
       setLoading(true);
 
-      // Buscar cobranças do cliente
+      // Buscar lançamentos do cliente (cobranças/parcelas)
+      // Campo correto é pessoa_id (não cliente_id) e tipo "entrada" (não "receita")
       const { data, error } = await supabase
         .from("financeiro_lancamentos")
         .select(`
           id,
-          valor,
-          data_vencimento,
+          valor_total,
+          vencimento,
           status,
-          pessoas:cliente_id (nome)
+          descricao,
+          pessoa:pessoa_id (nome)
         `)
-        .eq("cliente_id", clienteId)
-        .eq("tipo", "receita")
-        .order("data_vencimento", { ascending: true });
+        .eq("pessoa_id", clienteId)
+        .eq("tipo", "entrada")
+        .order("vencimento", { ascending: true });
 
       if (error || !data || data.length === 0) {
+        // Tentar buscar também por contrato_id se não encontrar por pessoa_id
+        if (contratoId) {
+          const { data: dataContrato } = await supabase
+            .from("financeiro_lancamentos")
+            .select(`
+              id,
+              valor_total,
+              vencimento,
+              status,
+              descricao
+            `)
+            .eq("contrato_id", contratoId)
+            .eq("tipo", "entrada")
+            .order("vencimento", { ascending: true });
+
+          if (dataContrato && dataContrato.length > 0) {
+            const hoje = new Date();
+            const cobrancasFormatadas: Cobranca[] = dataContrato.map((item: any) => {
+              const vencimento = item.vencimento ? new Date(item.vencimento) : new Date();
+              let status: "pendente" | "vencido" | "pago" =
+                item.status === "pago" ? "pago" :
+                item.status === "pendente" && vencimento < hoje ? "vencido" : "pendente";
+
+              return {
+                id: item.id,
+                clienteNome: item.descricao || "Parcela",
+                vencimento: item.vencimento || new Date().toISOString(),
+                valor: item.valor_total || 0,
+                status,
+              };
+            });
+            setCobrancas(cobrancasFormatadas);
+            return;
+          }
+        }
         setCobrancas([]);
         return;
       }
 
       const hoje = new Date();
       const cobrancasFormatadas: Cobranca[] = data.map((item: any) => {
-        const vencimento = new Date(item.data_vencimento);
-        let status: "pendente" | "vencido" | "pago" = item.status;
-        if (item.status !== "pago" && vencimento < hoje) {
-          status = "vencido";
-        }
+        const vencimento = item.vencimento ? new Date(item.vencimento) : new Date();
+        let status: "pendente" | "vencido" | "pago" =
+          item.status === "pago" ? "pago" :
+          item.status === "pendente" && vencimento < hoje ? "vencido" : "pendente";
 
         return {
           id: item.id,
-          clienteNome: item.pessoas?.nome || "Cliente",
-          vencimento: item.data_vencimento,
-          valor: item.valor,
+          clienteNome: item.pessoa?.nome || item.descricao || "Parcela",
+          vencimento: item.vencimento || new Date().toISOString(),
+          valor: item.valor_total || 0,
           status,
         };
       });

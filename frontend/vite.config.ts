@@ -25,7 +25,10 @@ export default defineConfig(() => {
     },
     build: {
       chunkSizeWarningLimit: 1000,
-      // Let Vite handle chunk splitting automatically to avoid circular dependency issues
+      sourcemap: true,
+    },
+    css: {
+      devSourcemap: true,
     },
   };
 });

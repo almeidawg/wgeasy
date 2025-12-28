@@ -14,7 +14,7 @@ import { createClient, PostgrestError } from "@supabase/supabase-js";
 // ------------------------------------------------------------
 // CONFIGURAÇÃO BASE (usa o mesmo supabaseUrl e anonKey do projeto)
 // ------------------------------------------------------------
-const supabaseUrl = "https://ahlqzzkxuutwoepirpzr.supabase.co";
+export const supabaseUrl = "https://ahlqzzkxuutwoepirpzr.supabase.co";
 const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseAnon) {

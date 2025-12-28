@@ -22,9 +22,12 @@ export default function MainLayout() {
 
       {/* ÁREA PRINCIPAL */}
       <div className="layout-main">
-        <Topbar onToggleSidebar={toggleSidebar} />
-        <TabNavigation />
-        <main className="layout-content">
+        <Topbar />
+        {/* TAB NAVIGATION - Desktop only */}
+        <div className="hidden md:block">
+          <TabNavigation />
+        </div>
+        <main className="layout-content" style={{ paddingTop: '8px' }}>
           <Outlet />
         </main>
       </div>

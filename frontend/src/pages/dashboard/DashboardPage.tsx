@@ -38,7 +38,6 @@ import {
   Quote,
   AtSign,
 } from "lucide-react";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { supabase } from "@/lib/supabaseClient";
 import { useUsuarioLogado } from "@/hooks/useUsuarioLogado";
 import { listarFinanceiro, LancamentoFinanceiro } from "@/lib/financeiroApi";
@@ -58,7 +57,7 @@ import {
 } from "recharts";
 import {
   obterChecklistDiario,
-  adicionarItem,
+  adicionarItemComMencoes,
   toggleItemConcluido,
   removerItem,
   calcularProgresso,
@@ -136,7 +135,6 @@ export default function DashboardPage() {
   // Checklist persistente do banco de dados
   const [ceoChecklist, setCeoChecklist] = useState<CEOChecklist | null>(null);
   const [novoItemTexto, setNovoItemTexto] = useState("");
-  const [adicionandoItem, setAdicionandoItem] = useState(false);
   const [salvandoItem, setSalvandoItem] = useState(false);
 
   // Menções do CEO em tarefas
@@ -395,28 +393,33 @@ export default function DashboardPage() {
     }
   }, [ceoChecklist]);
 
-  // Adicionar novo item ao checklist
+  // Adicionar novo item ao checklist (novos itens aparecem PRIMEIRO)
+  // Suporta menções @usuario - a tarefa aparece no checklist do mencionado também
   const handleAdicionarItem = useCallback(async () => {
-    if (!ceoChecklist?.id || !novoItemTexto.trim()) return;
+    if (!ceoChecklist?.id || !novoItemTexto.trim() || !usuario?.id) return;
 
     setSalvandoItem(true);
     try {
-      const novoItem = await adicionarItem(ceoChecklist.id, {
-        texto: novoItemTexto.trim(),
-        prioridade: "media",
-      });
+      const novoItem = await adicionarItemComMencoes(
+        ceoChecklist.id,
+        {
+          texto: novoItemTexto.trim(),
+          prioridade: "media",
+        },
+        usuario.id // Autor da tarefa (para processar @menções)
+      );
+      // Novo item vai para o INÍCIO da lista
       setCeoChecklist(prev => prev ? {
         ...prev,
-        itens: [...(prev.itens || []), novoItem]
+        itens: [novoItem, ...(prev.itens || [])]
       } : null);
       setNovoItemTexto("");
-      setAdicionandoItem(false);
     } catch (err) {
       console.error("Erro ao adicionar item:", err);
     } finally {
       setSalvandoItem(false);
     }
-  }, [ceoChecklist?.id, novoItemTexto]);
+  }, [ceoChecklist?.id, novoItemTexto, usuario?.id]);
 
   // Remover item do checklist
   const handleRemoverItem = useCallback(async (itemId: string) => {
@@ -581,8 +584,6 @@ export default function DashboardPage() {
 
   return (
     <div className="pb-16 space-y-8">
-      <Breadcrumb items={[{ label: "Dashboard", href: "/" }]} />
-
       {/* ====== HEADER COM SAUDAÇÃO E FRASE ====== */}
       <section className="rounded-3xl bg-gradient-to-r from-[#0f172a] via-[#1f2937] to-[#111827] text-white p-8 md:p-10 shadow-xl overflow-hidden relative">
         {/* Background decorativo */}
@@ -663,32 +664,34 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* ====== CONTRATOS ATIVOS ====== */}
-      <section className="space-y-4">
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900">Contratos ativos do dia</h2>
-            <p className="text-sm text-gray-500">
-              Mini cards com avatar, acesso rápido ao contato do cliente e endereço da obra.
-            </p>
+      {/* ====== CONTRATOS ATIVOS + CHECKLIST ====== */}
+      <section className="grid gap-6 lg:grid-cols-2">
+        {/* Coluna Esquerda: Contratos Ativos */}
+        <div className="space-y-4">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Contratos ativos do dia</h2>
+              <p className="text-sm text-gray-500">
+                Mini cards com avatar, acesso rápido ao contato do cliente e endereço da obra.
+              </p>
+            </div>
+            {!loadingContratos && (
+              <span className="text-xs uppercase tracking-[0.3em] text-gray-400">
+                {contratosAtivos.length} clientes ativos
+              </span>
+            )}
           </div>
-          {!loadingContratos && (
-            <span className="text-xs uppercase tracking-[0.3em] text-gray-400">
-              {contratosAtivos.length} clientes ativos
-            </span>
-          )}
-        </div>
 
-        {loadingContratos ? (
-          <div className="rounded-3xl border border-dashed border-gray-200 p-6 text-sm text-gray-500">
-            Carregando cartões de contratos...
-          </div>
-        ) : contratosAtivos.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-gray-200 p-6 text-sm text-gray-500">
-            Nenhum contrato ativo disponível para exibir agora.
-          </div>
-        ) : (
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          {loadingContratos ? (
+            <div className="rounded-3xl border border-dashed border-gray-200 p-6 text-sm text-gray-500">
+              Carregando cartões de contratos...
+            </div>
+          ) : contratosAtivos.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-gray-200 p-6 text-sm text-gray-500">
+              Nenhum contrato ativo disponível para exibir agora.
+            </div>
+          ) : (
+            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5">
             {contratosAtivos.map((contrato) => {
               const clienteNome = contrato.dados_cliente_json?.nome?.trim() ||
                                   contrato.cliente?.nome?.trim() ||
@@ -793,6 +796,104 @@ export default function DashboardPage() {
             })}
           </div>
         )}
+        </div>
+
+        {/* Coluna Direita: Checklist do Dia */}
+        <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm space-y-4 h-fit">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Checklist do Dia</h2>
+                <p className="text-xs text-gray-500">
+                  {checklistProgress}% concluído • {ceoChecklist?.itens?.filter(i => i.concluido).length || 0}/{ceoChecklist?.itens?.length || 0} tarefas
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500"
+              style={{ width: `${checklistProgress}%` }}
+            />
+          </div>
+
+          {/* Input para novo item - suporta @menções */}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={novoItemTexto}
+              onChange={(e) => setNovoItemTexto(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAdicionarItem()}
+              placeholder="@eliana fazer entrega... (use @nome)"
+              className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-gray-50"
+            />
+            {novoItemTexto.trim() && (
+              <button
+                type="button"
+                onClick={handleAdicionarItem}
+                disabled={salvandoItem}
+                className="px-3 py-2 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 disabled:opacity-50"
+              >
+                {salvandoItem ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+              </button>
+            )}
+          </div>
+
+          {/* Items */}
+          <div className="space-y-2 max-h-[280px] overflow-y-auto">
+            {(!ceoChecklist?.itens || ceoChecklist.itens.length === 0) ? (
+              <div className="text-center py-4">
+                <CheckCircle2 className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">Nenhuma tarefa para hoje</p>
+              </div>
+            ) : (
+              ceoChecklist.itens.map((item) => (
+                <div
+                  key={item.id}
+                  className={`group flex items-center gap-3 p-3 rounded-xl transition-all ${
+                    item.concluido
+                      ? 'bg-emerald-50 border border-emerald-100'
+                      : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleChecklist(item.id)}
+                    className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      item.concluido
+                        ? 'bg-emerald-500'
+                        : 'border-2 border-gray-300 hover:border-emerald-400'
+                    }`}
+                  >
+                    {item.concluido && <Check className="w-3 h-3 text-white" />}
+                  </button>
+                  <span
+                    onClick={() => toggleChecklist(item.id)}
+                    className={`flex-1 text-sm cursor-pointer ${item.concluido ? 'text-gray-400 line-through' : 'text-gray-700'}`}
+                  >
+                    {item.texto}
+                  </span>
+                  {item.prioridade === 'alta' && !item.concluido && (
+                    <span className="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">Alta</span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoverItem(item.id)}
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 rounded"
+                    title="Remover tarefa"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </section>
 
       {/* ====== KPIs FINANCEIROS ====== */}
@@ -948,134 +1049,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* CHECKLIST DO CEO + AGENDA */}
+        {/* MENÇÕES DO CEO */}
         <div className="space-y-6">
-          {/* Checklist Diário */}
-          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Checklist do Dia</h2>
-                  <p className="text-xs text-gray-500">
-                    {checklistProgress}% concluído • {ceoChecklist?.itens?.filter(i => i.concluido).length || 0}/{ceoChecklist?.itens?.length || 0} tarefas
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setAdicionandoItem(true)}
-                className="p-2 hover:bg-emerald-50 rounded-lg transition-colors"
-                title="Adicionar tarefa"
-              >
-                <Plus className="w-4 h-4 text-emerald-600" />
-              </button>
-            </div>
-
-            {/* Progress bar */}
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500"
-                style={{ width: `${checklistProgress}%` }}
-              />
-            </div>
-
-            {/* Input para novo item */}
-            {adicionandoItem && (
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={novoItemTexto}
-                  onChange={(e) => setNovoItemTexto(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleAdicionarItem()}
-                  placeholder="Nova tarefa..."
-                  className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={handleAdicionarItem}
-                  disabled={salvandoItem || !novoItemTexto.trim()}
-                  className="px-3 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50 transition-colors"
-                  title="Salvar tarefa"
-                >
-                  {salvandoItem ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setAdicionandoItem(false); setNovoItemTexto(""); }}
-                  className="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
-                  title="Cancelar"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-
-            {/* Items */}
-            <div className="space-y-2 max-h-[250px] overflow-y-auto">
-              {(!ceoChecklist?.itens || ceoChecklist.itens.length === 0) ? (
-                <div className="text-center py-6">
-                  <CheckCircle2 className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">Nenhuma tarefa para hoje</p>
-                  <button
-                    type="button"
-                    onClick={() => setAdicionandoItem(true)}
-                    className="mt-2 text-xs text-emerald-600 hover:text-emerald-700"
-                  >
-                    Adicionar primeira tarefa
-                  </button>
-                </div>
-              ) : (
-                ceoChecklist.itens.map((item) => (
-                  <div
-                    key={item.id}
-                    className={`group flex items-center gap-3 p-3 rounded-xl transition-all ${
-                      item.concluido
-                        ? 'bg-emerald-50 border border-emerald-100'
-                        : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => toggleChecklist(item.id)}
-                      className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        item.concluido
-                          ? 'bg-emerald-500'
-                          : 'border-2 border-gray-300 hover:border-emerald-400'
-                      }`}
-                      title={item.concluido ? 'Marcar como pendente' : 'Marcar como concluído'}
-                    >
-                      {item.concluido && <Check className="w-3 h-3 text-white" />}
-                    </button>
-                    <span
-                      onClick={() => toggleChecklist(item.id)}
-                      className={`flex-1 text-sm cursor-pointer ${item.concluido ? 'text-gray-400 line-through' : 'text-gray-700'}`}
-                    >
-                      {item.texto}
-                    </span>
-                    {item.prioridade === 'alta' && !item.concluido && (
-                      <span className="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">Alta</span>
-                    )}
-                    {item.fonte === 'recorrente' && !item.concluido && (
-                      <span className="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full">Ontem</span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoverItem(item.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 rounded transition-all"
-                      title="Remover tarefa"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
           {/* Menções do CEO */}
           {mencoes.length > 0 && (
             <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">

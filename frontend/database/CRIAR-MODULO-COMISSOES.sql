@@ -232,16 +232,16 @@ CREATE POLICY "comissoes_calculadas_select" ON comissoes_calculadas FOR SELECT T
 
 -- Políticas de modificação para admins (INSERT, UPDATE, DELETE)
 CREATE POLICY "faixas_vgv_all" ON faixas_vgv FOR ALL TO authenticated
-USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo IN ('admin', 'super_admin')));
+USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo_usuario IN ('MASTER', 'ADMIN')));
 
 CREATE POLICY "categorias_comissao_all" ON categorias_comissao FOR ALL TO authenticated
-USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo IN ('admin', 'super_admin')));
+USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo_usuario IN ('MASTER', 'ADMIN')));
 
 CREATE POLICY "percentuais_comissao_all" ON percentuais_comissao FOR ALL TO authenticated
-USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo IN ('admin', 'super_admin')));
+USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo_usuario IN ('MASTER', 'ADMIN')));
 
 CREATE POLICY "comissoes_calculadas_all" ON comissoes_calculadas FOR ALL TO authenticated
-USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo IN ('admin', 'super_admin')));
+USING (EXISTS (SELECT 1 FROM usuarios WHERE auth_user_id = auth.uid() AND tipo_usuario IN ('MASTER', 'ADMIN')));
 
 -- ============================================================
 -- FIM DO SCRIPT

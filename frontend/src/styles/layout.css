@@ -41,36 +41,54 @@
 .wg-tabs-container {
   background: #fff;
   border-bottom: 1px solid #e7e7e7;
-  padding: 0 12px;
+  padding: 0 10px;
+  flex-shrink: 0;
+  overflow: hidden; /* Impede quebra de linha */
 }
 
 .wg-tabs-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 42px;
-  gap: 8px;
+  height: 32px; /* Reduzido 30% (era 42px) */
+  gap: 6px;
 }
 
 .wg-tabs-scroll {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   overflow-x: auto;
-  scrollbar-width: thin;
+  overflow-y: hidden;
+  scrollbar-width: none; /* Oculta scrollbar no Firefox */
+  -ms-overflow-style: none; /* Oculta scrollbar no IE/Edge */
+  flex: 1;
+  max-width: calc(100% - 80px); /* Reserva espaço para botão "Fechar tudo" */
+}
+
+.wg-tabs-scroll::-webkit-scrollbar {
+  display: none; /* Oculta scrollbar no Chrome/Safari */
 }
 
 .wg-tab-item {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 10px;
+  gap: 4px;
+  padding: 4px 8px; /* Reduzido 30% (era 8px 12px) */
+  border-radius: 6px; /* Reduzido (era 10px) */
   background: #f5f5f5;
   color: #444;
-  font-size: 13px;
+  font-size: 11px; /* Reduzido 30% (era 13px) */
   cursor: pointer;
   white-space: nowrap;
   transition: all 120ms ease;
+  max-width: 140px; /* Limita largura máxima */
+  flex-shrink: 0;
+}
+
+.wg-tab-item span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
 }
 
 .wg-tab-item:hover {
@@ -89,16 +107,26 @@
   background: transparent;
   color: inherit;
   cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wg-tabs-actions {
+  flex-shrink: 0;
 }
 
 .wg-tabs-actions button {
   border: none;
   background: transparent;
-  font-size: 12px;
+  font-size: 10px; /* Reduzido (era 12px) */
   color: #666;
   cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 6px;
+  padding: 4px 6px; /* Reduzido (era 6px 8px) */
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
 .wg-tabs-actions button:hover {

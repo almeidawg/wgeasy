@@ -79,20 +79,27 @@ const CobrancasPage = () => {
     try {
       let query = supabase
         .from('cobrancas')
-        .select(`*, obra:obras(nome)`);
+        .select(`*, obra:obras!obra_id(nome), contrato:contratos!contrato_id(numero, titulo)`);
 
       if (searchTerm) {
-        query = query.or(`cliente.ilike.*${searchTerm}*`);
+        // Buscar por cliente ou observações
+        query = query.or(`cliente.ilike.%${searchTerm}%,observacoes.ilike.%${searchTerm}%`);
       }
       if (filtroStatus !== 'Todos') {
-        query = query.eq('status', filtroStatus);
+        if (filtroStatus === 'Vencido') {
+          // Vencido = não pago e data < hoje
+          query = query.neq('status', 'Pago').lt('vencimento', new Date().toISOString().split('T')[0]);
+        } else {
+          query = query.eq('status', filtroStatus);
+        }
       }
 
       query = query.order('vencimento', { ascending: true });
 
-      const [cobrancasRes, obrasRes] = await Promise.all([
+      const [cobrancasRes, obrasRes, contratosRes] = await Promise.all([
         query,
         supabase.from('obras').select('id, nome'),
+        supabase.from('contratos').select('id, numero, titulo').order('numero', { ascending: false }),
       ]);
 
       if (cobrancasRes.error) throw cobrancasRes.error;
@@ -393,6 +400,7 @@ const CobrancasPage = () => {
                 <tr>
                   <th className="px-3 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Status</th>
                   <th className="px-2 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Cliente</th>
+                  <th className="px-2 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Contrato</th>
                   <th className="px-2 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase">Obra</th>
                   <th className="px-2 py-2 text-center text-[10px] font-semibold text-gray-500 uppercase">Vencimento</th>
                   <th className="px-2 py-2 text-right text-[10px] font-semibold text-gray-500 uppercase">Valor</th>
@@ -402,7 +410,7 @@ const CobrancasPage = () => {
               <tbody className="divide-y divide-gray-50">
                 {cobrancas.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-3 py-8 text-center text-gray-400 text-xs">
+                    <td colSpan={7} className="px-3 py-8 text-center text-gray-400 text-xs">
                       Nenhuma cobrança encontrada
                     </td>
                   </tr>
@@ -416,7 +424,8 @@ const CobrancasPage = () => {
                         </span>
                       </td>
                       <td className="px-2 py-2 font-medium text-gray-800 text-[11px]">{cobranca.cliente}</td>
-                      <td className="px-2 py-2 text-gray-600 text-[11px]">{cobranca.obra?.nome}</td>
+                      <td className="px-2 py-2 text-gray-600 text-[11px]">{cobranca.contrato?.numero || '-'}</td>
+                      <td className="px-2 py-2 text-gray-600 text-[11px]">{cobranca.obra?.nome || '-'}</td>
                       <td className="px-2 py-2 text-center text-gray-500 text-[11px]">
                         {new Date(cobranca.vencimento).toLocaleDateString('pt-BR')}
                       </td>

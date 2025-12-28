@@ -143,6 +143,9 @@ export default function ContratosPage() {
                   Status
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  Indicação
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Data
                 </th>
                 <th className="px-4 py-3"></th>
@@ -196,6 +199,15 @@ export default function ContratosPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
+                    {(contrato as any).tem_especificador ? (
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
+                        {(contrato as any).especificador_nome || "Indicado"}
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 text-xs">-</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
                     <span className="text-gray-600">
                       {new Date(contrato.data_criacao).toLocaleDateString("pt-BR")}
                     </span>
@@ -216,7 +228,7 @@ export default function ContratosPage() {
 
               {contratosFiltrados.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center">
+                  <td colSpan={8} className="px-4 py-8 text-center">
                     <div className="flex flex-col items-center gap-2">
                       <svg
                         className="w-12 h-12 text-gray-400"

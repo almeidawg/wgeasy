@@ -277,17 +277,19 @@ export default function ImportarExtratoPage() {
             .from('financeiro_lancamentos')
             .insert({
               data_competencia: item.data,
-              data_vencimento: item.data,
+              vencimento: item.data,
               data_pagamento: item.data,
               descricao: item.classificacao?.descricao_formatada || item.descricao,
-              valor: item.valor,
-              tipo: item.tipo === 'entrada' ? 'receita' : 'despesa',
+              valor_total: item.valor,
+              tipo: item.tipo, // 'entrada' ou 'saida'
               status: 'pago',
               categoria_id: item.classificacao?.categoria_id,
               projeto_id: item.classificacao?.projeto_id,
               contrato_id: item.classificacao?.contrato_id,
               pessoa_id: item.classificacao?.pessoa_id,
               origem: 'importacao',
+              classificado_auto: true,
+              confianca_classificacao: item.classificacao?.confianca || 0,
             });
 
           if (errLanc) {
@@ -400,12 +402,12 @@ export default function ImportarExtratoPage() {
                 ou clique para selecionar um arquivo
               </p>
               <p className="text-sm text-gray-400">
-                Formatos aceitos: Excel (.xlsx, .xls), CSV, OFX
+                Formatos aceitos: Excel (.xlsx, .xls), CSV, OFX, PDF
               </p>
               <input
                 id="file-input"
                 type="file"
-                accept=".xlsx,.xls,.csv,.ofx"
+                accept=".xlsx,.xls,.csv,.ofx,.pdf"
                 onChange={handleInputChange}
                 className="hidden"
               />
@@ -494,10 +496,10 @@ export default function ImportarExtratoPage() {
                 <p className="text-sm font-medium text-purple-900">OFX</p>
                 <p className="text-xs text-purple-600">.ofx</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg opacity-50">
-                <FileSpreadsheet className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                <p className="text-sm font-medium text-gray-600">PDF</p>
-                <p className="text-xs text-gray-500">Em breve</p>
+              <div className="text-center p-4 bg-red-50 rounded-lg">
+                <FileSpreadsheet className="w-8 h-8 mx-auto text-red-600 mb-2" />
+                <p className="text-sm font-medium text-red-900">PDF</p>
+                <p className="text-xs text-red-600">IA Vision</p>
               </div>
             </div>
           </CardContent>

@@ -4,12 +4,13 @@
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response(null, { status: 204, headers: corsHeaders });
   }
 
   try {
@@ -276,31 +277,7 @@ Responda APENAS com o JSON, sem explicações.`;
 
         if (pageResponse.ok) {
           const html = await pageResponse.text();
-
-          // Extrair imagem do JSON-LD
-          let imagemUrl = null;
-
-          const jsonLdMatch = html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/i);
-          if (jsonLdMatch) {
-            try {
-              const jsonData = JSON.parse(jsonLdMatch[1]);
-              if (jsonData.image) {
-                imagemUrl = Array.isArray(jsonData.image) ? jsonData.image[0] : jsonData.image;
-              }
-            } catch {}
-          }
-
-          // Fallback: meta og:image
-          if (!imagemUrl) {
-            const ogImage = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"/i);
-            if (ogImage) imagemUrl = ogImage[1];
-          }
-
-          // Fallback: primeira imagem de produto
-          if (!imagemUrl) {
-            const imgMatch = html.match(/<img[^>]*src="([^"]*(?:product|produto|item)[^"]*)"/i);
-            if (imgMatch) imagemUrl = imgMatch[1];
-          }
+          const imagemUrl = extrairImagemDoHTML(html, url);
 
           if (imagemUrl) {
             return new Response(
@@ -315,6 +292,45 @@ Responda APENAS com o JSON, sem explicações.`;
 
       return new Response(
         JSON.stringify({ imagem_url: null, fonte: null }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Tipo 5: Buscar produto na Leroy Merlin por termo de busca
+    if (tipo === 'buscar_leroy') {
+      const termoBuscaLeroy = encodeURIComponent(termoBusca);
+      const urlBusca = `https://www.leroymerlin.com.br/busca?term=${termoBuscaLeroy}`;
+
+      try {
+        // Tentar buscar na pagina de resultados da Leroy
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(urlBusca)}`;
+        const pageResponse = await fetch(proxyUrl, {
+          headers: {
+            'Accept': 'text/html',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          },
+        });
+
+        if (pageResponse.ok) {
+          const html = await pageResponse.text();
+
+          // Extrair dados do primeiro produto dos resultados
+          const produtos = extrairProdutosLeroyDaLista(html);
+
+          if (produtos.length > 0) {
+            return new Response(
+              JSON.stringify({ produtos, fonte: 'leroy_scraping' }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+        }
+      } catch (e) {
+        console.log('Busca Leroy falhou:', e);
+      }
+
+      // Fallback para IA
+      return new Response(
+        JSON.stringify({ produtos: [], fonte: null }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -345,4 +361,126 @@ function getSiteName(hostname: string): string {
   if (hostname.includes('submarino')) return 'Submarino';
   if (hostname.includes('shoptime')) return 'Shoptime';
   return hostname.split('.')[0];
+}
+
+// Funcao auxiliar para extrair imagem do HTML
+function extrairImagemDoHTML(html: string, url: string): string | null {
+  const hostname = new URL(url).hostname.toLowerCase();
+  let imagemUrl: string | null = null;
+
+  // 1. Tentar JSON-LD (mais confiavel)
+  const jsonLdMatches = html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi);
+  for (const match of jsonLdMatches) {
+    try {
+      const jsonData = JSON.parse(match[1]);
+      // Pode ser array ou objeto
+      const products = Array.isArray(jsonData) ? jsonData : [jsonData];
+      for (const item of products) {
+        if (item['@type'] === 'Product' && item.image) {
+          imagemUrl = Array.isArray(item.image) ? item.image[0] : item.image;
+          if (typeof imagemUrl === 'object' && imagemUrl.url) {
+            imagemUrl = imagemUrl.url;
+          }
+          if (imagemUrl) break;
+        }
+      }
+    } catch {}
+  }
+
+  // 2. Meta og:image
+  if (!imagemUrl) {
+    const ogImage = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"/i);
+    if (ogImage) imagemUrl = ogImage[1];
+  }
+
+  // 3. Padroes especificos por site
+  if (!imagemUrl && hostname.includes('leroymerlin')) {
+    // Leroy Merlin usa CDN especifico
+    const leroyImg = html.match(/https:\/\/cdn\.leroymerlin\.com\.br\/[^"'\s]+\.(jpg|png|webp)/i);
+    if (leroyImg) imagemUrl = leroyImg[0];
+  }
+
+  if (!imagemUrl && hostname.includes('amazon')) {
+    const amazonImg = html.match(/"hiRes":"([^"]+)"|"large":"([^"]+)"/i);
+    if (amazonImg) imagemUrl = amazonImg[1] || amazonImg[2];
+  }
+
+  if (!imagemUrl && (hostname.includes('mercadolivre') || hostname.includes('mercadolibre'))) {
+    const mlImg = html.match(/https:\/\/http2\.mlstatic\.com\/[^"'\s]+\.(jpg|png|webp)/i);
+    if (mlImg) imagemUrl = mlImg[0];
+  }
+
+  // 4. Fallback: primeira imagem com palavras-chave
+  if (!imagemUrl) {
+    const imgMatch = html.match(/<img[^>]*src="(https?:\/\/[^"]*(?:product|produto|item|goods)[^"]*)"/i);
+    if (imgMatch) imagemUrl = imgMatch[1];
+  }
+
+  // 5. Fallback: qualquer imagem grande (provavelmente produto)
+  if (!imagemUrl) {
+    const imgMatch = html.match(/<img[^>]*src="(https?:\/\/[^"]+\.(?:jpg|png|webp))"/i);
+    if (imgMatch) imagemUrl = imgMatch[1];
+  }
+
+  return imagemUrl;
+}
+
+// Funcao para extrair produtos da pagina de resultados da Leroy Merlin
+function extrairProdutosLeroyDaLista(html: string): Array<{
+  titulo: string;
+  preco: number;
+  imagem_url: string | null;
+  url_origem: string | null;
+}> {
+  const produtos: Array<{
+    titulo: string;
+    preco: number;
+    imagem_url: string | null;
+    url_origem: string | null;
+  }> = [];
+
+  // Tentar extrair do JSON embutido na pagina
+  const jsonDataMatch = html.match(/window\.__PRELOADED_STATE__\s*=\s*(\{[\s\S]*?\});/);
+  if (jsonDataMatch) {
+    try {
+      const data = JSON.parse(jsonDataMatch[1]);
+      if (data.search?.products) {
+        for (const p of data.search.products.slice(0, 5)) {
+          produtos.push({
+            titulo: p.name || p.title,
+            preco: parseFloat(p.price?.value || p.price) || 0,
+            imagem_url: p.image?.url || p.images?.[0]?.url || null,
+            url_origem: p.url ? `https://www.leroymerlin.com.br${p.url}` : null,
+          });
+        }
+      }
+    } catch {}
+  }
+
+  // Fallback: regex para extrair cards de produto
+  if (produtos.length === 0) {
+    // Padroes comuns de listagem de produtos
+    const cardMatches = html.matchAll(/<div[^>]*class="[^"]*product-card[^"]*"[^>]*>([\s\S]*?)<\/div>/gi);
+    for (const match of cardMatches) {
+      const cardHtml = match[1];
+
+      const titulo = cardHtml.match(/<[^>]*class="[^"]*product-name[^"]*"[^>]*>([^<]+)/i);
+      const preco = cardHtml.match(/R\$\s*([0-9.,]+)/i);
+      const imagem = cardHtml.match(/src="(https:\/\/cdn\.leroymerlin\.com\.br[^"]+)"/i);
+      const link = cardHtml.match(/href="([^"]+)"/i);
+
+      if (titulo) {
+        produtos.push({
+          titulo: titulo[1].trim(),
+          preco: preco ? parseFloat(preco[1].replace(/\./g, '').replace(',', '.')) : 0,
+          imagem_url: imagem ? imagem[1] : null,
+          url_origem: link ? `https://www.leroymerlin.com.br${link[1]}` : null,
+        });
+      }
+
+      if (produtos.length >= 5) break;
+    }
+  }
+
+  return produtos;
 }

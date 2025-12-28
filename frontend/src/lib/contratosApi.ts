@@ -110,11 +110,16 @@ export { listarContratos as listarContratosCompletos };
 export async function listarContratos(): Promise<ContratoCompleto[]> {
   const { data, error } = await supabase
     .from("contratos")
-    .select("*")
+    .select("*, especificador:especificador_id(id, nome)")
     .order("id", { ascending: false });
 
   if (error) throw error;
-  return data as any;
+
+  // Mapear para incluir nome do especificador
+  return (data || []).map((c: any) => ({
+    ...c,
+    especificador_nome: c.especificador?.nome || null,
+  }));
 }
 
 /**
@@ -814,6 +819,11 @@ export async function criarContratoMultiNucleo(
         valor_parcela: valorParcela,
         dados_cliente_json: formData.dados_cliente,
         dados_imovel_json: formData.dados_imovel,
+        // Dados do especificador/indicação
+        especificador_id: formData.especificador_id || null,
+        tem_especificador: formData.tem_especificador || false,
+        codigo_rastreamento: formData.codigo_rastreamento || null,
+        observacoes_indicacao: formData.observacoes_indicacao || null,
         status: "rascunho",
         created_by: userData?.user?.id,
       })

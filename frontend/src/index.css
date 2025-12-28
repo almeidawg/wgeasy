@@ -31,7 +31,7 @@ html, body {
   font-size: var(--wg-text-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  font-smooth: antialiased; /* Fallback padrão */
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   max-width: 100vw;
 }

@@ -48,6 +48,7 @@ export interface NovoItemInput {
   ordem?: number;
   fonte?: FonteItem;
   referencia_id?: string;
+  criado_por?: string;
 }
 
 // ============================================================
@@ -189,27 +190,35 @@ export async function adicionarItem(
   checklistId: string,
   item: NovoItemInput
 ): Promise<CEOChecklistItem> {
-  // Buscar próxima ordem
-  const { data: ultimoItem } = await supabase
+  // Buscar próxima ordem (não usar .single() pois pode não haver itens)
+  const { data: itensOrdem } = await supabase
     .from("ceo_checklist_itens")
     .select("ordem")
     .eq("checklist_id", checklistId)
     .order("ordem", { ascending: false })
-    .limit(1)
-    .single();
+    .limit(1);
 
+  const ultimoItem = itensOrdem?.[0];
   const proximaOrdem = (ultimoItem?.ordem || 0) + 1;
+
+  // Montar objeto de insert (criado_por é opcional pois a coluna pode não existir)
+  const insertData: Record<string, any> = {
+    checklist_id: checklistId,
+    texto: item.texto,
+    prioridade: item.prioridade || "media",
+    ordem: item.ordem ?? proximaOrdem,
+    fonte: item.fonte || "manual",
+    referencia_id: item.referencia_id || null,
+  };
+
+  // Adicionar criado_por apenas se fornecido
+  if (item.criado_por) {
+    insertData.criado_por = item.criado_por;
+  }
 
   const { data, error } = await supabase
     .from("ceo_checklist_itens")
-    .insert({
-      checklist_id: checklistId,
-      texto: item.texto,
-      prioridade: item.prioridade || "media",
-      ordem: item.ordem ?? proximaOrdem,
-      fonte: item.fonte || "manual",
-      referencia_id: item.referencia_id || null,
-    })
+    .insert(insertData)
     .select()
     .single();
 
@@ -324,4 +333,283 @@ export async function importarMencaoParaChecklist(
     fonte: "mencao",
     referencia_id: mencaoId,
   });
+}
+
+// ============================================================
+// SISTEMA DE MENÇÕES (@usuario)
+// ============================================================
+
+export interface UsuarioParaMencao {
+  id: string;
+  nome: string;
+  tipo_usuario: string;
+  avatar_url: string | null;
+}
+
+export interface ChecklistMencao {
+  id: string;
+  item_id: string;
+  usuario_mencionado_id: string;
+  usuario_autor_id: string;
+  lido: boolean;
+  created_at: string;
+  // Dados expandidos
+  item?: CEOChecklistItem;
+  autor_nome?: string;
+}
+
+/**
+ * Extrair menções (@nome) do texto
+ * Retorna array de nomes mencionados (sem o @)
+ */
+export function extrairMencoes(texto: string): string[] {
+  const regex = /@([a-zA-ZÀ-ÿ]+(?:\s+[a-zA-ZÀ-ÿ]+)?)/gi;
+  const matches = texto.matchAll(regex);
+  const mencoes: string[] = [];
+
+  for (const match of matches) {
+    mencoes.push(match[1].toLowerCase());
+  }
+
+  return [...new Set(mencoes)]; // Remove duplicatas
+}
+
+/**
+ * Buscar usuários para autocomplete de menções
+ * Busca por nome ou email
+ */
+export async function buscarUsuariosParaMencao(termo: string): Promise<UsuarioParaMencao[]> {
+  if (!termo || termo.length < 2) return [];
+
+  const { data, error } = await supabase
+    .from("usuarios")
+    .select(`
+      id,
+      tipo_usuario,
+      pessoas:pessoa_id (
+        nome,
+        avatar_url,
+        foto_url
+      )
+    `)
+    .eq("ativo", true)
+    .limit(10);
+
+  if (error) {
+    console.error("[buscarUsuariosParaMencao] Erro:", error);
+    return [];
+  }
+
+  // Filtrar e mapear resultados
+  const termoLower = termo.toLowerCase();
+  return (data || [])
+    .filter((u: any) => {
+      const nome = u.pessoas?.nome?.toLowerCase() || "";
+      return nome.includes(termoLower);
+    })
+    .map((u: any) => ({
+      id: u.id,
+      nome: u.pessoas?.nome || "Sem nome",
+      tipo_usuario: u.tipo_usuario,
+      avatar_url: u.pessoas?.avatar_url || u.pessoas?.foto_url || null,
+    }));
+}
+
+/**
+ * Buscar usuário por nome (para resolver @menção)
+ */
+export async function buscarUsuarioPorNome(nome: string): Promise<UsuarioParaMencao | null> {
+  const { data, error } = await supabase
+    .from("usuarios")
+    .select(`
+      id,
+      tipo_usuario,
+      pessoas:pessoa_id (
+        nome,
+        avatar_url,
+        foto_url
+      )
+    `)
+    .eq("ativo", true);
+
+  if (error || !data) return null;
+
+  // Buscar por nome similar (case insensitive, parcial)
+  const nomeLower = nome.toLowerCase();
+  const usuario = data.find((u: any) => {
+    const nomeUsuario = u.pessoas?.nome?.toLowerCase() || "";
+    // Primeiro nome ou nome completo
+    const primeiroNome = nomeUsuario.split(" ")[0];
+    return primeiroNome === nomeLower || nomeUsuario.includes(nomeLower);
+  });
+
+  if (!usuario) return null;
+
+  return {
+    id: (usuario as any).id,
+    nome: (usuario as any).pessoas?.nome || "Sem nome",
+    tipo_usuario: (usuario as any).tipo_usuario,
+    avatar_url: (usuario as any).pessoas?.avatar_url || (usuario as any).pessoas?.foto_url || null,
+  };
+}
+
+/**
+ * Criar menções para um item do checklist
+ * Detecta @nomes no texto e cria registros na tabela de menções
+ */
+export async function criarMencoesDoItem(
+  itemId: string,
+  texto: string,
+  autorId: string
+): Promise<void> {
+  const nomesMencionados = extrairMencoes(texto);
+
+  if (nomesMencionados.length === 0) return;
+
+  // Resolver cada @nome para um usuário
+  for (const nome of nomesMencionados) {
+    const usuario = await buscarUsuarioPorNome(nome);
+
+    if (usuario && usuario.id !== autorId) {
+      // Criar registro de menção
+      const { error } = await supabase
+        .from("ceo_checklist_mencoes")
+        .insert({
+          item_id: itemId,
+          usuario_mencionado_id: usuario.id,
+          usuario_autor_id: autorId,
+        });
+
+      if (error && error.code !== "23505") { // Ignora duplicatas
+        console.error("[criarMencoesDoItem] Erro ao criar menção:", error);
+      }
+
+      // Criar a tarefa no checklist do usuário mencionado também
+      await criarTarefaParaMencionado(usuario.id, texto, autorId, itemId);
+    }
+  }
+}
+
+/**
+ * Criar tarefa no checklist do usuário mencionado
+ */
+async function criarTarefaParaMencionado(
+  usuarioMencionadoId: string,
+  texto: string,
+  autorId: string,
+  itemOriginalId: string
+): Promise<void> {
+  const hoje = new Date().toISOString().split("T")[0];
+
+  // Buscar ou criar checklist do usuário mencionado
+  let { data: checklist } = await supabase
+    .from("ceo_checklist_diario")
+    .select("id")
+    .eq("usuario_id", usuarioMencionadoId)
+    .eq("data", hoje)
+    .single();
+
+  if (!checklist) {
+    // Criar checklist para o usuário
+    const { data: novoChecklist, error } = await supabase
+      .from("ceo_checklist_diario")
+      .insert({ data: hoje, usuario_id: usuarioMencionadoId })
+      .select("id")
+      .single();
+
+    if (error) {
+      console.error("[criarTarefaParaMencionado] Erro ao criar checklist:", error);
+      return;
+    }
+    checklist = novoChecklist;
+  }
+
+  // Buscar nome do autor
+  const { data: autorData } = await supabase
+    .from("usuarios")
+    .select("pessoas:pessoa_id(nome)")
+    .eq("id", autorId)
+    .single();
+
+  const autorNome = (autorData as any)?.pessoas?.nome || "Alguém";
+
+  // Criar o item no checklist do mencionado
+  const { error } = await supabase
+    .from("ceo_checklist_itens")
+    .insert({
+      checklist_id: checklist!.id,
+      texto: `📌 ${autorNome}: ${texto}`,
+      prioridade: "alta",
+      fonte: "mencao",
+      referencia_id: itemOriginalId,
+      criado_por: autorId,
+    });
+
+  if (error) {
+    console.error("[criarTarefaParaMencionado] Erro ao criar item:", error);
+  }
+}
+
+/**
+ * Buscar tarefas onde o usuário foi mencionado (não lidas)
+ */
+export async function buscarTarefasMencionadas(usuarioId: string): Promise<ChecklistMencao[]> {
+  const { data, error } = await supabase
+    .from("ceo_checklist_mencoes")
+    .select(`
+      *,
+      item:ceo_checklist_itens(*),
+      autor:usuario_autor_id(
+        pessoas:pessoa_id(nome)
+      )
+    `)
+    .eq("usuario_mencionado_id", usuarioId)
+    .eq("lido", false)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (error) {
+    console.error("[buscarTarefasMencionadas] Erro:", error);
+    return [];
+  }
+
+  return (data || []).map((m: any) => ({
+    ...m,
+    autor_nome: m.autor?.pessoas?.nome || "Desconhecido",
+  }));
+}
+
+/**
+ * Marcar menção como lida
+ */
+export async function marcarMencaoComoLida(mencaoId: string): Promise<void> {
+  const { error } = await supabase
+    .from("ceo_checklist_mencoes")
+    .update({ lido: true })
+    .eq("id", mencaoId);
+
+  if (error) {
+    console.error("[marcarMencaoComoLida] Erro:", error);
+  }
+}
+
+/**
+ * Adicionar item com suporte a menções
+ * Wrapper do adicionarItem que processa @menções
+ */
+export async function adicionarItemComMencoes(
+  checklistId: string,
+  item: NovoItemInput,
+  autorId: string
+): Promise<CEOChecklistItem> {
+  // Criar o item com criado_por incluído diretamente
+  const novoItem = await adicionarItem(checklistId, {
+    ...item,
+    criado_por: autorId,
+  });
+
+  // Processar menções no texto
+  await criarMencoesDoItem(novoItem.id, item.texto, autorId);
+
+  return novoItem;
 }

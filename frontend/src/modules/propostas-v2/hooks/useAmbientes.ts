@@ -73,8 +73,13 @@ function calcularAreas(
 }
 
 export function useAmbientes(): UseAmbientesReturn {
-  const [ambientes, setAmbientes] = useState<Ambiente[]>([]);
+  const [ambientesRaw, setAmbientesRaw] = useState<Ambiente[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Ambientes ordenados alfabeticamente pelo nome
+  const ambientes = useMemo(() => {
+    return [...ambientesRaw].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  }, [ambientesRaw]);
 
   const totais = useMemo<TotaisAmbientes>(() => {
     return ambientes.reduce((acc, amb) => {
@@ -117,12 +122,12 @@ export function useAmbientes(): UseAmbientesReturn {
       ...areas,
     };
 
-    setAmbientes(prev => [...prev, novoAmbiente]);
+    setAmbientesRaw(prev => [...prev, novoAmbiente]);
     return novoAmbiente;
   }, []);
 
   const atualizar = useCallback((id: string, input: Partial<AmbienteInput>) => {
-    setAmbientes(prev => prev.map(amb => {
+    setAmbientesRaw(prev => prev.map(amb => {
       if (amb.id !== id) return amb;
 
       const merged: AmbienteInput = {
@@ -143,7 +148,7 @@ export function useAmbientes(): UseAmbientesReturn {
   }, []);
 
   const remover = useCallback((id: string) => {
-    setAmbientes(prev => prev.filter(amb => amb.id !== id));
+    setAmbientesRaw(prev => prev.filter(amb => amb.id !== id));
   }, []);
 
   const importar = useCallback((ambientesExtraidos: AmbienteExtraido[]) => {
@@ -165,11 +170,11 @@ export function useAmbientes(): UseAmbientesReturn {
       };
     });
 
-    setAmbientes(prev => [...prev, ...novosAmbientes]);
+    setAmbientesRaw(prev => [...prev, ...novosAmbientes]);
   }, []);
 
   const limpar = useCallback(() => {
-    setAmbientes([]);
+    setAmbientesRaw([]);
   }, []);
 
   return {
@@ -180,7 +185,7 @@ export function useAmbientes(): UseAmbientesReturn {
     atualizar,
     remover,
     importar,
-    setAmbientes,
+    setAmbientes: setAmbientesRaw, // Permite definir ambientes diretamente
     limpar,
   };
 }

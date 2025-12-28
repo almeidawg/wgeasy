@@ -38,7 +38,7 @@ export async function listarTiposAmbiente(): Promise<TipoAmbienteDB[]> {
     .from("tipos_ambiente")
     .select("*")
     .eq("ativo", true)
-    .order("ordem", { ascending: true });
+    .order("nome", { ascending: true }); // Ordenação alfabética
 
   if (error) {
     console.error("[tiposAmbienteApi] Erro ao listar tipos:", error);

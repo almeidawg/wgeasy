@@ -1,17 +1,13 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogOut, User as UserIcon, Menu as MenuIcon } from "lucide-react";
+import { LogOut, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
 import NotificationBell from "@/components/layout/NotificationBell";
 import { useUsuarioLogado } from "@/hooks/useUsuarioLogado";
 import { TIPOS_USUARIO } from "@/lib/permissoesModuloApi";
 
-type TopbarProps = {
-  onToggleSidebar?: () => void;
-};
-
-export default function Topbar({ onToggleSidebar }: TopbarProps) {
+export default function Topbar() {
   const { user } = useAuth();
   const { usuario } = useUsuarioLogado();
   const navigate = useNavigate();
@@ -56,27 +52,12 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
   }
 
   return (
-    <header className="topbar">
-      <div className="topbar-left">
-        <button
-          type="button"
-          className="btn-ghost md:hidden"
-          onClick={onToggleSidebar}
-          aria-label="Abrir menu"
-        >
-          <MenuIcon size={20} />
-        </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img
-            src="/simbolo-wg.svg"
-            alt="WG"
-            style={{ height: '32px', width: 'auto' }}
-          />
-          <h1 className="topbar-title">EASY · Sistema Empresarial</h1>
-        </div>
-      </div>
+    <header className="topbar" style={{ padding: '8px 16px', minHeight: 'auto' }}>
+      {/* Espaço vazio à esquerda para manter alinhamento */}
+      <div className="topbar-left" />
 
-      <div className="flex items-center gap-2">
+      {/* Sino + Avatar + Nome + Função - tudo em linha */}
+      <div className="flex items-center gap-3">
         {/* Sino de notificações */}
         {user && <NotificationBell />}
 
@@ -84,31 +65,32 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
           <button
             type="button"
             onClick={handleUserClick}
-            className="topbar-user"
+            className="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
           >
+            {/* Avatar */}
             {user ? (
-              <div className="relative shrink-0">
-                {avatarUrl ? (
-                  <img
-                    src={avatarUrl}
-                    alt={nome}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-orange-500/30 shadow-lg ring-2 ring-orange-500/10"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center text-sm font-bold border-2 border-orange-500/30 shadow-lg ring-2 ring-orange-500/10">
-                    {iniciais}
-                  </div>
-                )}
-              </div>
+              avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={nome}
+                  className="w-9 h-9 rounded-full object-cover border-2 border-orange-500/30 shadow-md"
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center text-sm font-bold border-2 border-orange-500/30 shadow-md">
+                  {iniciais}
+                </div>
+              )
             ) : (
-              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
-                <UserIcon size={18} className="text-gray-500" />
+              <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
+                <UserIcon size={16} className="text-gray-500" />
               </div>
             )}
-            <div className="flex flex-col items-start">
-              <span className="user-name">{user ? nome : "Entrar"}</span>
+
+            {/* Nome e Função na mesma linha */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-gray-900">{user ? nome : "Entrar"}</span>
               {user && tipoUsuarioLabel && (
-                <span className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">
+                <span className="text-xs text-gray-500 font-medium">
                   {tipoUsuarioLabel}
                 </span>
               )}

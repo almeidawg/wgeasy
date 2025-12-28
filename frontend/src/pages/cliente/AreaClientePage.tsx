@@ -23,30 +23,18 @@ import {
   CheckCircle2,
   Bell,
   ChevronRight,
+  FolderOpen,
 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
-// Componentes do cliente
+// Componentes do cliente (versão simplificada)
 import OrcamentosPendentesCliente from "@/components/cliente/OrcamentosPendentesCliente";
-import OnboardingArquitetura from "@/components/cliente/OnboardingArquitetura";
-import OnboardingEngenharia from "@/components/cliente/OnboardingEngenharia";
-import OnboardingMarcenaria from "@/components/cliente/OnboardingMarcenaria";
 import ItensContratados from "@/components/cliente/ItensContratados";
 import InfoContratoCliente from "@/components/cliente/InfoContratoCliente";
 import ComentariosCliente from "@/components/cliente/ComentariosCliente";
-import SpotifyPlayer, { SpotifyFloatingButton } from "@/components/cliente/SpotifyPlayer";
-
-// Novos componentes
-import ItensEmAndamento from "@/components/cliente/ItensEmAndamento";
-import CardsStatusProjeto from "@/components/cliente/CardsStatusProjeto";
-import CardsMetricas from "@/components/cliente/CardsMetricas";
-import CardsProjetos from "@/components/cliente/CardsProjetos";
-import AssistenciaTecnicaSection from "@/components/cliente/AssistenciaTecnicaSection";
 import DiarioObra from "@/components/cliente/DiarioObra";
-import GraficosFinanceiros from "@/components/cliente/GraficosFinanceiros";
 import ControleCobrancas from "@/components/cliente/ControleCobrancas";
-import WGStoreSection from "@/components/cliente/WGStoreSection";
-import CardsDadosCliente from "@/components/cliente/CardsDadosCliente";
+import SpotifyPlayer, { SpotifyFloatingButton } from "@/components/cliente/SpotifyPlayer";
 
 import "@/styles/dashboard.css";
 
@@ -517,179 +505,34 @@ export default function AreaClientePage() {
             ))}
           </section>
 
-          {/* Onboarding por Núcleo */}
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900">Onboarding Grupo WG Almeida</h2>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {clienteInfo.nucleosContratados.map((nucleo) => (
-                <div key={nucleo} className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-                  {nucleo === 'arquitetura' && (
-                    <OnboardingArquitetura
-                      contratoId={clienteInfo.contratoId || undefined}
-                      oportunidadeId={clienteInfo.oportunidadeId}
-                      clienteId={clienteInfo.pessoaId}
-                    />
-                  )}
-                  {nucleo === 'engenharia' && (
-                    <OnboardingEngenharia
-                      contratoId={clienteInfo.contratoId || undefined}
-                      oportunidadeId={clienteInfo.oportunidadeId}
-                      clienteId={clienteInfo.pessoaId}
-                    />
-                  )}
-                  {nucleo === 'marcenaria' && (
-                    <OnboardingMarcenaria
-                      contratoId={clienteInfo.contratoId || undefined}
-                      oportunidadeId={clienteInfo.oportunidadeId}
-                      clienteId={clienteInfo.pessoaId}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Grid: Itens em Andamento + Comentários */}
-          <section className="grid gap-8 lg:grid-cols-2">
-            <ItensEmAndamento
-              clienteId={clienteInfo.pessoaId}
-              contratoId={clienteInfo.contratoId || undefined}
-            />
-            {permissoes.podeComentarem && (
-              <ComentariosCliente
-                clienteId={clienteInfo.pessoaId}
-                contratoId={clienteInfo.contratoId || undefined}
-                podeComentarem={permissoes.podeComentarem}
-              />
-            )}
-          </section>
-
-          {/* Cards de Status do Projeto */}
-          <CardsStatusProjeto
-            clienteId={clienteInfo.pessoaId}
-            contratoId={clienteInfo.contratoId || undefined}
-          />
-
-          {/* Links Rápidos */}
-          <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm space-y-5">
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-              {permissoes.podeVerProposta && (
-                <button
-                  onClick={() => navigate('/wgx/proposta')}
-                  className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-orange-200 hover:bg-orange-50 transition-all text-left group"
-                >
-                  <div className="p-2 rounded-lg bg-green-100 group-hover:bg-green-200 transition-colors">
-                    <FileCheck className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">Proposta</p>
-                    <p className="text-xs text-gray-500">Ver proposta comercial</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
-                </button>
-              )}
-              {permissoes.podeVerContratos && (
-                <button
-                  onClick={() => navigate('/wgx/contratos')}
-                  className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-orange-200 hover:bg-orange-50 transition-all text-left group"
-                >
-                  <div className="p-2 rounded-lg bg-orange-100 group-hover:bg-orange-200 transition-colors">
-                    <FileText className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">Contratos</p>
-                    <p className="text-xs text-gray-500">Acessar contratos</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
-                </button>
-              )}
-              {permissoes.podeFazerUpload && (
-                <button
-                  onClick={() => navigate('/wgx/arquivos')}
-                  className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-orange-200 hover:bg-orange-50 transition-all text-left group"
-                >
-                  <div className="p-2 rounded-lg bg-indigo-100 group-hover:bg-indigo-200 transition-colors">
-                    <Upload className="w-5 h-5 text-indigo-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">Upload</p>
-                    <p className="text-xs text-gray-500">Enviar arquivos</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
-                </button>
-              )}
-              <a
-                href="https://wgalmeida.com.br"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-orange-200 hover:bg-orange-50 transition-all text-left group"
-              >
-                <div className="p-2 rounded-lg bg-gray-100 group-hover:bg-gray-200 transition-colors">
-                  <Monitor className="w-5 h-5 text-gray-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">Site WG</p>
-                  <p className="text-xs text-gray-500">Visitar wgalmeida.com.br</p>
-                </div>
-                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
-              </a>
-            </div>
-          </section>
-
-          {/* Cards de Métricas */}
-          <CardsMetricas
-            clienteId={clienteInfo.pessoaId}
-            contratoId={clienteInfo.contratoId || undefined}
-          />
-
-          {/* Cards de Projetos */}
-          <CardsProjetos
-            clienteId={clienteInfo.pessoaId}
-            contratoId={clienteInfo.contratoId || undefined}
-          />
-
-          {/* Seção Assistência Técnica */}
-          <AssistenciaTecnicaSection
-            clienteId={clienteInfo.pessoaId}
-            contratoId={clienteInfo.contratoId || undefined}
-          />
-
-          {/* Diário de Obra */}
+          {/* ============================================================ */}
+          {/* SEÇÃO 1: DIÁRIO DE OBRA (Fotos) - PRIORITÁRIO */}
+          {/* ============================================================ */}
           <DiarioObra
             clienteId={clienteInfo.pessoaId}
             contratoId={clienteInfo.contratoId || undefined}
             oportunidadeId={clienteInfo.oportunidadeId}
           />
 
-          {/* Gráficos Financeiros */}
-          <GraficosFinanceiros
-            clienteId={clienteInfo.pessoaId}
-            contratoId={clienteInfo.contratoId || undefined}
-          />
+          {/* ============================================================ */}
+          {/* SEÇÃO 2: CONTRATO E PAGAMENTOS (Grid lado a lado) */}
+          {/* ============================================================ */}
+          <section className="grid gap-6 lg:grid-cols-2">
+            {/* Info do Contrato */}
+            {clienteInfo.contratoId && permissoes.podeVerContratos && (
+              <InfoContratoCliente contratoId={clienteInfo.contratoId} />
+            )}
 
-          {/* Controle de Cobranças */}
-          <ControleCobrancas
-            clienteId={clienteInfo.pessoaId}
-            contratoId={clienteInfo.contratoId || undefined}
-          />
+            {/* Controle de Cobranças/Pagamentos */}
+            <ControleCobrancas
+              clienteId={clienteInfo.pessoaId}
+              contratoId={clienteInfo.contratoId || undefined}
+            />
+          </section>
 
-          {/* WG Store */}
-          <WGStoreSection
-            clienteId={clienteInfo.pessoaId}
-            contratoId={clienteInfo.contratoId || undefined}
-          />
-
-          {/* Cards de Dados do Cliente */}
-          <CardsDadosCliente clienteId={clienteInfo.pessoaId} />
-
-
-          {/* Orçamentos Pendentes */}
-          <OrcamentosPendentesCliente
-            clienteId={clienteInfo.oportunidadeId.replace('CLIENTE-', '')}
-            onAprovar={carregarDadosCliente}
-          />
-
-          {/* Itens Contratados */}
+          {/* ============================================================ */}
+          {/* SEÇÃO 3: ITENS CONTRATADOS (Quantitativos) */}
+          {/* ============================================================ */}
           {clienteInfo.contratoId && permissoes.podeVerContratos && (
             <ItensContratados
               contratoId={clienteInfo.contratoId}
@@ -697,9 +540,23 @@ export default function AreaClientePage() {
             />
           )}
 
-          {/* Info Contrato */}
-          {clienteInfo.contratoId && permissoes.podeVerContratos && (
-            <InfoContratoCliente contratoId={clienteInfo.contratoId} />
+          {/* ============================================================ */}
+          {/* SEÇÃO 4: ORÇAMENTOS PENDENTES */}
+          {/* ============================================================ */}
+          <OrcamentosPendentesCliente
+            clienteId={clienteInfo.oportunidadeId.replace('CLIENTE-', '')}
+            onAprovar={carregarDadosCliente}
+          />
+
+          {/* ============================================================ */}
+          {/* SEÇÃO 5: COMENTÁRIOS (se permitido) */}
+          {/* ============================================================ */}
+          {permissoes.podeComentarem && (
+            <ComentariosCliente
+              clienteId={clienteInfo.pessoaId}
+              contratoId={clienteInfo.contratoId || undefined}
+              podeComentarem={permissoes.podeComentarem}
+            />
           )}
 
 

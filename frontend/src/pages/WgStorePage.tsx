@@ -36,7 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase, supabaseUrl } from "@/lib/supabaseClient";
 import type { PricelistItemCompleto, PricelistCategoria } from "@/types/pricelist";
 import { formatarPreco } from "@/types/pricelist";
 import BuscaProdutoInternet from "@/components/common/BuscaProdutoInternet";
@@ -330,7 +330,7 @@ export default function WgStorePage() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/buscar-produto-ia`;
+      const EDGE_FUNCTION_URL = `${supabaseUrl}/functions/v1/buscar-produto-ia`;
 
       // Primeiro tentar extrair da URL de referência se existir
       if (produto.url_referencia) {

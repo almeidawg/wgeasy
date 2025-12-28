@@ -21,6 +21,10 @@ import {
 import ContratoAtivacaoModal from "@/components/contratos/ContratoAtivacaoModal";
 import type { AtivarContratoResult } from "@/lib/workflows/contratoWorkflow";
 import { gerarContratoPDF } from "@/lib/contratoPdfUtils";
+import {
+  buscarModelosPorNucleo,
+  gerarContratoFinal,
+} from "@/lib/juridico/contratoUtils";
 
 export default function ContratoDetalhePage() {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +35,9 @@ export default function ContratoDetalhePage() {
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [mostrarModalAtivacao, setMostrarModalAtivacao] = useState(false);
+
+  // Estados para geração de contrato jurídico
+  const [gerandoContrato, setGerandoContrato] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -70,6 +77,98 @@ export default function ContratoDetalhePage() {
     setMostrarModalAtivacao(false);
     alert(resultado.mensagem);
     carregarContrato();
+  }
+
+  // Emitir contrato automaticamente - identifica núcleo e gera direto
+  async function emitirContratoAutomatico() {
+    if (!contrato) return;
+
+    setGerandoContrato(true);
+
+    try {
+      // 1. Buscar modelo para o núcleo do contrato
+      const modelos = await buscarModelosPorNucleo(contrato.unidade_negocio);
+
+      if (modelos.length === 0) {
+        alert(
+          `Nenhum modelo de contrato publicado para o núcleo "${getUnidadeNegocioLabel(contrato.unidade_negocio)}".\n\n` +
+          `Acesse o Módulo Jurídico para criar e publicar um modelo.`
+        );
+        setGerandoContrato(false);
+        return;
+      }
+
+      // 2. Usar o primeiro modelo (mais recente)
+      const modelo = modelos[0];
+
+      // 3. Gerar contrato
+      const resultado = await gerarContratoFinal(modelo.id, contrato.id);
+
+      if (resultado.sucesso && resultado.html) {
+        // 4. Abrir em nova janela para impressão
+        const janela = window.open("", "_blank");
+        if (janela) {
+          janela.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>Contrato ${contrato.numero} - ${getUnidadeNegocioLabel(contrato.unidade_negocio)}</title>
+              <style>
+                body {
+                  font-family: 'Times New Roman', serif;
+                  margin: 40px 60px;
+                  line-height: 1.8;
+                  font-size: 12pt;
+                }
+                h1, h2, h3 { font-family: Arial, sans-serif; }
+                table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+                th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+                th { background: #f5f5f5; }
+                .assinaturas { margin-top: 60px; display: flex; justify-content: space-between; }
+                .assinatura { text-align: center; width: 45%; }
+                .assinatura-linha { border-top: 1px solid #333; margin-top: 60px; padding-top: 5px; }
+                @media print {
+                  body { margin: 20px 40px; }
+                  @page { margin: 2cm; }
+                }
+              </style>
+            </head>
+            <body>
+              ${resultado.html}
+
+              <div class="assinaturas">
+                <div class="assinatura">
+                  <div class="assinatura-linha">
+                    <strong>CONTRATANTE</strong><br>
+                    ${contrato.cliente_nome || ""}
+                  </div>
+                </div>
+                <div class="assinatura">
+                  <div class="assinatura-linha">
+                    <strong>CONTRATADA</strong><br>
+                    Grupo WG Almeida
+                  </div>
+                </div>
+              </div>
+            </body>
+            </html>
+          `);
+          janela.document.close();
+
+          // Auto-print após carregar
+          setTimeout(() => {
+            janela.print();
+          }, 500);
+        }
+      } else {
+        const erros = resultado.erros?.join("\n") || "Erro ao gerar contrato";
+        alert(`Erro ao gerar contrato:\n\n${erros}`);
+      }
+    } catch (error: any) {
+      alert(`Erro ao gerar contrato:\n\n${error.message || "Erro desconhecido"}`);
+    } finally {
+      setGerandoContrato(false);
+    }
   }
 
   if (loading) {
@@ -172,6 +271,32 @@ export default function ContratoDetalhePage() {
           >
             {getStatusContratoLabel(contrato.status)}
           </span>
+
+          {/* Botão Emitir Contrato - Automático por Núcleo */}
+          <button
+            type="button"
+            onClick={emitirContratoAutomatico}
+            disabled={gerandoContrato}
+            className="px-4 py-2 bg-[#2B4580] text-white rounded-lg hover:bg-[#1e3260] font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-wait"
+            title={`Emitir contrato do núcleo ${getUnidadeNegocioLabel(contrato.unidade_negocio)}`}
+          >
+            {gerandoContrato ? (
+              <>
+                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Gerando...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Emitir Contrato
+              </>
+            )}
+          </button>
 
           {/* Ações Rápidas */}
           <div className="flex items-center gap-2 border-l pl-3">
@@ -570,6 +695,7 @@ export default function ContratoDetalhePage() {
           onSuccess={handleAtivacaoSucesso}
         />
       )}
+
     </div>
   );
 }

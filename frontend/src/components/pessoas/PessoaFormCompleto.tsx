@@ -102,18 +102,18 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
   const [especificadoresMaster, setEspecificadoresMaster] = useState<EspecificadorMaster[]>([]);
   const [loadingComissao, setLoadingComissao] = useState(false);
 
-  // Carregar dados de comissionamento para especificadores
+  // Carregar dados de comissionamento para especificadores e colaboradores
   useEffect(() => {
-    if (tipo === "ESPECIFICADOR") {
+    if (tipo === "ESPECIFICADOR" || tipo === "COLABORADOR") {
       setLoadingComissao(true);
       Promise.all([
         listarCategoriasComissao(),
         listarEspecificadoresMaster(),
       ])
         .then(([cats, masters]) => {
-          // Filtrar apenas categorias de especificador
-          const catsEspecificador = cats.filter(c => c.tipo_pessoa === "ESPECIFICADOR");
-          setCategoriasComissao(catsEspecificador);
+          // Filtrar categorias pelo tipo de pessoa atual
+          const catsRelevantes = cats.filter(c => c.tipo_pessoa === tipo);
+          setCategoriasComissao(catsRelevantes);
           setEspecificadoresMaster(masters);
         })
         .catch((error) => {
@@ -612,8 +612,8 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
         </div>
       )}
 
-      {/* Comissionamento - apenas para Especificadores */}
-      {tipo === "ESPECIFICADOR" && (
+      {/* Comissionamento - para Especificadores e Colaboradores */}
+      {(tipo === "ESPECIFICADOR" || tipo === "COLABORADOR") && (
         <div className="bg-white p-6 rounded-lg border shadow-sm">
           <h2 className="text-lg font-semibold mb-4 text-gray-800">Comissionamento</h2>
           {loadingComissao ? (
@@ -637,7 +637,7 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
                   ))}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  Define o percentual de comissão que este especificador receberá
+                  Define o percentual de comissão que este {tipo === "ESPECIFICADOR" ? "especificador" : "colaborador"} receberá
                 </p>
               </div>
 
@@ -660,7 +660,7 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
                     ))}
                   </select>
                   <p className="text-xs text-gray-500 mt-1">
-                    O Master recebe uma comissão adicional sobre as vendas deste especificador
+                    O Master recebe uma comissão adicional sobre as vendas deste {tipo === "ESPECIFICADOR" ? "especificador" : "colaborador"}
                   </p>
                 </div>
               )}

@@ -15,15 +15,15 @@ export interface MenuSection {
   icon: string;
   items: MenuItem[];
   maxVisible?: number; // Limite de itens visíveis antes do "Ver mais"
+  path?: string; // Caminho direto ao clicar no título da seção
 }
 
 const wgMenus: MenuSection[] = [
   {
     section: "Dashboard",
     icon: "📊",
-    items: [
-      { label: "Dashboard", path: "/" }
-    ]
+    path: "/", // Clique no título navega direto para o Dashboard
+    items: []
   },
   {
     section: "Pessoas",
@@ -39,9 +39,8 @@ const wgMenus: MenuSection[] = [
   {
     section: "Oportunidades",
     icon: "🎯",
-    items: [
-      { label: "Oportunidades", path: "/oportunidades" }
-    ]
+    path: "/oportunidades", // Clique no título navega direto
+    items: []
   },
   {
     section: "Comercial",
@@ -66,8 +65,10 @@ const wgMenus: MenuSection[] = [
   {
     section: "Planejamento",
     icon: "📋",
-    maxVisible: 4,
+    maxVisible: 6,
     items: [
+      { label: "Orçamento de Materiais", path: "/planejamento/orcamentos/materiais" },
+      { label: "Composições", path: "/planejamento/orcamentos/composicoes" },
       { label: "Modelos de Orçamento", path: "/planejamento/orcamentos/modelos" },
       { label: "Orçamentos", path: "/planejamento/orcamentos" },
       { label: "Aprovações", path: "/planejamento/aprovacoes" },
@@ -77,20 +78,17 @@ const wgMenus: MenuSection[] = [
   {
     section: "Cronograma",
     icon: "📅",
-    maxVisible: 4,
+    path: "/cronograma", // Clique no título navega direto para o Dashboard
     items: [
-      { label: "Dashboard", path: "/cronograma" },
-      { label: "Projetos", path: "/cronograma/projects" },
-      { label: "Equipes", path: "/cronograma/teams" },
-      { label: "Gráficos", path: "/cronograma/graficos" }
+      { label: "Projetos", path: "/cronograma/projects" }
     ]
   },
   {
     section: "Financeiro",
     icon: "💰",
-    maxVisible: 8,
+    maxVisible: 7,
+    path: "/financeiro", // Clique no título navega direto para o Dashboard
     items: [
-      { label: "Dashboard", path: "/financeiro" },
       { label: "Projetos", path: "/financeiro/obras" },
       { label: "Lançamentos", path: "/financeiro/lancamentos" },
       { label: "SDP - Solicitações", path: "/financeiro/solicitacoes" },
@@ -101,11 +99,38 @@ const wgMenus: MenuSection[] = [
     ]
   },
   {
-    section: "Depósito WG",
-    icon: "📦",
+    section: "Jurídico",
+    icon: "⚖️",
+    path: "/juridico", // Clique no título navega direto
     items: [
-      { label: "Depósito", path: "/deposito" }
+      { label: "Empresas do Grupo WG", path: "/juridico/empresas" },
+      { label: "Modelos de Contrato", path: "/juridico/modelos" }
     ]
+  },
+  {
+    section: "Área WGXperience",
+    icon: "⭐",
+    items: [
+      { label: "Portal do Cliente", path: "/portal-cliente" },
+      { label: "Cadastro de Clientes", path: "/sistema/area-cliente/clientes" },
+      { label: "Drive Compartilhado", path: "/sistema/area-cliente/drive" }
+    ]
+  },
+  {
+    section: "Pós Vendas",
+    icon: "🛠️",
+    maxVisible: 3,
+    items: [
+      { label: "Assistência", path: "/assistencia" },
+      { label: "Termo de Aceite", path: "/termo-aceite" },
+      { label: "Garantia", path: "/garantia" }
+    ]
+  },
+  {
+    section: "Onboarding",
+    icon: "🚀",
+    path: "/onboarding", // Clique no título navega direto
+    items: []
   },
   {
     section: "WG Store",
@@ -116,29 +141,10 @@ const wgMenus: MenuSection[] = [
     ]
   },
   {
-    section: "Área WGXperience",
-    icon: "⭐",
-    items: [
-      { label: "Portal do Cliente", path: "/area-cliente" },
-      { label: "Jornada do Cliente", path: "/wg-experience/clientes" },
-      { label: "Cadastro de Clientes", path: "/sistema/area-cliente/clientes" },
-      { label: "Drive Compartilhado", path: "/sistema/area-cliente/drive" }
-    ]
-  },
-  {
-    section: "Onboarding",
-    icon: "🚀",
-    items: [
-      { label: "Onboarding", path: "/onboarding" }
-    ]
-  },
-  {
-    section: "Jurídico",
-    icon: "⚖️",
-    items: [
-      { label: "Dashboard Jurídico", path: "/juridico" },
-      { label: "Modelos de Contrato", path: "/juridico/modelos" }
-    ]
+    section: "Depósito WG",
+    icon: "📦",
+    path: "/deposito", // Clique no título navega direto
+    items: []
   },
   {
     section: "Sistema",
@@ -159,21 +165,10 @@ const wgMenus: MenuSection[] = [
     ]
   },
   {
-    section: "Pós Vendas",
-    icon: "🛠️",
-    maxVisible: 3,
-    items: [
-      { label: "Assistência", path: "/assistencia" },
-      { label: "Termo de Aceite", path: "/termo-aceite" },
-      { label: "Garantia", path: "/garantia" }
-    ]
-  },
-  {
     section: "Sessão",
     icon: "🚪",
-    items: [
-      { label: "Sair", path: "/logout" }
-    ]
+    path: "/logout", // Clique no título faz logout direto
+    items: []
   }
 ];
 

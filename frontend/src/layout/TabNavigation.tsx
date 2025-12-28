@@ -158,7 +158,7 @@ export function TabNavigation() {
                   fecharAba(tab.path);
                 }}
               >
-                <X size={13} />
+                <X size={10} />
               </button>
             </div>
           ))}

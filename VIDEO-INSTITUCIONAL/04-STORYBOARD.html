@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storyboard - Video Institucional WG Easy</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+      color: #2E2E2E;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #F25C26;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .timeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .timeline-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 12px;
+    }
+
+    .timeline-time {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .timeline-bar {
+      height: 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .timeline-bar.c1 { width: 60px; background: #F25C26; }
+    .timeline-bar.c2 { width: 75px; background: #1a1a2e; }
+    .timeline-bar.c3 { width: 75px; background: #2d2d44; }
+    .timeline-bar.c4 { width: 75px; background: #2d442d; }
+    .timeline-bar.c5 { width: 90px; background: #2B4580; }
+    .timeline-bar.c6 { width: 75px; background: #4C4C4C; }
+    .timeline-bar.c7 { width: 90px; background: #1a2e1a; }
+    .timeline-bar.c8 { width: 60px; background: #F25C26; }
+
+    .timeline-label {
+      font-size: 10px;
+      color: #666;
+      text-align: center;
+      max-width: 70px;
+    }
+
+    .total-time {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #F25C26;
+      margin-top: 20px;
+    }
+
+    .storyboard {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+
+    .scene {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .scene-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .scene-number {
+      background: #F25C26;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .scene-time {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .scene-time strong {
+      color: #F25C26;
+    }
+
+    .scene-preview {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .scene-preview.s1 { background: linear-gradient(135deg, #F25C26, #e04a1a); }
+    .scene-preview.s2 { background: linear-gradient(180deg, #1a1a2e, #0f0f1a); color: white; }
+    .scene-preview.s3 { background: #f5f5f5; }
+    .scene-preview.s4 { background: linear-gradient(135deg, #1e2f1e, #2d442d); }
+    .scene-preview.s5 { background: linear-gradient(135deg, #2B4580, #1a2d54); }
+    .scene-preview.s6 { background: #4C4C4C; }
+    .scene-preview.s7 { background: linear-gradient(135deg, #1a2e1a, #0f1f0f); }
+    .scene-preview.s8 { background: linear-gradient(135deg, #F25C26, #e04a1a); }
+
+    .scene-content {
+      padding: 20px;
+    }
+
+    .scene-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .scene-description {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .scene-narracao {
+      background: #f9f9f9;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-style: italic;
+      color: #555;
+      border-left: 3px solid #F25C26;
+    }
+
+    .scene-visual {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: #e8f4ff;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #2B4580;
+    }
+
+    .scene-visual strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #1a2d54;
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #888;
+      font-size: 12px;
+    }
+
+    @media print {
+      body {
+        padding: 20px;
+      }
+      .scene {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>STORYBOARD</h1>
+  <p>Video Institucional WG Easy - Grupo WG Almeida</p>
+</div>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-time">0:00</div>
+    <div class="timeline-bar c1"></div>
+    <div class="timeline-label">Abertura</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">0:08</div>
+    <div class="timeline-bar c2"></div>
+    <div class="timeline-label">Problema</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">0:18</div>
+    <div class="timeline-bar c3"></div>
+    <div class="timeline-label">Dashboard</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">0:28</div>
+    <div class="timeline-bar c4"></div>
+    <div class="timeline-label">Pessoas</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">0:38</div>
+    <div class="timeline-bar c5"></div>
+    <div class="timeline-label">Pipeline</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">0:50</div>
+    <div class="timeline-bar c6"></div>
+    <div class="timeline-label">Nucleos</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">1:00</div>
+    <div class="timeline-bar c7"></div>
+    <div class="timeline-label">Financeiro</div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-time">1:12</div>
+    <div class="timeline-bar c8"></div>
+    <div class="timeline-label">Fim</div>
+  </div>
+</div>
+
+<div class="total-time">Duracao Total: 1:20 (80 segundos)</div>
+
+<div class="storyboard">
+
+  <!-- CENA 1 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">1</div>
+      <div class="scene-time"><strong>0:00 - 0:08</strong> (8s)</div>
+    </div>
+    <div class="scene-preview s1">
+      <span style="color:white;font-weight:800;font-size:64px;">WG</span>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">ABERTURA</div>
+      <div class="scene-description">
+        Fade in do logo WG Almeida sobre fundo gradiente laranja.
+        Animacao suave de entrada com tagline.
+      </div>
+      <div class="scene-narracao">
+        "WG Easy. O sistema completo de gestao para o Grupo WG Almeida."
+      </div>
+      <div class="scene-visual">
+        <strong>Elementos visuais:</strong>
+        Logo grande, fundo laranja, texto branco
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 2 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">2</div>
+      <div class="scene-time"><strong>0:08 - 0:18</strong> (10s)</div>
+    </div>
+    <div class="scene-preview s2">
+      <span>📊 📋 💰</span>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">O PROBLEMA</div>
+      <div class="scene-description">
+        Icones animados representando desafios: planilhas, documentos,
+        financas. Transicao para fundo escuro.
+      </div>
+      <div class="scene-narracao">
+        "Gerenciar projetos de arquitetura, engenharia e marcenaria exige controle total.
+        Clientes, propostas, contratos, financeiro... tudo integrado."
+      </div>
+      <div class="scene-visual">
+        <strong>Elementos visuais:</strong>
+        Fundo escuro, icones animados, texto destacado
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 3 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">3</div>
+      <div class="scene-time"><strong>0:18 - 0:28</strong> (10s)</div>
+    </div>
+    <div class="scene-preview s3">
+      <div style="background:white;padding:20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+        <span style="font-size:24px;">📊</span>
+        <span style="font-size:16px;color:#2E2E2E;margin-left:10px;">Dashboard</span>
+      </div>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">DASHBOARD</div>
+      <div class="scene-description">
+        Mockup do navegador com o Dashboard do sistema.
+        Zoom suave nos KPIs e graficos.
+      </div>
+      <div class="scene-narracao">
+        "Com o WG Easy, voce tem visao completa do seu negocio em um unico lugar.
+        Dashboard executivo com metricas em tempo real."
+      </div>
+      <div class="scene-visual">
+        <strong>Tela:</strong> / (Dashboard principal)
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 4 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">4</div>
+      <div class="scene-time"><strong>0:28 - 0:38</strong> (10s)</div>
+    </div>
+    <div class="scene-preview s4">
+      <span style="color:white;">👥 👔 🏢 🎨</span>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">GESTAO DE PESSOAS</div>
+      <div class="scene-description">
+        Cards representando os 4 tipos de pessoas: Clientes,
+        Colaboradores, Fornecedores, Especificadores.
+      </div>
+      <div class="scene-narracao">
+        "Cadastro completo de clientes, colaboradores e fornecedores.
+        Historico de propostas, contratos e obras em um so lugar."
+      </div>
+      <div class="scene-visual">
+        <strong>Telas:</strong> /pessoas/clientes, /pessoas/clientes/:id
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 5 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">5</div>
+      <div class="scene-time"><strong>0:38 - 0:50</strong> (12s)</div>
+    </div>
+    <div class="scene-preview s5">
+      <div style="display:flex;gap:10px;color:white;">
+        <div style="background:rgba(255,255,255,0.2);padding:15px;border-radius:8px;">Lead</div>
+        <div style="background:rgba(255,255,255,0.2);padding:15px;border-radius:8px;">Proposta</div>
+        <div style="background:rgba(255,255,255,0.2);padding:15px;border-radius:8px;">Fechamento</div>
+      </div>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">PIPELINE COMERCIAL</div>
+      <div class="scene-description">
+        Kanban de oportunidades com cards sendo arrastados.
+        Demonstracao visual do fluxo comercial.
+      </div>
+      <div class="scene-narracao">
+        "Acompanhe cada oportunidade do primeiro contato ate o fechamento.
+        Crie propostas profissionais e converta em contratos com um clique."
+      </div>
+      <div class="scene-visual">
+        <strong>Telas:</strong> /oportunidades, /propostas, /contratos
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 6 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">6</div>
+      <div class="scene-time"><strong>0:50 - 1:00</strong> (10s)</div>
+    </div>
+    <div class="scene-preview s6">
+      <div style="display:flex;gap:15px;">
+        <div style="width:60px;height:60px;background:#5E9B94;border-radius:12px;display:flex;align-items:center;justify-content:center;">🏛️</div>
+        <div style="width:60px;height:60px;background:#2B4580;border-radius:12px;display:flex;align-items:center;justify-content:center;">⚙️</div>
+        <div style="width:60px;height:60px;background:#8B5E3C;border-radius:12px;display:flex;align-items:center;justify-content:center;">🪵</div>
+      </div>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">NUCLEOS DE NEGOCIO</div>
+      <div class="scene-description">
+        Tres cards coloridos representando Arquitetura, Engenharia
+        e Marcenaria com suas cores caracteristicas.
+      </div>
+      <div class="scene-narracao">
+        "Tres nucleos integrados: Arquitetura, Engenharia e Marcenaria.
+        Cada um com seu fluxo de trabalho, mas todos conectados."
+      </div>
+      <div class="scene-visual">
+        <strong>Cores:</strong> Verde #5E9B94, Azul #2B4580, Marrom #8B5E3C
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 7 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">7</div>
+      <div class="scene-time"><strong>1:00 - 1:12</strong> (12s)</div>
+    </div>
+    <div class="scene-preview s7">
+      <div style="display:flex;gap:15px;align-items:flex-end;">
+        <div style="width:30px;height:60px;background:#F25C26;border-radius:4px 4px 0 0;"></div>
+        <div style="width:30px;height:80px;background:#F25C26;border-radius:4px 4px 0 0;"></div>
+        <div style="width:30px;height:50px;background:#F25C26;border-radius:4px 4px 0 0;"></div>
+        <div style="width:30px;height:100px;background:#F25C26;border-radius:4px 4px 0 0;"></div>
+      </div>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">FINANCEIRO E CRONOGRAMA</div>
+      <div class="scene-description">
+        Dashboard financeiro com graficos de barras animados.
+        KPIs de receita, despesa e lucro.
+      </div>
+      <div class="scene-narracao">
+        "Controle financeiro completo com fluxo de caixa, cobrancas e comissoes.
+        Cronograma de projetos com visao de Gantt e acompanhamento em tempo real."
+      </div>
+      <div class="scene-visual">
+        <strong>Telas:</strong> /financeiro, /cronograma, /cronograma/timeline
+      </div>
+    </div>
+  </div>
+
+  <!-- CENA 8 -->
+  <div class="scene">
+    <div class="scene-header">
+      <div class="scene-number">8</div>
+      <div class="scene-time"><strong>1:12 - 1:20</strong> (8s)</div>
+    </div>
+    <div class="scene-preview s8">
+      <span style="color:white;font-weight:800;font-size:48px;">WG EASY</span>
+    </div>
+    <div class="scene-content">
+      <div class="scene-title">ENCERRAMENTO</div>
+      <div class="scene-description">
+        Logo centralizado com tagline e site.
+        Fade out suave.
+      </div>
+      <div class="scene-narracao">
+        "WG Easy. Gestao integrada para quem constroi o futuro."
+      </div>
+      <div class="scene-visual">
+        <strong>Texto final:</strong> wgalmeida.com.br
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>WG Easy - Video Institucional | Storyboard de Producao</p>
+  <p>Duracao: 1:20 | Resolucao: 1920x1080 | Formato: MP4</p>
+</div>
+
+</body>
+</html>

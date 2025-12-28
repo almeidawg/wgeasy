@@ -3,7 +3,7 @@
 // Sistema WG Easy - Importação de produtos com IA e Web Search
 // ============================================================
 
-import { supabase } from "./supabaseClient";
+import { supabase, supabaseUrl } from "./supabaseClient";
 
 export interface ProdutoImportado {
   titulo: string;
@@ -20,7 +20,7 @@ export interface ProdutoImportado {
 }
 
 // URL da Edge Function para chamadas IA (evita CORS)
-const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/buscar-produto-ia`;
+const EDGE_FUNCTION_URL = `${supabaseUrl}/functions/v1/buscar-produto-ia`;
 
 /**
  * Importa produto usando IA para extrair dados
@@ -36,35 +36,23 @@ export async function importarProdutoPorLink(url: string): Promise<ProdutoImport
       return await importarMercadoLivre(url);
     }
 
-    // Para outros sites, tentar múltiplos métodos
-    let produto: ProdutoImportado | null = null;
-
-    // Método 1: Tentar proxy CORS (mais rápido se funcionar)
+    // Para outros sites, usar extração automática via proxy (SEM IA)
+    // A opção de IA é separada e escolhida pelo usuário
     try {
-      produto = await importarViaProxy(url, hostname);
-      if (produto && produto.preco > 0) {
+      const produto = await importarViaProxy(url, hostname);
+      if (produto && produto.titulo) {
         return produto;
       }
     } catch (e) {
-      console.log('Proxy CORS falhou, tentando IA...');
+      console.log('Proxy CORS falhou:', e);
     }
 
-    // Método 2: Usar IA com web search para extrair dados (via Edge Function)
-    try {
-      produto = await importarViaIA(url, hostname);
-      if (produto && produto.titulo !== 'Produto não encontrado') {
-        return produto;
-      }
-    } catch (e) {
-      console.log('IA falhou, usando fallback...');
-    }
-
-    // Método 3: Fallback com dados básicos
+    // Fallback com dados básicos (sem IA)
     return {
       titulo: `Produto de ${getSiteName(hostname)}`,
       preco: 0,
       url_origem: url,
-      descricao: 'Não foi possível extrair dados automaticamente. Por favor, preencha manualmente.'
+      descricao: 'Não foi possível extrair dados automaticamente. Por favor, preencha manualmente ou use a busca com IA.'
     };
 
   } catch (error) {

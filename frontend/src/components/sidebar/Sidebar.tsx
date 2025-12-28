@@ -1,6 +1,6 @@
 // Sidebar com suporte a mobile (off-canvas) e seções recolhidas
 import { useMemo, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import wgMenus, { MenuSection } from "@/config/wg-menus";
 import "@/styles/wg-sidebar.css";
 import { useUsuarioLogado } from "@/hooks/useUsuarioLogado";
@@ -124,6 +124,8 @@ export default function Sidebar({ open = false, onToggle }: SidebarProps) {
   // começa recolhido por padrão
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const { usuario } = useUsuarioLogado();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Filtrar menus baseado no tipo de usuário
   const sortedMenus = useMemo(() => {
@@ -141,11 +143,28 @@ export default function Sidebar({ open = false, onToggle }: SidebarProps) {
     return wgMenus;
   }, [usuario?.tipo_usuario]);
 
-  const toggleSection = (section: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [section]: !(prev[section] ?? false),
-    }));
+  const toggleSection = (section: string, path?: string, hasItems?: boolean) => {
+    // Se a seção tiver um path, navega para ele
+    if (path) {
+      navigate(path);
+      // Em mobile, fecha o menu após navegar
+      if (open && onToggle) {
+        onToggle();
+      }
+    }
+    // Só expande/recolhe se tiver itens no submenu
+    if (hasItems) {
+      setOpenSections((prev) => ({
+        ...prev,
+        [section]: !(prev[section] ?? false),
+      }));
+    }
+  };
+
+  // Verifica se a seção está ativa (baseado no path atual)
+  const isSectionActive = (sectionPath?: string) => {
+    if (!sectionPath) return false;
+    return location.pathname === sectionPath || location.pathname.startsWith(sectionPath + '/');
   };
 
   return (
@@ -171,13 +190,14 @@ export default function Sidebar({ open = false, onToggle }: SidebarProps) {
 
       {sortedMenus.map((section) => {
         const isOpen = openSections[section.section] ?? false;
+        const hasItems = section.items.length > 0;
         return (
           <div key={section.section} className="wg-sidebar-section">
             <button
               type="button"
-              className={`wg-sidebar-section-head ${isOpen ? 'expanded' : ''}`}
-              onClick={() => toggleSection(section.section)}
-              aria-expanded={isOpen ? "true" : "false"}
+              className={`wg-sidebar-section-head ${isOpen && hasItems ? 'expanded' : ''} ${section.path && isSectionActive(section.path) ? 'active' : ''}`}
+              onClick={() => toggleSection(section.section, section.path, hasItems)}
+              aria-expanded={isOpen && hasItems ? "true" : "false"}
             >
               <span className="wg-sidebar-head-left">
                 <span className="wg-sidebar-head-icon">
@@ -187,10 +207,10 @@ export default function Sidebar({ open = false, onToggle }: SidebarProps) {
                   {section.section}
                 </span>
               </span>
-              {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              {hasItems && (isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
             </button>
 
-            {isOpen && (
+            {isOpen && hasItems && (
               <div className="wg-sidebar-items">
                 {section.items.map((item) => (
                   <NavLink
