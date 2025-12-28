@@ -1,0 +1,987 @@
+[
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Protetor de Quina 1,20mx5cm Salva Quina",
+    "preco": 12.29
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Protetor de Ralo e Tubulações 10cm Salva Ralo",
+    "preco": 3.89
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Protetor de Piso 25x1m Salva Piso",
+    "preco": 189.9
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Proteção de Pisos e Bancadas Salva Obra Papelão Reforçado 1,2x25m 300g Salvabras",
+    "preco": 95.9
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Bobina Papel Ondulado com 50 metros",
+    "preco": 179.9
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Saco alvejado de pano",
+    "preco": 10.99
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Fita Crepe Branca 48mm x 50m",
+    "preco": 13.95
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Fita Crepe Branca 24mm x 50m",
+    "preco": 8.5
+  },
+  {
+    "categoria": "PRÉ OBRA",
+    "descricao": "Vassoura Original Noviça Concept Bettanin",
+    "preco": 24.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Argamassa Polimérica Impermeabilizante Viapol Viaplus 5000 Fibras 18kg Cinza",
+    "preco": 169.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Argamassa Polimérica Impermeabilizante Viapol Viaplus 7000 Fibras 18kg Cinza",
+    "preco": 219.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Aditivo para Chapisco Bianco 18kg Branco Vedacit",
+    "preco": 259.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Areia fina/média saco  20 Kg",
+    "preco": 4.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Pedra Britada 1 Saco de 20kg",
+    "preco": 4.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Cimento CP II F 32 Todas as Obras 50kg Votoran",
+    "preco": 31.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Gesso em Pó - 40kg",
+    "preco": 43.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Argila Expandida - 50 Litros",
+    "preco": 37.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Chapa de Madeira Compensado Resinado 9mm",
+    "preco": 114.9
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Caixa De Luz Quadrada 4x4",
+    "preco": 6.89
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Caixa De Luz Quadrada 4x2",
+    "preco": 2.493
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Caixa De Luz Quadrada 4x2 Drywall",
+    "preco": 3.49
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Tijolo Comum de Barro 4,3x9,1x18cm 10 Unidades",
+    "preco": 0.89
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Bloco Cerâmico Vedação 11,5x14x24cm",
+    "preco": 1.69
+  },
+  {
+    "categoria": "MATERIAL CINZA",
+    "descricao": "Sacos para Entulho",
+    "preco": 4.5
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Cano Marrom PVC Soldável 25mm ou 3/4\" 3m",
+    "preco": 15.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Joelho 45° Marrom PVC Soldável 25mm ou 3/4\"",
+    "preco": 2.19
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Joelho 90° Marrom PVC Soldável 25mm ou 3/4\"",
+    "preco": 1.09
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Joelho 90° com Bucha PVC Azul Roscável e Soldável 3/4x1/2\" 25x20mm",
+    "preco": 4.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Plug PVC Branco Roscável 1/2\" 20mm Plastilit",
+    "preco": 0.78
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Plug PVC Branco Roscável 3/4\" 25mm Plastilit",
+    "preco": 1.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Cano PVC para Esgoto 40mm ou 1.1/4\" 3m Tigre",
+    "preco": 21.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Joelho 45° Branco PVC Soldável 40mm",
+    "preco": 2.0
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Joelho 90° Branco PVC Soldável 40mm",
+    "preco": 3.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Mangueira Flexível 60cm 1/2 Polegada Aço Inox Engate Fêmea X Fêmea Cozinha Banheiro Torneira Pia Sanitário",
+    "preco": 16.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Fita Veda Rosca 18mmx25m Tigre",
+    "preco": 4.95
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Cola para PVC Incolor Frasco 175g Tigre",
+    "preco": 22.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Cano CPVC para Água Quente 22mm ou 3/4\" 3m Aquatherm Tigre",
+    "preco": 63.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Joelho 90° CPVC Liso para Condução de Água Quente 22mm ou 3/4\" Aquatherm Tigre",
+    "preco": 3.99
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Joelho de Transição CPVC Roscável e Liso para Condução de Água Quente 22mm ou 3/4\" Aquatherm  Rosca 1/2",
+    "preco": 11.53
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Tê 90° CPVC Liso para Condução de Água Quente 22mm ou 3/4\" Aquatherm Tigre",
+    "preco": 5.05
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Torneira Registro Esfera Maquina Tanque 1/4 De Volta Torneira Esferica Borboleta Metal",
+    "preco": 34.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Cola para CPVC Frasco 175g Aquatherm Tigre",
+    "preco": 53.9
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Abraçadeira 3/4\" Cinza",
+    "preco": 1.29
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Abraçadeira 1/2\" Cinza",
+    "preco": 11.79
+  },
+  {
+    "categoria": "HIDRAULICA",
+    "descricao": "Abracadeira Pvc Branco Pro 1\"",
+    "preco": 0.72
+  },
+  {
+    "categoria": "GÁS",
+    "descricao": "Tubo Pex 20mm Para Gás 10 Metros Amanco",
+    "preco": 125.32
+  },
+  {
+    "categoria": "GÁS",
+    "descricao": "Cotovelo 20 Mm X 20 Mm Para Tubo Pex 20mm De Gás",
+    "preco": 31.01
+  },
+  {
+    "categoria": "GÁS",
+    "descricao": "União Metálica 16 Pex Gás Amanco",
+    "preco": 29.05
+  },
+  {
+    "categoria": "GÁS",
+    "descricao": "Cotovelo Multicamadas Pex Gás 16mm X 1/2\"",
+    "preco": 31.8
+  },
+  {
+    "categoria": "GÁS",
+    "descricao": "Cotovelo Multicamadas Pex Gás 16mm X 1/2\"(f) Com Suporte",
+    "preco": 45.3
+  },
+  {
+    "categoria": "GÁS",
+    "descricao": "Tee Metálico 16 Pex Gás Amanco",
+    "preco": 38.15
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Conduíte Corrugado 3/4''     50 Metros",
+    "preco": 88.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Conduíte Corrugado 1\"                   25 Metros",
+    "preco": 81.75
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Abraçadeira D com Cunha para Instalações Hidráulicas e Elétricas 3/4\" Aço Zincado",
+    "preco": 1.6
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Abraçadeira D com Cunha para Instalações Hidráulicas e Elétricas 1/2\" Aço Zincado",
+    "preco": 1.3
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Amarelo Rolo 50 Metros - Ilumnação",
+    "preco": 139.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Branco Rolo 50 Metros - Ilumnação",
+    "preco": 139.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Amarelo Rolo 100 Metros - Ilumnação",
+    "preco": 139.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Branco Rolo 100 Metros - Ilumnação",
+    "preco": 139.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Cabo Flexível 2,5mm 100Metros Azul 750V - Neutro Ilumnação",
+    "preco": 209.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Cabo Flexível 2,5mm 100Metros Verde 750V - Terra",
+    "preco": 209.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Cabo Flexível 4mm 100Metros Preto 750V SIL Fios",
+    "preco": 345.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Cabo Flexível 4mm 100Metros Vermelho 750V SIL Fios",
+    "preco": 345.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Quadro De Distribuição 18/24 + Barramentos Embutir Tigre",
+    "preco": 383.0
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Caixa de Distribuição de Embutir com Barramento 27/36 Disjuntores Tigre",
+    "preco": 669.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor DR Tripola 63A/30MA Steck",
+    "preco": 269.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "DPS Monopolar 45000A Front 275V Clamper",
+    "preco": 59.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Monopolar Curva C 16A Steck",
+    "preco": 11.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Monopolar Curva A 20A Steck",
+    "preco": 11.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Monopolar Curva A 32A Steck",
+    "preco": 11.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Bipolar Curva A 16A Steck",
+    "preco": 38.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Bipolar Curva A 20A Steck",
+    "preco": 38.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Bipolar Curva C 25A Steck",
+    "preco": 44.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Bipolar Curva A 32A Steck",
+    "preco": 44.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Monopolar Curva A 40A Steck",
+    "preco": 44.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Disjuntor Din Bipolar Curva C 63A Steck",
+    "preco": 51.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Suporte para Placa 4x2 Horizontal Plus Pial Legrand",
+    "preco": 4.19
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Suporte para Placa 4x2 Vertical Pial Plus Pial Legrand",
+    "preco": 5.59
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Suporte para Placa 4x4 Pial Plus Pial Legrand",
+    "preco": 8.39
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa sem Suporte 4x2 Horizontal 1Módulo Branco Pial Plus Pial Legrand",
+    "preco": 11.29
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa sem Suporte 4x2 Vertical 1 Módulo Branco Pial Plus Legrand",
+    "preco": 11.29
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa sem Suporte 4x2 2 Módulos Branco Pial Plus Legrand",
+    "preco": 11.29
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa sem Suporte 4x2 3 Módulos Branco Pial Plus Legrand",
+    "preco": 11.29
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa Cega 4x2 Branco Pial Plus Pial Legrand",
+    "preco": 11.29
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa sem Suporte 4x4 2 Módulos Branco Pial Plus Legrand",
+    "preco": 32.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa 4 Módulos + Suporte 4x4 - Pial Plus",
+    "preco": 28.14
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa 6 Módulos 4x4 - Pial Plus",
+    "preco": 22.46
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Placa sem Suporte Cega 4x4 Branco Pial Plus Pial Legrand",
+    "preco": 32.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Módulo de Interruptor Simples 10A Pial Plus Pial Legrand",
+    "preco": 19.99
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Módulo de Interruptor Paralelo 10A Pial Plus Pial Legrand",
+    "preco": 29.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Módulo de Interruptor Intermediário 10A Pial Plus Pial Legrand",
+    "preco": 99.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Módulo de Tomada de Energia 10A Pial PlusPial Legrand",
+    "preco": 21.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Módulo de Tomada de Energia 20A Pial PlusPial Legrand",
+    "preco": 21.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Módulo de Tomada de Energia 20A Vermelho Pial PlusPial Legrand",
+    "preco": 21.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Conjunto 1 Tomada Energia 10A 4x2 Branco Pial Plus Legrand",
+    "preco": 23.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Conjunto 1 Tomada Energia 20A 4x2 Branco Pial Plus Legrand",
+    "preco": 41.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Conjunto 2 Tomadas Energia 10A 4x2 Branco Pial Plus Legrand",
+    "preco": 92.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Conjunto 2 Interruptores Simples - Pial Plus - 612100",
+    "preco": 57.32
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Conjunto 1 Tomada e 1 Interruptor Energia Simples 10A 4x2 Branco Pial Plus Legrand",
+    "preco": 69.9
+  },
+  {
+    "categoria": "ELÉTRICA",
+    "descricao": "Módulo Dimmer Bivolt- Branco - Pial Plus",
+    "preco": 110.83
+  },
+  {
+    "categoria": "AUTOMAÇÃO",
+    "descricao": "Cabo De Rede Cat6 Cmx Cx 305m Azul Sohoplus",
+    "preco": 1219.9
+  },
+  {
+    "categoria": "AUTOMAÇÃO",
+    "descricao": "Fio Som Cristal 2x12 -2,50 100m Alum Cobreado",
+    "preco": 277.38
+  },
+  {
+    "categoria": "AUTOMAÇÃO",
+    "descricao": "Conduíte Corrugado 3/4''     50 Metros",
+    "preco": 28.448
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Cunha Para Azulejo - C/ 100 Peças Niveladora para Piso",
+    "preco": 15.83
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Espaçador Nivelador 1,0mm Smart Cortag Pacote com 100 Unidades",
+    "preco": 28.9
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Espaçador Plástico 1,0mm (Embalagem com 100 peças) Cruszeta",
+    "preco": 4.61
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Kit Com 10 Barras Rodapé Liso 10cmx1,5cmx220cm Mdf Revestido Casablanca 33m Branco",
+    "preco": 244.2
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Kit Com 10 Barras Rodapé De Mdf 15cm X 15mm X 2.20m Revestido Liso Casablanca 22m Branco",
+    "preco": 322.0
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Kit Com 10 Barras Rodapé De Mdf 15cm X 15mm X 2.20m Mdf Revestido Frisado Casablanca 22m Branco",
+    "preco": 322.0
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Cola para Rodapé Balde 5Kg Santa Luzia",
+    "preco": 299.9
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Piso Laminado com rodapé de 10 cm",
+    "preco": 295.29
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Piso Vinilico  com rodapé de 10 cm",
+    "preco": 295.29
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Piso de Madeira Taco 7x45 / 10x40",
+    "preco": 1003.09
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Piso Assolaho de Madeira 10 / 15 / 20",
+    "preco": 1647.0
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Rodapé Invertido, Mod \"l\", Alumínio Epóxi Preto Fosco , 13 X 30 X 3000 Mm",
+    "preco": 110.66
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Porcelanato Cimentício Acetinado Borda Reta Interno 80x80cm Hit Fendi Natural Portobello",
+    "preco": 98.61
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Porcelanato Cimentício Natural Borda Reta Interno 120x120cm Belgique Clair Portobello",
+    "preco": 93.91
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Porcelanato Marmorizado Acetinado Borda Reta Interno 90x90cm Chiaro di Versilia Natural Portobello",
+    "preco": 108.01
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Porcelanato Cimentício Acetinado Borda Reta Interno 120x120cm Hit Camel Natural Portobello",
+    "preco": 140.91
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Porcelanato Amadeirado Acetinado Borda Reta Interno 20x120cm Arca Nordic ST Natural Portobello",
+    "preco": 155.01
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Porcelanato Marmorizado Polido Borda Reta Interno 120x120cm Mare D'Autunno Portobello",
+    "preco": 338.31
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Rejunte para Porcelanato Cinza Platina 5kg Quartzolit",
+    "preco": 71.35
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Rejunte Acrílico Bege 1 Kg Quartzolit",
+    "preco": 43.99
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Rejunte Epóxi Cinza Claro 1 Kg Axton",
+    "preco": 59.1
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Argamassa Porcelanato Interno 20kg Cinza Fortaleza",
+    "preco": 26.23
+  },
+  {
+    "categoria": "PISOS E PAREDES",
+    "descricao": "Argamassa ACIII Interno e Externo 20kg Branco CimentCola Quartzolit",
+    "preco": 62.9
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Lona Plástica 4x50m Preta",
+    "preco": 164.9
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Tinta Acrílica Toque Premium Fosco Completo Interno e Externo Branco Neve 20L Suvinil",
+    "preco": 599.9
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Aguarrás 0,9L",
+    "preco": 24.9
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Massa Corrida 25Kg",
+    "preco": 86.9
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Selador Acrílico Suvinil 18L",
+    "preco": 184.9
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Thinner 900ml",
+    "preco": 22.0
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Lixa Massa - Grão 180",
+    "preco": 1.59
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Lixa Massa - Grão 150",
+    "preco": 1.59
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Lixa para Madeira e Massa Grão 120 225x275cm 1 Unidade",
+    "preco": 1.79
+  },
+  {
+    "categoria": "PINTURA",
+    "descricao": "Tinta Esmalte Sintético Base Solvente Sempre Branco Acetinado 3,6L Suvinil",
+    "preco": 179.9
+  },
+  {
+    "categoria": "INSUMOS",
+    "descricao": "Disco Diamantado para Makita Segmentado Para Concreto E Alvenaria",
+    "preco": 72.38
+  },
+  {
+    "categoria": "INSUMOS",
+    "descricao": "Disco de Lixa para Mármore Grão 50 100mm 4 \" 1 unidade G50 Stamaco",
+    "preco": 24.9
+  },
+  {
+    "categoria": "INSUMOS",
+    "descricao": "Disco De Corte Fino De Ferro E Aço De Esmerilhadeira 10 Pçs",
+    "preco": 48.0
+  },
+  {
+    "categoria": "TRILHOS MAGNÉTICOS",
+    "descricao": "TRILHOS MAGNÉTICOS Embutir  1 METRO VOLTAGEM: 48V NECESSÁRIO FONTE",
+    "preco": 47.79
+  },
+  {
+    "categoria": "TRILHOS MAGNÉTICOS",
+    "descricao": "TODOS OS MODELOS: COMPRIMENTO: 1 METRO TENSÃO: 48V NECESSÁRIO FONTE",
+    "preco": 43.87
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Cuba Pia Cozinha Gourmet Aço Inox 304 Retangular Acabamento Escovado 58x40 Tubrax",
+    "preco": 396.91
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Cuba Cozinha Luxo Gourmet Inox com Acessórios Aquas Tubrax",
+    "preco": 298.41
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Tanque 55 X 45 X 22 Cm Aço Inox 304 Com Válvula Tubrax",
+    "preco": 284.91
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Cuba Dupla Inox com Torneira Gourmet, Dispenser, Lixeira, Cesto, Porta Facas e Acessórios",
+    "preco": 946.9
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Banheiro Luxo Preto Fosco Completo Deca Torneira Petra 1.1/4",
+    "preco": 1409.1
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Torneira Cozinha Monocomando Gourmet Aço Escovado",
+    "preco": 259.9
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Vaso Sanitário Monobloco Completo - Caixa Acoplada Privada Acies Tubrax",
+    "preco": 746.91
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Ducha Higiênica Aço Inox Escovado Com Registro Nox15 Doan",
+    "preco": 94.9
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Banheiro Luxo Cromada Completo Deca Torneira Quadrada Alta 1.1/4 - Soft Inox",
+    "preco": 1294.29
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Cuba de Banheiro 40,5cm L73 Deca com Sifão Válvula e Fita Veda-Rosca",
+    "preco": 791.89
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Torneira Monocomando Gourmet de Pia para Cozinha com Bica Alta Flexível Preto Fosco Tomas Delinia",
+    "preco": 889.9
+  },
+  {
+    "categoria": "CUBAS, LOUÇAS E METAIS",
+    "descricao": "Torneira Monocomando Gourmet de Pia para Cozinha com Bica Alta Flexível Inox Escovado Tomas Delinia",
+    "preco": 889.9
+  },
+  {
+    "categoria": "AR CONDICIONADO",
+    "descricao": "Ar Condicionado Split Rotativo Frio 18000 BTUs 220V TPRO 2.0 Wi Fi TCL",
+    "preco": 2978.0
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Frigobar Branco 93 Litros Midea",
+    "preco": 1139.05
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Frigobar Branco 124 Litros Midea",
+    "preco": 1349.0
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Frigobar Black Edition Preto 124 Litros Midea",
+    "preco": 1139.05
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Geladeira Inverse Frost Free 347L Inverter cor Inox Midea",
+    "preco": 2754.05
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Geladeira Inverse Frost Free 416L Inverter cor Inox Midea",
+    "preco": 3704.05
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Geladeira Frost Free Duplex 491L Inverter cor Inox Midea",
+    "preco": 3894.05
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Geladeira Side by Side 511L Inverter Preta Conectada Midea",
+    "preco": 5081.55
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Geladeira Side by Side 511L Inverter Cor Inox Conectada Midea",
+    "preco": 4599.0
+  },
+  {
+    "categoria": "ELETRODOMÉSTICOS",
+    "descricao": "Geladeira Side by Side 570L Dispenser Água e Gelo Inverter cor Inox Midea",
+    "preco": 8999.0
+  },
+  {
+    "categoria": "ELETRONICOS",
+    "descricao": "Smart Tv Samsung 55\" Uhd 4k 2024 55du7700",
+    "preco": 2781.36
+  },
+  {
+    "categoria": "ELETRONICOS",
+    "descricao": "Smart Tv Samsung 65\" Uhd 4k 2024 55du7700",
+    "preco": 2781.36
+  },
+  {
+    "categoria": "ELETRONICOS",
+    "descricao": "Smart Tv Samsung 75\" Uhd 4k 2024 55du7700",
+    "preco": 2781.36
+  },
+  {
+    "categoria": "AQUECEDORES",
+    "descricao": "Aquecedor Rinnai 27 Litros E27 Feh Glp Prata (digital) + Kit Ligação De 40cm",
+    "preco": 3649.77
+  },
+  {
+    "categoria": "EZVIZ",
+    "descricao": "Fechadura Eletrônica Digital Elsys com Biometria e Senha",
+    "preco": 700.0
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Dimmer Inteligente",
+    "preco": 98.88
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Série Touch Zigbee/Wi-Fi - 1 Circuito",
+    "preco": 61.8
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Cortina Persiana Wifi",
+    "preco": 83.2
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Série Touch Zigbee/Wi-Fi - 1 Circuito",
+    "preco": 64.38
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Série Touch 2.5d Zigbee/Wi-Fi - 2 Circuitos",
+    "preco": 64.38
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Touch Zigbee/Wi-Fi - 4X4 - 4 Circuitos",
+    "preco": 94.76
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Série Touch 2.5d Zigbee/Wi-Fi - 3 Circuitos",
+    "preco": 66.95
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Série Touch - Zigbee/Wi-Fi - 4 Circuitos",
+    "preco": 70.81
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente Touch Zigbee/Wi-Fi - 4X4 - 6 Circuitos",
+    "preco": 123.5
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor com Tomada  20A Touch 1 Cirtcuito \nWIFI",
+    "preco": 96.56
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Com Tomada 20A Touch - 1Circruito WIFI",
+    "preco": 103.0
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Com Tomada 20A Touch - 2 Circruitos WIFI",
+    "preco": 103.0
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Interruptor Inteligente com 2 Tomadas 4x4 WiFi",
+    "preco": 128.75
+  },
+  {
+    "categoria": "INTERRUPTORES E TOMDAS INTELIGENTES",
+    "descricao": "Double with USB-A+USB-C 16A - Glass",
+    "preco": 90.64
+  },
+  {
+    "categoria": "AUTOMAÇÃO",
+    "descricao": "MINI MÓDULO PARALELO 1 CANAL",
+    "preco": 110.08
+  },
+  {
+    "categoria": "AUTOMAÇÃO",
+    "descricao": "MONITOR DE ENERGIA INTELIGENTE WIFI 80A",
+    "preco": 700.0
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Box para Banheiro 90x185cm Vidro Incolor Frontal de Abrir 2 Folhas",
+    "preco": 1531.81
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Box para Banheiro 130x190cm Vidro Incolor",
+    "preco": 1531.81
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Box para Banheiro 110x200cm Vidro Incolor Frontal de Correr 2 Folhas",
+    "preco": 1931.81
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Piso Teto -  90x2400 - Vidro Incolor Frontal de Abrir 2 Folhas",
+    "preco": 1531.81
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Piso Teto - 130x2400 - Vidro Incolor",
+    "preco": 1531.81
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Espelho Com Chassi para Led",
+    "preco": 875.32
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Espelho",
+    "preco": 765.91
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Espelho Orgânico",
+    "preco": 995.0
+  },
+  {
+    "categoria": "VIDRAÇARIA",
+    "descricao": "Espelhos tamanhos Especiais",
+    "preco": 875.32
+  },
+  {
+    "categoria": "ENVIDRAÇAMENTO DE SACADA",
+    "descricao": "Envidraçamento Sacada 10MM - Sistema sem roldana",
+    "preco": 1750.0
+  },
+  {
+    "categoria": "ENVIDRAÇAMENTO DE SACADA",
+    "descricao": "Envidraçamento Sacada 10MM - Sistema com roldana",
+    "preco": 1750.0
+  },
+  {
+    "categoria": "ENVIDRAÇAMENTO DE SACADA",
+    "descricao": "Envidraçamento Sacada 12MM - Sistema sem roldana",
+    "preco": 1950.0
+  },
+  {
+    "categoria": "ENVIDRAÇAMENTO DE SACADA",
+    "descricao": "Envidraçamento Sacada 12MM - Sistema com roldana",
+    "preco": 1950.0
+  }
+]

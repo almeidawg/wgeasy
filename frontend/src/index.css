@@ -1,0 +1,491 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================= */
+/*    WG — Tipografia Oficial    */
+/*    Design System Compacto     */
+/* ============================= */
+
+:root {
+  /* Escala tipográfica reduzida ~15% */
+  --wg-text-h1: 1.0625rem; /* 17px (antes 20px) */
+  --wg-text-h2: 0.9375rem; /* 15px (antes 18px) */
+  --wg-text-h3: 0.8125rem; /* 13px (antes 16px) */
+  --wg-text-body: 0.75rem; /* 12px (antes 14px) */
+  --wg-text-sm: 0.6875rem; /* 11px (antes 13px) */
+  --wg-text-xs: 0.625rem;  /* 10px (antes 12px) */
+  --wg-text-tag: 0.5625rem; /* 9px (antes 11px) */
+
+  /* Espaçamentos compactos */
+  --wg-space-1: 0.125rem; /* 2px */
+  --wg-space-2: 0.25rem;  /* 4px */
+  --wg-space-3: 0.375rem; /* 6px */
+  --wg-space-4: 0.5rem;   /* 8px */
+  --wg-space-5: 0.625rem; /* 10px */
+  --wg-space-6: 0.75rem;  /* 12px */
+}
+
+html, body {
+  @apply font-roboto text-[#4C4C4C] bg-[#F3F3F3];
+  font-size: var(--wg-text-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-smooth: antialiased; /* Fallback padrão */
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+h1, h2, h3 {
+  @apply font-oswald tracking-tight;
+}
+
+h1 { font-size: var(--wg-text-h1); }
+h2 { font-size: var(--wg-text-h2); }
+h3 { font-size: var(--wg-text-h3); }
+
+.subtitle {
+  @apply font-poppins text-[#585858] font-medium;
+  font-size: var(--wg-text-sm);
+}
+
+/* ============================= */
+/*   Classes Utilitárias WG      */
+/* ============================= */
+
+.wg-text-h1 { font-size: var(--wg-text-h1); font-weight: 700; }
+.wg-text-h2 { font-size: var(--wg-text-h2); font-weight: 600; }
+.wg-text-h3 { font-size: var(--wg-text-h3); font-weight: 600; }
+.wg-text-body { font-size: var(--wg-text-body); }
+.wg-text-sm { font-size: var(--wg-text-sm); }
+.wg-text-xs { font-size: var(--wg-text-xs); }
+.wg-text-tag { font-size: var(--wg-text-tag); font-weight: 600; }
+
+/* ============================= */
+/*   Espaçamentos Compactos      */
+/* ============================= */
+
+.wg-card {
+  background: white;
+  border-radius: 0.625rem; /* 10px */
+  padding: var(--wg-space-4);
+  border: 1px solid #e5e7eb;
+}
+
+.wg-card-compact {
+  background: white;
+  border-radius: 0.625rem; /* 10px */
+  padding: var(--wg-space-3);
+  border: 1px solid #e5e7eb;
+}
+
+/* Reduzir padding padrão de cards e containers */
+.p-4 { padding: 0.75rem !important; } /* 12px ao invés de 16px */
+.p-6 { padding: 1rem !important; }    /* 16px ao invés de 24px */
+.px-4 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+.px-6 { padding-left: 1rem !important; padding-right: 1rem !important; }
+.py-4 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+.py-6 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+
+/* Gaps menores */
+.gap-4 { gap: 0.75rem !important; }
+.gap-6 { gap: 1rem !important; }
+
+/* ============================= */
+/*   Tipografia em Componentes   */
+/* ============================= */
+
+/* Textos em tabelas */
+table th, table td {
+  font-size: var(--wg-text-sm);
+  padding: var(--wg-space-3) var(--wg-space-4);
+}
+
+/* Labels de formulários */
+label, .label {
+  font-size: var(--wg-text-xs);
+  font-weight: 500;
+}
+
+/* Inputs mais compactos */
+input, select, textarea {
+  font-size: var(--wg-text-body);
+  padding: var(--wg-space-3) var(--wg-space-4);
+}
+
+/* Botões */
+button, .btn {
+  font-size: var(--wg-text-body);
+}
+
+/* Tags e badges */
+.badge, .tag, [class*="badge"], [class*="tag"] {
+  font-size: var(--wg-text-tag);
+  padding: var(--wg-space-1) var(--wg-space-3);
+}
+
+/* ============================= */
+/*     Scrollbar WG Moderno      */
+/* ============================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C7C7C7;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A1A1A1;
+}
+
+/* ============================= */
+/*   Phone Input Internacional   */
+/* ============================= */
+.phone-input-internacional {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.phone-input-internacional .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  background-color: white;
+  min-width: 80px;
+}
+
+.phone-input-internacional .PhoneInputCountryIcon {
+  width: 1.25rem;
+  height: auto;
+  border-radius: 0.125rem;
+}
+
+.phone-input-internacional .PhoneInputCountrySelectArrow {
+  margin-left: 0.25rem;
+  opacity: 0.6;
+}
+
+.phone-input-internacional .PhoneInputCountrySelect {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.phone-input-internacional input {
+  flex: 1;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.phone-input-internacional input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-color: #3b82f6;
+}
+
+/* Estilo para inputs de telefone em altura h-11 */
+.phone-input-internacional.h-11 .PhoneInputCountry {
+  height: 2.75rem;
+}
+
+.phone-input-internacional.h-11 input {
+  height: 2.75rem;
+}
+
+/* ============================= */
+/*   RESPONSIVIDADE MOBILE WG    */
+/* ============================= */
+
+@media (max-width: 768px) {
+  /* Tipografia Mobile - textos maiores para melhor leitura */
+  :root {
+    --wg-text-h1: 1.25rem;
+    --wg-text-h2: 1.125rem;
+    --wg-text-h3: 1rem;
+    --wg-text-body: 0.875rem;
+    --wg-text-sm: 0.8125rem;
+    --wg-text-xs: 0.75rem;
+    --wg-text-tag: 0.6875rem;
+  }
+
+  /* Container principal com padding menor */
+  .layout-content {
+    padding: 0.75rem !important;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Grids devem virar 1 coluna no mobile */
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  .grid-cols-5,
+  .grid-cols-6,
+  [class*="grid-cols-\["] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Exceção: grids de 2 colunas em alguns casos */
+  .grid-cols-2.mobile-keep,
+  .mobile-grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Cards com padding reduzido */
+  .wg-card,
+  .wg-card-compact,
+  .bg-white.rounded-xl,
+  .bg-white.rounded-lg {
+    padding: 0.75rem !important;
+  }
+
+  /* Headers de página */
+  .text-2xl,
+  .text-3xl {
+    font-size: 1.25rem !important;
+  }
+
+  /* Tabelas responsivas - scroll horizontal */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  table thead,
+  table tbody,
+  table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  /* Cards em linha viram coluna */
+  .flex.items-center.gap-4,
+  .flex.items-center.gap-6 {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* Exceção: manter flex row em alguns casos */
+  .mobile-flex-row {
+    flex-direction: row !important;
+  }
+
+  /* Botões maiores para touch */
+  button,
+  .btn,
+  [type="button"],
+  [type="submit"] {
+    min-height: 44px;
+    padding: 0.75rem 1rem !important;
+  }
+
+  /* Botões de ícone pequenos */
+  button.p-2,
+  button.p-1\.5,
+  button.p-1 {
+    min-height: 40px;
+    min-width: 40px;
+    padding: 0.5rem !important;
+  }
+
+  /* Inputs maiores para touch */
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    padding: 0.75rem !important;
+    font-size: 1rem !important; /* Previne zoom no iOS */
+  }
+
+  /* Modais fullscreen no mobile */
+  .fixed.inset-0 > div,
+  [class*="modal"],
+  [class*="Modal"] {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  /* Drawer de baixo para cima */
+  .mobile-drawer {
+    max-height: 90vh !important;
+  }
+
+  /* Max width containers */
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-5xl,
+  .max-w-4xl,
+  [class*="max-w-\["] {
+    max-width: 100% !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  /* Stats cards em 2 colunas */
+  .grid.grid-cols-5,
+  .grid.grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Gaps menores */
+  .gap-4 { gap: 0.5rem !important; }
+  .gap-6 { gap: 0.75rem !important; }
+  .gap-8 { gap: 1rem !important; }
+
+  /* Padding menores */
+  .p-6 { padding: 0.75rem !important; }
+  .p-8 { padding: 1rem !important; }
+  .px-6 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .py-6 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+  .py-8 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+
+  /* Sidebar escondida */
+  .wg-sidebar:not(.open) {
+    transform: translateX(-100%);
+  }
+
+  /* Topbar mais compacto */
+  .topbar,
+  [class*="topbar"] {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  /* Tabs de navegação com scroll */
+  .tab-navigation,
+  [class*="tab-nav"] {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tab-navigation::-webkit-scrollbar,
+  [class*="tab-nav"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Kanban cards mais compactos */
+  [class*="kanban"] {
+    gap: 0.5rem !important;
+  }
+
+  /* Charts responsivos */
+  .recharts-wrapper {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 200px;
+  }
+
+  /* Legendas de charts abaixo do gráfico */
+  .recharts-legend-wrapper {
+    position: relative !important;
+    width: 100% !important;
+    margin-top: 0.5rem;
+  }
+
+  /* Esconder elementos não essenciais no mobile */
+  .mobile-hide,
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  /* Mostrar elementos só no mobile */
+  .mobile-show,
+  .visible-mobile {
+    display: block !important;
+  }
+
+  /* Texto truncado com ellipsis */
+  .mobile-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+
+  /* Cards de núcleo empilhados */
+  .nucleo-cards,
+  [class*="nucleo"] {
+    flex-direction: column !important;
+  }
+
+  /* Ações inline viram dropdown */
+  .inline-actions {
+    position: relative;
+  }
+
+  /* Fix para z-index de dropdowns */
+  .dropdown-content,
+  [class*="dropdown"] {
+    z-index: 1000;
+  }
+}
+
+/* ============================= */
+/*   RESPONSIVIDADE TABLET       */
+/* ============================= */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Grids de 4+ colunas viram 2 */
+  .grid-cols-4,
+  .grid-cols-5,
+  .grid-cols-6 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Grids de 3 colunas mantêm */
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Container principal */
+  .layout-content {
+    padding: 1rem !important;
+  }
+
+  /* Sidebar mais estreita */
+  .wg-sidebar {
+    width: 200px !important;
+  }
+}
+
+/* ============================= */
+/*   PRINT STYLES                */
+/* ============================= */
+
+@media print {
+  .mobile-bottom-nav,
+  .wg-sidebar,
+  .topbar,
+  .tab-navigation,
+  button:not(.print-show) {
+    display: none !important;
+  }
+
+  .layout-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body {
+    background: white !important;
+  }
+}

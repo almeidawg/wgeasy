@@ -1,0 +1,1891 @@
+{
+  "items": [
+    {
+      "codigo": "ARQ-001",
+      "nome": "Modelagem de Maquete 3D",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2000,
+      "preco": 8177,
+      "margem_percentual": "308.85"
+    },
+    {
+      "codigo": "ARQ-002",
+      "nome": "Renderização Fotorealismo",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 16353,
+      "margem_percentual": "308.82"
+    },
+    {
+      "codigo": "ARQ-003",
+      "nome": "Projeto Arquitetônico Executivo",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 5000,
+      "preco": 20441,
+      "margem_percentual": "308.82"
+    },
+    {
+      "codigo": "ARQ-004",
+      "nome": "Projeto de Elétrica",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 560,
+      "preco": 2289,
+      "margem_percentual": "308.75"
+    },
+    {
+      "codigo": "ARQ-005",
+      "nome": "Projeto de Hidraúlica",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 560,
+      "preco": 2289,
+      "margem_percentual": "308.75"
+    },
+    {
+      "codigo": "ARQ-006",
+      "nome": "Projeto Luminotécnica",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 450,
+      "preco": 1840,
+      "margem_percentual": "308.89"
+    },
+    {
+      "codigo": "ARQ-007",
+      "nome": "Projeto Forro de Gesso",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 480,
+      "preco": 1962,
+      "margem_percentual": "308.75"
+    },
+    {
+      "codigo": "ARQ-008",
+      "nome": "Projeto Paginação de Pisos",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 360,
+      "preco": 1472,
+      "margem_percentual": "308.89"
+    },
+    {
+      "codigo": "ARQ-009",
+      "nome": "Projeto de Aquecimento",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 360,
+      "preco": 1472,
+      "margem_percentual": "308.89"
+    },
+    {
+      "codigo": "ARQ-010",
+      "nome": "Projeto de Exaustão",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 360,
+      "preco": 1472,
+      "margem_percentual": "308.89"
+    },
+    {
+      "codigo": "ARQ-011",
+      "nome": "Projeto Layout de Mobiliário",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 890,
+      "preco": 3639,
+      "margem_percentual": "308.88"
+    },
+    {
+      "codigo": "ARQ-012",
+      "nome": "Projeto de Portas e Janelas",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 390,
+      "preco": 1594,
+      "margem_percentual": "308.72"
+    },
+    {
+      "codigo": "ARQ-013",
+      "nome": "Projeto Paisagismo",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 890,
+      "preco": 3639,
+      "margem_percentual": "308.88"
+    },
+    {
+      "codigo": "ARQ-014",
+      "nome": "Projeto Sonorização",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 560,
+      "preco": 2289,
+      "margem_percentual": "308.75"
+    },
+    {
+      "codigo": "ARQ-015",
+      "nome": "Projeto Vidros e Espelhos",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 460,
+      "preco": 1881,
+      "margem_percentual": "308.91"
+    },
+    {
+      "codigo": "ARQ-016",
+      "nome": "Projeto Complementar Detalhamento de Marcenaria",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1500,
+      "preco": 6132,
+      "margem_percentual": "308.80"
+    },
+    {
+      "codigo": "ARQ-017",
+      "nome": "Projeto Complementar de Marmoraria",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 800,
+      "preco": 3271,
+      "margem_percentual": "308.88"
+    },
+    {
+      "codigo": "ARQ-018",
+      "nome": "Projeto Complementar de Automação",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 800,
+      "preco": 3271,
+      "margem_percentual": "308.88"
+    },
+    {
+      "codigo": "ARQ-019",
+      "nome": "Projeto Complementar de Telefonia, Lógica e Segurança",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 380,
+      "preco": 1554,
+      "margem_percentual": "308.95"
+    },
+    {
+      "codigo": "ARQ-020",
+      "nome": "Projeto Complementar de  Condicionamento de Ar",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 680,
+      "preco": 2780,
+      "margem_percentual": "308.82"
+    },
+    {
+      "codigo": "ARQ-021",
+      "nome": "Projeto Báscio e documentação e RRT - liberação de Obra",
+      "categoria": "Arquitetura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 4000,
+      "preco": 16353,
+      "margem_percentual": "308.82"
+    },
+    {
+      "codigo": "DOC-001",
+      "nome": "Anotação de Responsabilidade Técnica (ART) - Obra",
+      "categoria": "Documentação",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1800,
+      "preco": 7359,
+      "margem_percentual": "308.83"
+    },
+    {
+      "codigo": "DOC-002",
+      "nome": "Anotação de Responsabilidade Técnica (ART) - Projeto",
+      "categoria": "Documentação",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1500,
+      "preco": 6132,
+      "margem_percentual": "308.80"
+    },
+    {
+      "codigo": "DOC-003",
+      "nome": "Impressões",
+      "categoria": "Documentação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 300,
+      "preco": 1226,
+      "margem_percentual": "308.67"
+    },
+    {
+      "codigo": "DOC-004",
+      "nome": "seguro de obra",
+      "categoria": "Documentação",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1500,
+      "preco": 6132,
+      "margem_percentual": "308.80"
+    },
+    {
+      "codigo": "STA-001",
+      "nome": "ajudante",
+      "categoria": "Staff",
+      "tipo": "mao_obra",
+      "unidade": "m2",
+      "preco_custo": 2500,
+      "preco": 10221,
+      "margem_percentual": "308.84"
+    },
+    {
+      "codigo": "STA-002",
+      "nome": "arquiteto",
+      "categoria": "Staff",
+      "tipo": "mao_obra",
+      "unidade": "hora",
+      "preco_custo": 20000,
+      "preco": 81766,
+      "margem_percentual": "308.83"
+    },
+    {
+      "codigo": "STA-003",
+      "nome": "encarregado",
+      "categoria": "Staff",
+      "tipo": "mao_obra",
+      "unidade": "m2",
+      "preco_custo": 2800,
+      "preco": 11447,
+      "margem_percentual": "308.82"
+    },
+    {
+      "codigo": "STA-004",
+      "nome": "engenheiro",
+      "categoria": "Staff",
+      "tipo": "mao_obra",
+      "unidade": "hora",
+      "preco_custo": 20000,
+      "preco": 81766,
+      "margem_percentual": "308.83"
+    },
+    {
+      "codigo": "STA-005",
+      "nome": "limpeza recorrente",
+      "categoria": "Staff",
+      "tipo": "mao_obra",
+      "unidade": "m2",
+      "preco_custo": 1400,
+      "preco": 5724,
+      "margem_percentual": "308.86"
+    },
+    {
+      "codigo": "STA-006",
+      "nome": "medição técnica",
+      "categoria": "Staff",
+      "tipo": "mao_obra",
+      "unidade": "m2",
+      "preco_custo": 500,
+      "preco": 2044,
+      "margem_percentual": "308.80"
+    },
+    {
+      "codigo": "STA-007",
+      "nome": "vistoria",
+      "categoria": "Staff",
+      "tipo": "mao_obra",
+      "unidade": "hora",
+      "preco_custo": 889,
+      "preco": 3634,
+      "margem_percentual": "308.77"
+    },
+    {
+      "codigo": "PRE-001",
+      "nome": "armários com descarte",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 10000,
+      "preco": 25883,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PRE-002",
+      "nome": "remoção de bacias sanitárias",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 10353,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PRE-003",
+      "nome": "remoção de bancada de banheiro",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 10353,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PRE-004",
+      "nome": "remoção de bancada de cozinha",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 8000,
+      "preco": 20706,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PRE-005",
+      "nome": "remoção de caxilhos e portas",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 8000,
+      "preco": 20706,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PRE-006",
+      "nome": "remoção de pisos e revestimentos",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2500,
+      "preco": 6471,
+      "margem_percentual": "158.84"
+    },
+    {
+      "codigo": "PRE-007",
+      "nome": "remoção de tanque",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 12941,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PRE-008",
+      "nome": "remoção de torneira",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2000,
+      "preco": 5177,
+      "margem_percentual": "158.85"
+    },
+    {
+      "codigo": "PRE-009",
+      "nome": "remoção de portas e batentes",
+      "categoria": "Pré Obra e Remoções",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 12941,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "DEM-001",
+      "nome": "abertura de alvenaria para conduites pontos de tomada e interruptores",
+      "categoria": "Demolições",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 1500,
+      "preco": 4332,
+      "margem_percentual": "188.80"
+    },
+    {
+      "codigo": "DEM-002",
+      "nome": "abertura de nichos em alvenaria",
+      "categoria": "Demolições",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 10500,
+      "preco": 30327,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "DEM-003",
+      "nome": "demolição de alvenaria",
+      "categoria": "Demolições",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "DEM-004",
+      "nome": "demolição de drywall",
+      "categoria": "Demolições",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "DEM-005",
+      "nome": "equipe para retirada de entulho",
+      "categoria": "Demolições",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 500,
+      "preco": 1444,
+      "margem_percentual": "188.80"
+    },
+    {
+      "codigo": "DEM-006",
+      "nome": "demolição de Contra Piso",
+      "categoria": "Demolições",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "INF-001",
+      "nome": "abetura de alvenaria para drenos com motanagem do pvc e fechamento",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 2000,
+      "preco": 5777,
+      "margem_percentual": "188.85"
+    },
+    {
+      "codigo": "INF-002",
+      "nome": "acoplamento dos equipamentos",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 20000,
+      "preco": 47766,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "INF-003",
+      "nome": "tubulação para equipamentos de 09 mil a 12 mil btus até 5 metros",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 25000,
+      "preco": 59708,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "INF-004",
+      "nome": "tubulação para equipamentos de 09 mil a 12 mil btus metro adicional",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 14000,
+      "preco": 33436,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "INF-005",
+      "nome": "tubulação para equipamentos de 18 mil a 24 mil btus até 5 metros",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 30000,
+      "preco": 71649,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "INF-006",
+      "nome": "tubulação para equipamentos de 18 mil a 24 mil btus metro adicional",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 18000,
+      "preco": 42989,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "INF-007",
+      "nome": "tubulação para equipamentos de acima de 24 mil btus até 5 metros",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 35000,
+      "preco": 83590,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "INF-008",
+      "nome": "tubulação para equipamentos de acima de 24 mil btus metro adicional",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 23000,
+      "preco": 54931,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "INF-009",
+      "nome": "teste de estanquiedade da tubulação",
+      "categoria": "Infra Ar",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 20000,
+      "preco": 47766,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "ELE-001",
+      "nome": "alteração de quadro elétrico",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 40000,
+      "preco": 95532,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "ELE-002",
+      "nome": "instalação de balizador",
+      "categoria": "Elétrica",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "ELE-003",
+      "nome": "instalação de fita de led",
+      "categoria": "Elétrica",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 6000,
+      "preco": 17330,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-004",
+      "nome": "instalação de luminárias",
+      "categoria": "Elétrica",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 3000,
+      "preco": 8665,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-005",
+      "nome": "instalação de luminárias especiais",
+      "categoria": "Elétrica",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 7000,
+      "preco": 20218,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-006",
+      "nome": "instalação de lustre",
+      "categoria": "Elétrica",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 15000,
+      "preco": 43325,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-007",
+      "nome": "instalação de pendente",
+      "categoria": "Elétrica",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "ELE-008",
+      "nome": "interruptor intermediário",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "ELE-009",
+      "nome": "interruptor paralelo",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "ELE-010",
+      "nome": "interruptor simples",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "ELE-011",
+      "nome": "passagem de fiação para interruptores",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "ELE-012",
+      "nome": "passagem de fiação para pontos de iluminação",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "ELE-013",
+      "nome": "passagem de fiação para tomadas 110",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "ELE-014",
+      "nome": "passagem de fiação para tomadas 220",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "ELE-015",
+      "nome": "ponto de balizador",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3000,
+      "preco": 8665,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-016",
+      "nome": "ponto de iluminação",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2800,
+      "preco": 8087,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "ELE-017",
+      "nome": "ponto de tomada 110v tug",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3500,
+      "preco": 10109,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-018",
+      "nome": "ponto de tomada 110v tui (circuito independente)",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3500,
+      "preco": 10109,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-019",
+      "nome": "ponto de tomada 220v tug",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4500,
+      "preco": 12997,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "ELE-020",
+      "nome": "ponto de tomada 220v tui (circuito independente)",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4500,
+      "preco": 12997,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "ELE-021",
+      "nome": "ponto para led",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "ELE-022",
+      "nome": "recorte drywwall para luminárias",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 600,
+      "preco": 1733,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "ELE-023",
+      "nome": "visita para pequenos reparos",
+      "categoria": "Elétrica",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 600,
+      "preco": 1733,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "AUT-001",
+      "nome": "ponto de internet para tv",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "AUT-002",
+      "nome": "ponto de internet para wifi repetidor",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "AUT-003",
+      "nome": "ponto de sonorização",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3000,
+      "preco": 8665,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "AUT-004",
+      "nome": "ponto para motorização de cortinas",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "AUT-005",
+      "nome": "pontos de automação neutro para interruptores",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3500,
+      "preco": 10109,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "AUT-006",
+      "nome": "ponto de automação para luminária",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3500,
+      "preco": 10109,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "AUT-007",
+      "nome": "pontos de automação para video",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3500,
+      "preco": 10109,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "AUT-008",
+      "nome": "quadro de automação",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 30000,
+      "preco": 86649,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "AUT-009",
+      "nome": "retornos para automação",
+      "categoria": "Automação",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "HID-001",
+      "nome": "deslocamento de ponto de água quente ou fria",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-002",
+      "nome": "deslocamento de ponto de esgoto",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-003",
+      "nome": "eliminar ponto de água quente ou fria",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "HID-004",
+      "nome": "eliminar ponto de esgoto",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "HID-005",
+      "nome": "instalação base para monocomando",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 7000,
+      "preco": 20218,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "HID-006",
+      "nome": "instalação de ralo linear quadrado",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 14441,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-007",
+      "nome": "instalação de ralo linear retangular",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 7000,
+      "preco": 20218,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "HID-008",
+      "nome": "instalação base de registro",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-009",
+      "nome": "novo ponto de água fria ou quente",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-010",
+      "nome": "novo ponto de esgoto de parede",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-011",
+      "nome": "novo ponto de esgoto de piso bacia sanitária",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 10000,
+      "preco": 28883,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "HID-012",
+      "nome": "visita para pequenos reparos",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 15000,
+      "preco": 43325,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "HID-013",
+      "nome": "acabamento para monocomando",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3000,
+      "preco": 8665,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "HID-014",
+      "nome": "acabamento para registro",
+      "categoria": "Hidrossanitária",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 3000,
+      "preco": 8665,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "HID-015",
+      "nome": "instalação de bacia sanitária",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 10000,
+      "preco": 28883,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "HID-016",
+      "nome": "instalação de chuveiro",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 14441,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-017",
+      "nome": "instalação de ducha  higiênica",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-018",
+      "nome": "instalação de metais - porta papel higiênico",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 4000,
+      "preco": 11553,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-019",
+      "nome": "instalação de metais - toalheiro",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 14441,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-020",
+      "nome": "instalação de torneiras duplo comando",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 14441,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "HID-021",
+      "nome": "instalação de torneiras monocomando",
+      "categoria": "Hidrossanitária",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 14441,
+      "margem_percentual": "188.82"
+    },
+    {
+      "codigo": "GAS-001",
+      "nome": "ponto de gás",
+      "categoria": "Gás",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 11000,
+      "preco": 31771,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "GAS-002",
+      "nome": "teste de estanquiedade de tubulação de gás",
+      "categoria": "Gás",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 20000,
+      "preco": 57766,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "GAS-003",
+      "nome": "Instalação de Aquecedor a Gás",
+      "categoria": "Gás",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 35000,
+      "preco": 1.0109,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "GES-001",
+      "nome": "visita para pequenos reparos",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 15000,
+      "preco": 38825,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "GES-002",
+      "nome": "cortineiro [ml] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 4000,
+      "preco": 10353,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "GES-003",
+      "nome": "fechamento de buracos",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 800,
+      "preco": 2071,
+      "margem_percentual": "158.88"
+    },
+    {
+      "codigo": "GES-004",
+      "nome": "forro acartonado [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 8000,
+      "preco": 19106,
+      "margem_percentual": "138.82"
+    },
+    {
+      "codigo": "GES-005",
+      "nome": "Gesso Negativo [ml] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 4000,
+      "preco": 9553,
+      "margem_percentual": "138.82"
+    },
+    {
+      "codigo": "GES-006",
+      "nome": "Lã de Rocha Isofibras 2\" c/6 unidades",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 30000,
+      "preco": 71649,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-007",
+      "nome": "manta pet para acústica hidrosanitária",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 30000,
+      "preco": 71649,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-008",
+      "nome": "moldura de gesso [ml] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 2000,
+      "preco": 4777,
+      "margem_percentual": "138.85"
+    },
+    {
+      "codigo": "GES-009",
+      "nome": "nicho em drywall [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 10000,
+      "preco": 23883,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-010",
+      "nome": "parede drywall duas faces [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 9000,
+      "preco": 21495,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-011",
+      "nome": "parede drywall placa verde duas faces [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 11000,
+      "preco": 26271,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-012",
+      "nome": "parede drywall placa verde uma face [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 9000,
+      "preco": 21495,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-013",
+      "nome": "parede drywall uma face [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 7000,
+      "preco": 16718,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-014",
+      "nome": "rasgo de luz [ml] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 7000,
+      "preco": 16718,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-015",
+      "nome": "sanca aberta ou invertida [ml] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 6000,
+      "preco": 14330,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-016",
+      "nome": "substituição de placa de drywall [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 8000,
+      "preco": 19106,
+      "margem_percentual": "138.82"
+    },
+    {
+      "codigo": "GES-017",
+      "nome": "Teto ou Parede Drywall Placa Vermelha 1 Face [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 11000,
+      "preco": 26271,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-018",
+      "nome": "Teto ou Parede Drywall Placa Vermelha 2 Faces [m²] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 13000,
+      "preco": 31048,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "GES-019",
+      "nome": "tabica - junta de dilatação para forro [ml] [mm]",
+      "categoria": "Gesso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 1000,
+      "preco": 2388,
+      "margem_percentual": "138.80"
+    },
+    {
+      "codigo": "PAR-001",
+      "nome": "abertura em alvenaria para nicho com impermeabilização",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 15000,
+      "preco": 43325,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "PAR-002",
+      "nome": "assentamento de porcelanato até 100x100 a 120x120",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 8500,
+      "preco": 20301,
+      "margem_percentual": "138.84"
+    },
+    {
+      "codigo": "PAR-003",
+      "nome": "assentamento de porcelanato até 90x90",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 7000,
+      "preco": 16718,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "PAR-004",
+      "nome": "assentamento de revestimentos especiais",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 7500,
+      "preco": 19412,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PAR-005",
+      "nome": "assentamento de revestimentos mosaicos",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 7500,
+      "preco": 19412,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PAR-006",
+      "nome": "chumbar batente de porta na alvenaria",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 8000,
+      "preco": 20706,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PAR-007",
+      "nome": "construção de alvenaria com reboco",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 10000,
+      "preco": 25883,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PAR-008",
+      "nome": "impermeabilização de Paredes",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2500,
+      "preco": 6471,
+      "margem_percentual": "158.84"
+    },
+    {
+      "codigo": "PAR-009",
+      "nome": "instalação de porta e batente",
+      "categoria": "Paredes",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 9000,
+      "preco": 23295,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PAR-010",
+      "nome": "instalação de rodapés de porcelanato",
+      "categoria": "Paredes",
+      "tipo": "mao_obra",
+      "unidade": "ml",
+      "preco_custo": 2000,
+      "preco": 5177,
+      "margem_percentual": "158.85"
+    },
+    {
+      "codigo": "PAR-011",
+      "nome": "instalação de rodapés mdf  ou polipropileno",
+      "categoria": "Paredes",
+      "tipo": "mao_obra",
+      "unidade": "ml",
+      "preco_custo": 1600,
+      "preco": 4141,
+      "margem_percentual": "158.81"
+    },
+    {
+      "codigo": "PAR-012",
+      "nome": "reboco",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 4000,
+      "preco": 10353,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PAR-013",
+      "nome": "Preparação para Rodapé Embutido [ml]",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "PAR-014",
+      "nome": "requadro de vão",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 9000,
+      "preco": 25995,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "PAR-015",
+      "nome": "revestimento de nicho em porcelanato corte 45º",
+      "categoria": "Paredes",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 20000,
+      "preco": 57766,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "PIS-001",
+      "nome": "assentamento de porcelanato até 1000x1000 a 1200x1200",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 8500,
+      "preco": 20301,
+      "margem_percentual": "138.84"
+    },
+    {
+      "codigo": "PIS-002",
+      "nome": "assentamento de porcelanato até 900x900",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 7000,
+      "preco": 16718,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "PIS-003",
+      "nome": "base de alvenaria",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "PIS-004",
+      "nome": "Cimento Queimado",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 6000,
+      "preco": 17330,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "PIS-005",
+      "nome": "contrapiso",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2500,
+      "preco": 7221,
+      "margem_percentual": "188.84"
+    },
+    {
+      "codigo": "PIS-006",
+      "nome": "impermeabilização de piso",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1500,
+      "preco": 4332,
+      "margem_percentual": "188.80"
+    },
+    {
+      "codigo": "PIS-007",
+      "nome": "instalação de baguetes",
+      "categoria": "Piso",
+      "tipo": "mao_obra",
+      "unidade": "ml",
+      "preco_custo": 3500,
+      "preco": 10109,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "PIS-008",
+      "nome": "instalação de soleiras",
+      "categoria": "Piso",
+      "tipo": "mao_obra",
+      "unidade": "ml",
+      "preco_custo": 3500,
+      "preco": 10109,
+      "margem_percentual": "188.83"
+    },
+    {
+      "codigo": "PIS-009",
+      "nome": "Instalação de rodapé mdf",
+      "categoria": "Piso",
+      "tipo": "mao_obra",
+      "unidade": "ml",
+      "preco_custo": 1100,
+      "preco": 0,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "PIS-010",
+      "nome": "Instalação de rodapé poliestireno",
+      "categoria": "Piso",
+      "tipo": "mao_obra",
+      "unidade": "ml",
+      "preco_custo": 1100,
+      "preco": 0,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "PIS-011",
+      "nome": "Instalação de rodapé porcelanato",
+      "categoria": "Piso",
+      "tipo": "mao_obra",
+      "unidade": "ml",
+      "preco_custo": 1800,
+      "preco": 1800,
+      "margem_percentual": "0.00"
+    },
+    {
+      "codigo": "PIS-012",
+      "nome": "nivelamento até 6 cm",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2500,
+      "preco": 2500,
+      "margem_percentual": "0.00"
+    },
+    {
+      "codigo": "PIS-013",
+      "nome": "Piso Assolaho de Madeira 10 / 15 / 20",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 69000,
+      "preco": 69000,
+      "margem_percentual": "0.00"
+    },
+    {
+      "codigo": "PIS-014",
+      "nome": "Piso de Madeira Taco 7x45 / 10x40",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 42000,
+      "preco": 1.00309,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "PIS-015",
+      "nome": "Piso Laminado com rodapé de 10 cm",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 0,
+      "preco": 0,
+      "margem_percentual": 0
+    },
+    {
+      "codigo": "PIS-016",
+      "nome": "Piso Vinilico  com rodapé de 10 cm",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 12364,
+      "preco": 12364,
+      "margem_percentual": "0.00"
+    },
+    {
+      "codigo": "PIS-017",
+      "nome": "Restauração de Piso de Madeira",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 11800,
+      "preco": 11800,
+      "margem_percentual": "0.00"
+    },
+    {
+      "codigo": "PIN-001",
+      "nome": "emassamento de paredes uma demão de massa",
+      "categoria": "Pintura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1600,
+      "preco": 4141,
+      "margem_percentual": "158.81"
+    },
+    {
+      "codigo": "PIN-002",
+      "nome": "emassamento de paredes três demão de massa",
+      "categoria": "Pintura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1600,
+      "preco": 4141,
+      "margem_percentual": "158.81"
+    },
+    {
+      "codigo": "PIN-003",
+      "nome": "emassamento de tetos três demãos de massa",
+      "categoria": "Pintura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1800,
+      "preco": 4659,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PIN-004",
+      "nome": "equipe de pintura para pintura fina",
+      "categoria": "Pintura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 3500,
+      "preco": 9059,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PIN-005",
+      "nome": "equipe de pintura para preparação",
+      "categoria": "Pintura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 1200,
+      "preco": 3106,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PIN-006",
+      "nome": "Pintura de Portas, Guarnições e Batentes",
+      "categoria": "Pintura",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 9000,
+      "preco": 23295,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "PIN-007",
+      "nome": "Pinturas Especiais",
+      "categoria": "Pintura",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 5000,
+      "preco": 12941,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "ICA-001",
+      "nome": "içamento de peças especiais",
+      "categoria": "Içamento",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 1.4,
+      "preco": 3.62362,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "FIN-001",
+      "nome": "calafetação de batentes e guarnições",
+      "categoria": "Finalização",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 2500,
+      "preco": 6471,
+      "margem_percentual": "158.84"
+    },
+    {
+      "codigo": "PIS-018",
+      "nome": "calafetação de rodapés",
+      "categoria": "Piso",
+      "tipo": "material",
+      "unidade": "ml",
+      "preco_custo": 500,
+      "preco": 1294,
+      "margem_percentual": "158.80"
+    },
+    {
+      "codigo": "FIN-002",
+      "nome": "colocação de quadro",
+      "categoria": "Finalização",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 5000,
+      "preco": 12941,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "FIN-003",
+      "nome": "instalação de fechadura eletrônica",
+      "categoria": "Finalização",
+      "tipo": "mao_obra",
+      "unidade": "un",
+      "preco_custo": 15000,
+      "preco": 38825,
+      "margem_percentual": "158.83"
+    },
+    {
+      "codigo": "FIN-004",
+      "nome": "Instalação de Papel de Parede",
+      "categoria": "Finalização",
+      "tipo": "mao_obra",
+      "unidade": "m2",
+      "preco_custo": 0,
+      "preco": 0,
+      "margem_percentual": 0
+    },
+    {
+      "codigo": "LIM-001",
+      "nome": "Empresa especializada para Limpeza Pós Obra",
+      "categoria": "Limpeza Pós Obra",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 2800,
+      "preco": 7247,
+      "margem_percentual": "158.82"
+    },
+    {
+      "codigo": "PRO-001",
+      "nome": "Produção Completa",
+      "categoria": "Produção",
+      "tipo": "material",
+      "unidade": "un",
+      "preco_custo": 1.8,
+      "preco": 4.29894,
+      "margem_percentual": "138.83"
+    },
+    {
+      "codigo": "VID-001",
+      "nome": "Box",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 70000,
+      "preco": 1.53181,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "VID-002",
+      "nome": "Espelho",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 35000,
+      "preco": 76590,
+      "margem_percentual": "118.83"
+    },
+    {
+      "codigo": "VID-003",
+      "nome": "Espelho com chassi para led",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 40000,
+      "preco": 87532,
+      "margem_percentual": "118.83"
+    },
+    {
+      "codigo": "VID-004",
+      "nome": "Peças Especiais",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 50000,
+      "preco": 1.09415,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "VID-005",
+      "nome": "Envidraçamento de Sacada 10mm com Roldana",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 80000,
+      "preco": 1.75064,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "VID-006",
+      "nome": "Envidraçamento de Sacada 10mm sem Roldana",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 80000,
+      "preco": 1.75064,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "VID-007",
+      "nome": "Envidraçamento de Sacada 12mm com Roldana",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 80000,
+      "preco": 1.75064,
+      "margem_percentual": "-100.00"
+    },
+    {
+      "codigo": "VID-008",
+      "nome": "Envidraçamento de Sacada 12mm sem Roldana",
+      "categoria": "Vidraçaria",
+      "tipo": "material",
+      "unidade": "m2",
+      "preco_custo": 80000,
+      "preco": 1.75064,
+      "margem_percentual": "-100.00"
+    }
+  ],
+  "categoryCounts": {
+    "ARQ": 21,
+    "DOC": 4,
+    "STA": 7,
+    "PRE": 9,
+    "DEM": 6,
+    "INF": 9,
+    "ELE": 23,
+    "AUT": 9,
+    "HID": 21,
+    "GAS": 3,
+    "GES": 19,
+    "PAR": 15,
+    "PIS": 18,
+    "PIN": 7,
+    "ICA": 1,
+    "FIN": 4,
+    "LIM": 1,
+    "PRO": 1,
+    "VID": 8
+  },
+  "stats": {
+    "total": 186,
+    "categorias": 19,
+    "mao_obra": 35,
+    "materiais": 151
+  }
+}

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrigir Usuários Sem Auth - WG Easy</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #F25C26; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; }
+        .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .card h2 { color: #333; margin-bottom: 16px; font-size: 18px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat { background: #f8f9fa; padding: 16px; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 32px; font-weight: bold; color: #F25C26; }
+        .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .btn-primary { background: #F25C26; color: white; }
+        .btn-primary:hover { background: #e04a1a; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .actions { display: flex; gap: 12px; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: #333; }
+        tr:hover { background: #fafafa; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-error { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .status-indicator { display: flex; align-items: center; gap: 8px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-dot.pending { background: #f59e0b; }
+        .status-dot.success { background: #10b981; }
+        .status-dot.error { background: #ef4444; }
+        .log { background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; max-height: 400px; overflow-y: auto; white-space: pre-wrap; }
+        .log-entry { margin-bottom: 4px; }
+        .log-success { color: #4ade80; }
+        .log-error { color: #f87171; }
+        .log-info { color: #60a5fa; }
+        .log-warning { color: #fbbf24; }
+        .password-display { background: #ecfdf5; border: 2px solid #10b981; padding: 16px; border-radius: 8px; margin-top: 12px; }
+        .password-display h4 { color: #065f46; margin-bottom: 8px; }
+        .password-list { font-family: monospace; font-size: 14px; }
+        .password-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #d1fae5; }
+        .password-item:last-child { border-bottom: none; }
+        .copy-btn { padding: 4px 8px; font-size: 12px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .hidden { display: none; }
+        .loading { display: flex; align-items: center; gap: 8px; color: #666; }
+        .spinner { width: 20px; height: 20px; border: 2px solid #ddd; border-top-color: #F25C26; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .alert { padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+        .alert-warning { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
+        .alert-info { background: #dbeafe; border: 1px solid #3b82f6; color: #1e40af; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Corrigir Usuários Sem Acesso Auth</h1>
+        <p class="subtitle">Esta ferramenta cria acesso no Supabase Auth para usuários que estão na tabela mas não conseguem fazer login</p>
+
+        <!-- Estatísticas -->
+        <div class="card">
+            <h2>Estatísticas</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="stat-total">-</div>
+                    <div class="stat-label">Total de Usuários</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="stat-sem-auth">-</div>
+                    <div class="stat-label">Sem Auth (Problema)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="stat-sem-email">-</div>
+                    <div class="stat-label">Sem Email</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="stat-corrigiveis">-</div>
+                    <div class="stat-label">Podem ser Corrigidos</div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="listarUsuarios()">
+                    🔄 Atualizar Lista
+                </button>
+                <button class="btn btn-success" onclick="corrigirTodos()" id="btn-corrigir-todos">
+                    ✅ Corrigir Todos Automaticamente
+                </button>
+            </div>
+        </div>
+
+        <!-- Login -->
+        <div class="card" id="card-login">
+            <h2>🔐 Login Administrador</h2>
+            <p style="color: #666; margin-bottom: 16px;">Faça login com uma conta de administrador para poder corrigir os usuários:</p>
+            <div style="display: flex; gap: 12px; align-items: end;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">Email</label>
+                    <input type="email" id="login-email" placeholder="admin@wgalmeida.com.br"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">Senha</label>
+                    <input type="password" id="login-senha" placeholder="Sua senha"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
+            </div>
+            <p id="login-status" style="margin-top: 12px; font-size: 14px;"></p>
+        </div>
+
+        <!-- Alerta -->
+        <div class="alert alert-info" id="alert-info">
+            <strong>Como funciona:</strong> Esta ferramenta cria usuários no Supabase Auth com email já confirmado.<br>
+            <strong>Formato da senha:</strong> 3 dígitos do CPF + 3 letras do Nome + 3 dígitos do Telefone<br>
+            <strong>Exemplo:</strong> CPF 342.xxx.xxx-xx, Nome Wilson, Tel (11) 99991-xxxx → Senha: <code>342Wil991</code>
+        </div>
+
+        <!-- Tabela de Usuários -->
+        <div class="card">
+            <h2>Usuários sem Acesso Auth</h2>
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <span>Carregando...</span>
+            </div>
+            <table id="tabela-usuarios">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-usuarios">
+                    <tr><td colspan="5" style="text-align: center; color: #999;">Clique em "Atualizar Lista" para carregar</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Senhas Geradas -->
+        <div class="card hidden" id="card-senhas">
+            <h2>🔑 Senhas Geradas</h2>
+            <p style="color: #666; margin-bottom: 16px;">Copie e envie estas credenciais para os usuários por WhatsApp:</p>
+            <div class="password-display">
+                <div class="password-list" id="lista-senhas"></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top: 16px;" onclick="copiarTodasSenhas()">
+                📋 Copiar Todas as Credenciais
+            </button>
+        </div>
+
+        <!-- Log de Execução -->
+        <div class="card">
+            <h2>Log de Execução</h2>
+            <div class="log" id="log">Aguardando ações...</div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Supabase - WG Dev
+        const SUPABASE_URL = 'https://ahlqzzkxuutwoepirpzr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobHF6emt4dXV0d29lcGlycHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NzEyNDMsImV4cCI6MjA3NjE0NzI0M30.gLz5lpB5YlQpTfxzJjmILZwGp_H_XsT81nM2vXDbs7Y';
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let usuariosSemAuth = [];
+        let senhasGeradas = [];
+        let loggedIn = false;
+
+        async function fazerLogin() {
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+            const statusEl = document.getElementById('login-status');
+
+            if (!email || !senha) {
+                statusEl.innerHTML = '<span style="color: #ef4444;">Preencha email e senha</span>';
+                return;
+            }
+
+            statusEl.innerHTML = '<span style="color: #666;">Entrando...</span>';
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: senha
+                });
+
+                if (error) {
+                    statusEl.innerHTML = `<span style="color: #ef4444;">Erro: ${error.message}</span>`;
+                    return;
+                }
+
+                loggedIn = true;
+                statusEl.innerHTML = `<span style="color: #10b981;">✅ Logado como ${data.user.email}</span>`;
+                document.getElementById('card-login').style.background = '#ecfdf5';
+                document.getElementById('card-login').style.borderColor = '#10b981';
+                log(`Login realizado: ${data.user.email}`, 'success');
+
+                // Carregar lista automaticamente
+                listarUsuarios();
+            } catch (err) {
+                statusEl.innerHTML = `<span style="color: #ef4444;">Erro: ${err.message}</span>`;
+            }
+        }
+
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const className = `log-${type}`;
+            logEl.innerHTML += `<div class="log-entry ${className}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        async function listarUsuarios() {
+            try {
+                document.getElementById('loading').classList.remove('hidden');
+                log('Buscando usuários sem auth diretamente no banco...', 'info');
+
+                // Buscar diretamente no banco (sem Edge Function)
+                const { data: usuarios, error } = await supabaseClient
+                    .from('usuarios')
+                    .select(`
+                        id,
+                        pessoa_id,
+                        auth_user_id,
+                        tipo_usuario,
+                        ativo,
+                        pessoas:pessoa_id (
+                            id,
+                            nome,
+                            email,
+                            cpf,
+                            telefone
+                        )
+                    `)
+                    .is('auth_user_id', null)
+                    .order('criado_em', { ascending: false });
+
+                if (error) {
+                    log(`Erro ao buscar: ${error.message}`, 'error');
+                    document.getElementById('loading').classList.add('hidden');
+                    return;
+                }
+
+                usuariosSemAuth = (usuarios || []).map(u => ({
+                    usuario_id: u.id,
+                    pessoa_id: u.pessoa_id,
+                    tipo_usuario: u.tipo_usuario,
+                    ativo: u.ativo,
+                    nome: u.pessoas?.nome,
+                    email: u.pessoas?.email,
+                    cpf: u.pessoas?.cpf,
+                    telefone: u.pessoas?.telefone,
+                    tem_email: !!u.pessoas?.email,
+                }));
+
+                // Atualizar estatísticas
+                document.getElementById('stat-total').textContent = usuariosSemAuth.length;
+                document.getElementById('stat-sem-auth').textContent = usuariosSemAuth.length;
+                document.getElementById('stat-sem-email').textContent = usuariosSemAuth.filter(u => !u.tem_email).length;
+                document.getElementById('stat-corrigiveis').textContent = usuariosSemAuth.filter(u => u.tem_email).length;
+
+                // Atualizar tabela
+                const tbody = document.getElementById('tbody-usuarios');
+                if (usuariosSemAuth.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #10b981;">✅ Todos os usuários já têm acesso Auth!</td></tr>';
+                } else {
+                    tbody.innerHTML = usuariosSemAuth.map(u => `
+                        <tr id="row-${u.usuario_id}">
+                            <td><strong>${u.nome || 'Sem nome'}</strong></td>
+                            <td>${u.email || '<span class="badge badge-warning">Sem email</span>'}</td>
+                            <td><span class="badge badge-info">${u.tipo_usuario}</span></td>
+                            <td>
+                                <div class="status-indicator">
+                                    <span class="status-dot ${u.tem_email ? 'pending' : 'error'}"></span>
+                                    ${u.tem_email ? 'Pode ser corrigido' : 'Precisa de email'}
+                                </div>
+                            </td>
+                            <td>
+                                ${u.tem_email
+                                    ? `<button class="btn btn-success" onclick="corrigirUsuario('${u.usuario_id}', '${u.nome}', '${u.email}')">Corrigir</button>`
+                                    : '<span style="color: #999;">Cadastre email</span>'
+                                }
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+                log(`Encontrados ${usuariosSemAuth.length} usuários sem auth`, 'success');
+
+            } catch (err) {
+                log(`Erro: ${err.message}`, 'error');
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        // Gera senha personalizada: 3 dígitos CPF + 3 letras Nome + 3 dígitos Telefone
+        function gerarSenhaPersonalizada(cpf, nome, telefone) {
+            const cpfLimpo = (cpf || "").replace(/[^0-9]/g, "");
+            const cpfParte = cpfLimpo.substring(0, 3).padEnd(3, "0");
+
+            const nomeLimpo = (nome || "Usuario").replace(/[^a-zA-ZÀ-ÿ]/g, "");
+            const nomeParte = nomeLimpo.substring(0, 1).toUpperCase() +
+                              nomeLimpo.substring(1, 3).toLowerCase();
+
+            const telLimpo = (telefone || "").replace(/[^0-9]/g, "");
+            const telParte = telLimpo.length >= 3
+                ? telLimpo.substring(telLimpo.length - 3)
+                : telLimpo.padStart(3, "1");
+
+            return cpfParte + nomeParte + telParte;
+        }
+
+        async function corrigirUsuario(usuarioId, nome, email) {
+            if (!loggedIn) {
+                log('Faça login primeiro!', 'error');
+                alert('Faça login primeiro para corrigir usuários.');
+                return;
+            }
+
+            try {
+                log(`Corrigindo usuário: ${nome} (${email})...`, 'info');
+
+                // Buscar dados completos do usuário para gerar senha
+                const usuario = usuariosSemAuth.find(u => u.usuario_id === usuarioId);
+                const senhaEsperada = usuario ? gerarSenhaPersonalizada(usuario.cpf, usuario.nome, usuario.telefone) : null;
+
+                const { data, error } = await supabaseClient.functions.invoke('vincular-usuarios-existentes', {
+                    body: { modo: 'corrigir', usuario_id: usuarioId }
+                });
+
+                if (error) {
+                    log(`Erro ao corrigir ${nome}: ${error.message}`, 'error');
+                    return;
+                }
+
+                if (!data.sucesso) {
+                    log(`Erro ao corrigir ${nome}: ${data.erro}`, 'error');
+                    return;
+                }
+
+                // Atualizar linha na tabela
+                const row = document.getElementById(`row-${usuarioId}`);
+                if (row) {
+                    row.querySelector('.status-indicator').innerHTML = `
+                        <span class="status-dot success"></span>
+                        Corrigido!
+                    `;
+                    row.querySelector('td:last-child').innerHTML = '<span class="badge badge-success">✅ OK</span>';
+                }
+
+                if (data.ja_existia) {
+                    log(`${nome}: Vinculado! Email já existia no Auth. Use recuperação de senha.`, 'warning');
+                } else {
+                    const senha = data.senha || senhaEsperada;
+                    log(`${nome}: Criado com sucesso! Senha: ${senha}`, 'success');
+                    adicionarSenha(nome, email, senha);
+                }
+
+            } catch (err) {
+                log(`Erro: ${err.message}`, 'error');
+            }
+        }
+
+        async function corrigirTodos() {
+            if (!loggedIn) {
+                log('Faça login primeiro!', 'error');
+                alert('Faça login primeiro para corrigir usuários.');
+                return;
+            }
+
+            if (!confirm('Isso vai criar acesso para TODOS os usuários sem auth. Continuar?')) {
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('btn-corrigir-todos');
+                btn.disabled = true;
+                btn.textContent = '⏳ Processando...';
+
+                log('Iniciando correção em lote...', 'info');
+
+                const { data, error } = await supabaseClient.functions.invoke('vincular-usuarios-existentes', {
+                    body: { modo: 'corrigir_todos' }
+                });
+
+                if (error) {
+                    log(`Erro: ${error.message}`, 'error');
+                    return;
+                }
+
+                if (!data.sucesso) {
+                    log(`Erro: ${data.erro}`, 'error');
+                    return;
+                }
+
+                log(`Processados: ${data.processados}`, 'info');
+                log(`Criados: ${data.criados}`, 'success');
+                log(`Vinculados: ${data.vinculados}`, 'warning');
+                log(`Erros: ${data.erros}`, data.erros > 0 ? 'error' : 'info');
+
+                // Adicionar senhas geradas
+                for (const resultado of data.resultados) {
+                    if (resultado.status === 'criado' && resultado.senha) {
+                        adicionarSenha(resultado.nome, resultado.email, resultado.senha);
+                    }
+                    if (resultado.status === 'erro') {
+                        log(`Erro em ${resultado.nome}: ${resultado.erro}`, 'error');
+                    }
+                }
+
+                // Atualizar lista
+                await listarUsuarios();
+
+            } catch (err) {
+                log(`Erro: ${err.message}`, 'error');
+            } finally {
+                const btn = document.getElementById('btn-corrigir-todos');
+                btn.disabled = false;
+                btn.textContent = '✅ Corrigir Todos Automaticamente';
+            }
+        }
+
+        function adicionarSenha(nome, email, senha) {
+            senhasGeradas.push({ nome, email, senha });
+
+            const card = document.getElementById('card-senhas');
+            card.classList.remove('hidden');
+
+            const lista = document.getElementById('lista-senhas');
+            lista.innerHTML = senhasGeradas.map((s, i) => `
+                <div class="password-item">
+                    <div>
+                        <strong>${s.nome}</strong><br>
+                        <span style="color: #666;">Email: ${s.email}</span><br>
+                        <span style="color: #10b981; font-weight: bold;">Senha: ${s.senha}</span>
+                    </div>
+                    <button class="copy-btn" onclick="copiarCredencial(${i})">📋 Copiar</button>
+                </div>
+            `).join('');
+        }
+
+        function copiarCredencial(index) {
+            const s = senhasGeradas[index];
+            const texto = `Olá ${s.nome}!\n\nSeu acesso ao WG Easy foi criado:\n\n🌐 Link: https://easy.wgalmeida.com.br\n📧 Email: ${s.email}\n🔑 Senha: ${s.senha}\n\nFaça login e altere sua senha no primeiro acesso.`;
+            navigator.clipboard.writeText(texto);
+            alert('Credenciais copiadas!');
+        }
+
+        function copiarTodasSenhas() {
+            const texto = senhasGeradas.map(s =>
+                `${s.nome}\nEmail: ${s.email}\nSenha: ${s.senha}\n`
+            ).join('\n---\n\n');
+            navigator.clipboard.writeText(texto);
+            alert('Todas as credenciais foram copiadas!');
+        }
+
+        // Carregar ao iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            log('Sistema iniciado. Clique em "Atualizar Lista" para começar.', 'info');
+        });
+    </script>
+</body>
+</html>

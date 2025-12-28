@@ -1,0 +1,221 @@
+/* =========================================
+   Layout principal (sidebar + conteúdo)
+   ========================================= */
+.layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #f7f7f7;
+}
+
+/* Sidebar fixa à esquerda */
+.layout > .wg-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  border-right: 1px solid #e5e5e5;
+  background: #fff;
+  overflow-y: auto;
+}
+
+/* Coluna direita (topbar + tabs + conteúdo) */
+.layout-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Área de conteúdo scrollável */
+.layout-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background: #f7f7f7;
+}
+
+/* =========================================
+   Tabs horizontais (TabNavigation)
+   ========================================= */
+.wg-tabs-container {
+  background: #fff;
+  border-bottom: 1px solid #e7e7e7;
+  padding: 0 12px;
+}
+
+.wg-tabs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 42px;
+  gap: 8px;
+}
+
+.wg-tabs-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.wg-tab-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  color: #444;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 120ms ease;
+}
+
+.wg-tab-item:hover {
+  background: #ededed;
+}
+
+.wg-tab-item.wg-tab-active {
+  background: #ffe6db;
+  color: #f25c26;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px #ffd0bd;
+}
+
+.wg-tab-close {
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.wg-tabs-actions button {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.wg-tabs-actions button:hover {
+  background: #f1f1f1;
+}
+
+/* Estado de loading do título da aba */
+.wg-tab-loading {
+  opacity: 0.6;
+  animation: tab-pulse 1s ease-in-out infinite;
+}
+
+@keyframes tab-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Topbar minimal */
+.topbar {
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topbar-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  color: #1a1a1a;
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  color: #1a1a1a;
+}
+.topbar-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #444;
+  font-size: 14px;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f2f2f2;
+  border: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.user-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+}
+.user-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  width: 180px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  z-index: 50;
+}
+.user-email {
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #666;
+  border-bottom: 1px solid #f0f0f0;
+}
+.user-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+.user-menu-item:hover {
+  background: #f7f7f7;
+}
+
+@media (max-width: 768px) {
+  .layout > .wg-sidebar {
+    width: 240px;
+  }
+  .topbar-title {
+    font-size: 14px;
+  }
+  .layout-content {
+    padding: 16px;
+  }
+}

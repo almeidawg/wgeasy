@@ -1,0 +1,12 @@
+RewriteEngine On
+RewriteBase /
+
+# Não reprocessar o arquivo principal
+RewriteRule ^index\.html$ - [L]
+
+# Permitir arquivos estáticos existentes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirecionar tudo para o SPA
+RewriteRule . /index.html [L]
