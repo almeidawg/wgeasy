@@ -42,6 +42,10 @@ const NucleoKanbanPage = lazy(() => import("@/pages/oportunidades/NucleoKanbanPa
 const AnaliseProjetoListPage = lazy(() => import("@/pages/analise-projeto/AnaliseProjetoListPage"));
 const AnaliseProjetoEditorPage = lazy(() => import("@/pages/analise-projeto/AnaliseProjetoEditorPage"));
 
+/* ===================== LAZY IMPORTS - EVF (ESTUDO DE VIABILIDADE FINANCEIRA) ===================== */
+const EVFPage = lazy(() => import("@/pages/evf/EVFPage"));
+const EVFEditorPage = lazy(() => import("@/pages/evf/EVFEditorPage"));
+
 /* ===================== LAZY IMPORTS - PROPOSTAS ===================== */
 const PropostasPage = lazy(() => import("@/pages/propostas/PropostasPage"));
 const PropostaEmissaoPage = lazy(() => import("@/pages/PropostaEmissaoPage"));
@@ -88,6 +92,9 @@ const AssistenciaDetalhePage = lazy(() => import("@/pages/assistencia/Assistenci
 /* ===================== LAZY IMPORTS - FINANCEIRO ===================== */
 const FinanceiroDashboardNew = lazy(() => import("@/pages/financeiro/FinanceiroDashboardNew"));
 const LancamentosPage = lazy(() => import("@/pages/financeiro/LancamentosPage"));
+
+/* ===================== LAZY IMPORTS - FINANCEIRO PESSOAL ===================== */
+const FinanceiroPessoalPage = lazy(() => import("@/modules/financeiro-pessoal").then(m => ({ default: m.FinanceiroPessoalPage })));
 const ObrasFinanceiroPage = lazy(() => import("@/pages/financeiro/ObrasFinanceiroPage"));
 const SolicitacoesPage = lazy(() => import("@/pages/financeiro/SolicitacoesPage"));
 const ComissionamentoPage = lazy(() => import("@/pages/financeiro/ComissionamentoPage"));
@@ -179,6 +186,10 @@ const FornecedorDashboardPage = lazy(() => import("@/pages/fornecedor/Fornecedor
 const FornecedorCotacoesPage = lazy(() => import("@/pages/fornecedor/FornecedorCotacoesPage"));
 const FornecedorServicosPage = lazy(() => import("@/pages/fornecedor/FornecedorServicosPage"));
 
+/* ===================== LAZY IMPORTS - SERVIÇOS ===================== */
+const ServicosPage = lazy(() => import("@/modules/servicos").then(m => ({ default: m.ServicosPage })));
+const AceitarServicoPage = lazy(() => import("@/modules/servicos").then(m => ({ default: m.AceitarServicoPage })));
+
 /* ===================== LAZY IMPORTS - OUTROS ===================== */
 const WGExperienceClientesPage = lazy(() => import("@/pages/wg-experience/WGExperienceClientesPage"));
 const DepositoWGPage = lazy(() => import("@/pages/DepositoWGPage"));
@@ -215,6 +226,10 @@ export default function App() {
 
           {/* AÇÃO DO CLIENTE NA PROPOSTA - Aprovar/Recusar (público) */}
           <Route path="/proposta/:id/:acao" element={<PropostaAcaoClientePage />} />
+
+          {/* ACEITAR SERVIÇO - Página pública para prestadores */}
+          <Route path="/servico/aceitar/:token" element={<AceitarServicoPage />} />
+          <Route path="/servico/aceitar/p/:token" element={<AceitarServicoPage />} />
 
           {/* ÁREA DO CLIENTE - PÚBLICA (autenticação via parâmetros de URL ou Supabase Auth) */}
           {/* A AreaClientePage tem sua própria lógica de autenticação para links diretos */}
@@ -339,6 +354,11 @@ export default function App() {
             <Route path="/analise-projeto/nova" element={<AnaliseProjetoEditorPage />} />
             <Route path="/analise-projeto/:id" element={<AnaliseProjetoEditorPage />} />
 
+            {/* EVF - ESTUDO DE VIABILIDADE FINANCEIRA */}
+            <Route path="/evf" element={<EVFPage />} />
+            <Route path="/evf/novo" element={<EVFEditorPage />} />
+            <Route path="/evf/:id" element={<EVFEditorPage />} />
+
             {/* PROPOSTAS - Versão V3 Nova Estrutura (Cliente + Analise + Nucleos) */}
             <Route path="/propostas" element={<PropostasPage />} />
             <Route path="/propostas/nova" element={<PropostaEmissaoPageV3 />} />
@@ -372,6 +392,9 @@ export default function App() {
             <Route path="/financeiro/importar-extrato" element={<ImportarExtratoPage />} />
             <Route path="/financeiro/config" element={<ConfigFinanceiroPage />} />
             <Route path="/financeiro/plano-contas" element={<ConfigFinanceiroPage />} />
+
+            {/* MEU FINANCEIRO - FINANCEIRO PESSOAL */}
+            <Route path="/meu-financeiro" element={<FinanceiroPessoalPage />} />
 
             {/* CRONOGRAMA */}
             <Route path="/cronograma" element={<CronogramaDashboardPage />} />
@@ -422,6 +445,9 @@ export default function App() {
             <Route path="/compras/editar/:id" element={<PedidoCompraFormPage />} />
             <Route path="/compras/importar" element={<ImportarProdutoPage />} />
             <Route path="/compras/:id" element={<ComprasDetalhePage />} />
+
+            {/* SERVIÇOS */}
+            <Route path="/servicos" element={<ServicosPage />} />
 
             {/* ASSISTÊNCIA */}
             <Route path="/assistencia" element={<AssistenciaPage />} />

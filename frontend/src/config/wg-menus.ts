@@ -26,6 +26,12 @@ const wgMenus: MenuSection[] = [
     items: []
   },
   {
+    section: "Meu Financeiro",
+    icon: "💳",
+    path: "/meu-financeiro", // Financeiro Pessoal do usuário logado
+    items: []
+  },
+  {
     section: "Pessoas",
     icon: "👥",
     maxVisible: 4,
@@ -45,8 +51,9 @@ const wgMenus: MenuSection[] = [
   {
     section: "Comercial",
     icon: "💼",
-    maxVisible: 3,
+    maxVisible: 4,
     items: [
+      { label: "Estudo (EVF)", path: "/evf" },
       { label: "Análise de Projeto", path: "/analise-projeto" },
       { label: "Propostas", path: "/propostas" },
       { label: "Contratos", path: "/contratos" }
@@ -74,6 +81,12 @@ const wgMenus: MenuSection[] = [
       { label: "Aprovações", path: "/planejamento/aprovacoes" },
       { label: "Compras", path: "/compras" }
     ]
+  },
+  {
+    section: "Serviços",
+    icon: "🚚",
+    path: "/servicos",
+    items: []
   },
   {
     section: "Cronograma",

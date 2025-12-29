@@ -28,7 +28,8 @@ import {
   ChevronRight,
   Circle,
   X,
-  Scale
+  Scale,
+  Truck
 } from "lucide-react";
 
 type SidebarProps = {
@@ -60,6 +61,8 @@ function sectionIcon(section: string) {
       return <CheckSquare size={size} />;
     case "financeiro":
       return <Coins size={size} />;
+    case "meu financeiro":
+      return <Wallet size={size} />;
     case "deposito wg":
     case "depósito wg":
       return <Box size={size} />;
@@ -81,6 +84,9 @@ function sectionIcon(section: string) {
     case "juridico":
     case "jurídico":
       return <Scale size={size} />;
+    case "serviços":
+    case "servicos":
+      return <Truck size={size} />;
     default:
       return <Circle size={size} />;
   }
