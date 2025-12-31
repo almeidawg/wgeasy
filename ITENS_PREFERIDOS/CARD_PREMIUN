@@ -1,0 +1,162 @@
+================================================================================
+                           CARD PREMIUM
+                    Componente de Preferência - WG Easy
+                         Criado em: 29/12/2024
+================================================================================
+
+DESCRIÇÃO:
+Card estilo "premium" com visual moderno, gradiente, barra de progresso
+e animações. Baseado no design dos cartões de crédito.
+
+================================================================================
+                              ARQUIVO
+================================================================================
+
+CAMINHO:
+src/components/ui/card-premium.tsx
+
+IMPORT:
+```tsx
+import {
+  CardPremium,
+  CardPremiumAction,
+  ColorPickerPremium,
+  CORES_PREMIUM
+} from '@/components/ui/card-premium';
+```
+
+================================================================================
+                          PROPS DISPONÍVEIS
+================================================================================
+
+| Prop                 | Tipo          | Descrição                            |
+|----------------------|---------------|--------------------------------------|
+| titulo               | string        | Nome principal do card               |
+| subtitulo            | string        | Texto secundário (banco, categoria)  |
+| badge                | string        | Tag no canto (bandeira, status)      |
+| badgeSecundario      | string        | Segundo badge menor                  |
+| valorPrincipal       | string/number | Valor em destaque grande             |
+| labelValorPrincipal  | string        | Label do valor principal             |
+| valorSecundario      | string/number | Segundo valor                        |
+| labelValorSecundario | string        | Label do segundo valor               |
+| progresso            | number        | Barra de progresso (0-100)           |
+| progressoLabel       | string        | Label esquerda da barra              |
+| progressoSubLabel    | string        | Label direita da barra               |
+| cor                  | string        | Cor de fundo (#hex)                  |
+| icone                | LucideIcon    | Ícone opcional no topo               |
+| infoRodape           | ReactNode     | Informações no rodapé                |
+| acoes                | ReactNode     | Botões de ação                       |
+| delay                | number        | Delay da animação (index * 0.05)     |
+| onClick              | function      | Função ao clicar no card             |
+
+================================================================================
+                        PALETA DE CORES PREMIUM
+================================================================================
+
+#1A1A2E - Preto Premium
+#16213E - Azul Noite
+#0F3460 - Azul Profundo
+#533483 - Roxo Royal
+#E94560 - Vermelho Intense
+#F25C26 - Laranja WG
+#22C55E - Verde Sucesso
+#3B82F6 - Azul Céu
+#8B5CF6 - Violeta
+#EC4899 - Pink
+#EAB308 - Dourado
+#6B7280 - Cinza Elegante
+
+================================================================================
+                          EXEMPLOS DE USO
+================================================================================
+
+1. CARTÃO DE CRÉDITO:
+```tsx
+<CardPremium
+  titulo="Nubank Ultravioleta"
+  subtitulo="Nubank"
+  badge="Mastercard"
+  valorPrincipal="R$ 1.500,00"
+  labelValorPrincipal="Fatura Atual"
+  progresso={45}
+  progressoLabel="Disponível: R$ 3.500"
+  progressoSubLabel="Limite: R$ 5.000"
+  cor="#533483"
+  infoRodape={<span>Venc. dia 10</span>}
+  acoes={
+    <>
+      <CardPremiumAction icon={Edit} onClick={handleEdit} title="Editar" />
+      <CardPremiumAction icon={Archive} onClick={handleArchive} title="Arquivar" />
+    </>
+  }
+/>
+```
+
+2. META FINANCEIRA:
+```tsx
+<CardPremium
+  titulo="Viagem Europa"
+  subtitulo="Meta de Economia"
+  valorPrincipal="R$ 8.500,00"
+  labelValorPrincipal="Economizado"
+  progresso={68}
+  progressoLabel="68% concluído"
+  progressoSubLabel="Meta: R$ 12.500"
+  cor="#22C55E"
+  icone={Target}
+/>
+```
+
+3. PROJETO/OBRA:
+```tsx
+<CardPremium
+  titulo="Apt. 1402 - Torre Sul"
+  subtitulo="Cliente: João Silva"
+  badge="Arquitetura"
+  valorPrincipal="R$ 450.000"
+  labelValorPrincipal="Valor Total"
+  progresso={35}
+  progressoLabel="35% executado"
+  cor="#5E9B94"
+  icone={Building2}
+  infoRodape={<span>Prazo: 120 dias</span>}
+/>
+```
+
+4. INVESTIMENTO:
+```tsx
+<CardPremium
+  titulo="Tesouro Selic 2029"
+  subtitulo="Renda Fixa"
+  badge="+12,5%"
+  valorPrincipal="R$ 25.000,00"
+  labelValorPrincipal="Valor Investido"
+  valorSecundario="R$ 28.125,00"
+  labelValorSecundario="Valor Atual"
+  cor="#EAB308"
+  icone={TrendingUp}
+/>
+```
+
+5. SELETOR DE CORES (FORMULÁRIO):
+```tsx
+<ColorPickerPremium
+  value={cor}
+  onChange={(novaCor) => setCor(novaCor)}
+/>
+```
+
+================================================================================
+                        USOS RECOMENDADOS
+================================================================================
+
+- Cartões de Crédito
+- Metas Financeiras
+- Projetos/Obras em Andamento
+- Indicadores de Performance (KPIs)
+- Assinaturas/Planos
+- Investimentos
+- Contratos Ativos
+- Orçamentos
+
+================================================================================
