@@ -255,7 +255,11 @@
       "Bash(git commit:*)",
       "Bash(where psql:*)",
       "Bash(git init:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(start \"\" \"C:\\\\Users\\\\Atendimento\\\\Documents\\\\01VISUALSTUDIO_OFICIAL\\\\sistema\\\\wgeasy\\\\frontend\\\\database\\\\IMPORTAR-AUDITORIA-2023.sql\")",
+      "Bash(for dir in \"/d/Grupo WG Almeida/11 . Projetos Concluídos\"/2021*)",
+      "Bash(start \"\" \"C:\\\\Users\\\\Atendimento\\\\Documents\\\\01VISUALSTUDIO_OFICIAL\\\\sistema\\\\wgeasy\\\\frontend\\\\database\\\\AUDITORIA-2021-CLIENTES.sql\")",
+      "Bash(start \"\" \"C:\\\\Users\\\\Atendimento\\\\Documents\\\\01VISUALSTUDIO_OFICIAL\\\\sistema\\\\wgeasy\\\\frontend\\\\database\\\\AUDITORIA-2021-LANCAMENTOS.sql\")"
     ],
     "deny": [],
     "ask": []
