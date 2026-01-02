@@ -1,0 +1,977 @@
+[
+  {
+    "id": 2,
+    "descricao": "Protetor de Ralo e Tubulações 10cm Salva Ralo",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Protetor%20Ralo%20Tubula%C3%A7%C3%B5es%2010cm%20Salva"
+  },
+  {
+    "id": 3,
+    "descricao": "Protetor de Piso 25x1m Salva Piso",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Protetor%20Piso%2025x1m%20Salva%20Piso"
+  },
+  {
+    "id": 4,
+    "descricao": "Proteção de Pisos e Bancadas Salva Obra Papelão Reforçado 1,2x25m 300g Salvabras",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Prote%C3%A7%C3%A3o%20Pisos%20Bancadas%20Salva%20Obra"
+  },
+  {
+    "id": 5,
+    "descricao": "Bobina Papel Ondulado com 50 metros",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Bobina%20Papel%20Ondulado%20com%20metros"
+  },
+  {
+    "id": 6,
+    "descricao": "Saco alvejado de pano",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Saco%20alvejado%20pano"
+  },
+  {
+    "id": 7,
+    "descricao": "Fita Crepe Branca 48mm x 50m",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fita%20Crepe%20Branca%2048mm%2050m"
+  },
+  {
+    "id": 8,
+    "descricao": "Fita Crepe Branca 24mm x 50m",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fita%20Crepe%20Branca%2024mm%2050m"
+  },
+  {
+    "id": 9,
+    "descricao": "Vassoura Original Noviça Concept Bettanin",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Vassoura%20Original%20Novi%C3%A7a%20Concept%20Bettanin"
+  },
+  {
+    "id": 11,
+    "descricao": "Argamassa Polimérica Impermeabilizante Viapol Viaplus 7000 Fibras 18kg Cinza",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Argamassa%20Polim%C3%A9rica%20Impermeabilizante%20Viapol%20Viaplus"
+  },
+  {
+    "id": 12,
+    "descricao": "Aditivo para Chapisco Bianco 18kg Branco Vedacit",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Aditivo%20para%20Chapisco%20Bianco%2018kg"
+  },
+  {
+    "id": 13,
+    "descricao": "Areia fina/média saco  20 Kg",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Areia%20fina%2Fm%C3%A9dia%20saco"
+  },
+  {
+    "id": 14,
+    "descricao": "Pedra Britada 1 Saco de 20kg",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Pedra%20Britada%20Saco%2020kg"
+  },
+  {
+    "id": 15,
+    "descricao": "Cimento CP II F 32 Todas as Obras 50kg Votoran",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cimento%20Todas%20Obras%2050kg%20Votoran"
+  },
+  {
+    "id": 16,
+    "descricao": "Gesso em Pó - 40kg",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Gesso%2040kg"
+  },
+  {
+    "id": 17,
+    "descricao": "Argila Expandida - 50 Litros",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Argila%20Expandida%20Litros"
+  },
+  {
+    "id": 18,
+    "descricao": "Chapa de Madeira Compensado Resinado 9mm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Chapa%20Madeira%20Compensado%20Resinado%209mm"
+  },
+  {
+    "id": 19,
+    "descricao": "Caixa De Luz Quadrada 4x4",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Caixa%20Luz%20Quadrada%204x4"
+  },
+  {
+    "id": 20,
+    "descricao": "Caixa De Luz Quadrada 4x2",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Caixa%20Luz%20Quadrada%204x2"
+  },
+  {
+    "id": 21,
+    "descricao": "Caixa De Luz Quadrada 4x2 Drywall",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Caixa%20Luz%20Quadrada%204x2%20Drywall"
+  },
+  {
+    "id": 22,
+    "descricao": "Tijolo Comum de Barro 4,3x9,1x18cm 10 Unidades",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Tijolo%20Comum%20Barro%204%2C3x9%2C1x18cm%20Unidades"
+  },
+  {
+    "id": 23,
+    "descricao": "Bloco Cerâmico Vedação 11,5x14x24cm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Bloco%20Cer%C3%A2mico%20Veda%C3%A7%C3%A3o%2011%2C5x14x24cm"
+  },
+  {
+    "id": 24,
+    "descricao": "Sacos para Entulho",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Sacos%20para%20Entulho"
+  },
+  {
+    "id": 25,
+    "descricao": "Cano Marrom PVC Soldável 25mm ou 3/4\" 3m",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cano%20Marrom%20PVC%20Sold%C3%A1vel%2025mm"
+  },
+  {
+    "id": 26,
+    "descricao": "Joelho 45° Marrom PVC Soldável 25mm ou 3/4\"",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Joelho%2045%C2%B0%20Marrom%20PVC%20Sold%C3%A1vel"
+  },
+  {
+    "id": 27,
+    "descricao": "Joelho 90° Marrom PVC Soldável 25mm ou 3/4\"",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Joelho%2090%C2%B0%20Marrom%20PVC%20Sold%C3%A1vel"
+  },
+  {
+    "id": 28,
+    "descricao": "Joelho 90° com Bucha PVC Azul Roscável e Soldável 3/4x1/2\" 25x20mm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Joelho%2090%C2%B0%20com%20Bucha%20PVC"
+  },
+  {
+    "id": 29,
+    "descricao": "Plug PVC Branco Roscável 1/2\" 20mm Plastilit",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Plug%20PVC%20Branco%20Rosc%C3%A1vel%201%2F2%22"
+  },
+  {
+    "id": 30,
+    "descricao": "Plug PVC Branco Roscável 3/4\" 25mm Plastilit",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Plug%20PVC%20Branco%20Rosc%C3%A1vel%203%2F4%22"
+  },
+  {
+    "id": 31,
+    "descricao": "Cano PVC para Esgoto 40mm ou 1.1/4\" 3m Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cano%20PVC%20para%20Esgoto%2040mm"
+  },
+  {
+    "id": 32,
+    "descricao": "Joelho 45° Branco PVC Soldável 40mm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Joelho%2045%C2%B0%20Branco%20PVC%20Sold%C3%A1vel"
+  },
+  {
+    "id": 33,
+    "descricao": "Joelho 90° Branco PVC Soldável 40mm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Joelho%2090%C2%B0%20Branco%20PVC%20Sold%C3%A1vel"
+  },
+  {
+    "id": 34,
+    "descricao": "Mangueira Flexível 60cm 1/2 Polegada Aço Inox Engate Fêmea X Fêmea Cozinha Banheiro Torneira Pia Sanitário",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Mangueira%20Flex%C3%ADvel%2060cm%201%2F2%20Polegada"
+  },
+  {
+    "id": 35,
+    "descricao": "Fita Veda Rosca 18mmx25m Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fita%20Veda%20Rosca%2018mmx25m%20Tigre"
+  },
+  {
+    "id": 36,
+    "descricao": "Cola para PVC Incolor Frasco 175g Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cola%20para%20PVC%20Incolor%20Frasco"
+  },
+  {
+    "id": 37,
+    "descricao": "Cano CPVC para Água Quente 22mm ou 3/4\" 3m Aquatherm Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cano%20CPVC%20para%20%C3%81gua%20Quente"
+  },
+  {
+    "id": 38,
+    "descricao": "Joelho 90° CPVC Liso para Condução de Água Quente 22mm ou 3/4\" Aquatherm Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Joelho%2090%C2%B0%20CPVC%20Liso%20para"
+  },
+  {
+    "id": 39,
+    "descricao": "Joelho de Transição CPVC Roscável e Liso para Condução de Água Quente 22mm ou 3/4\" Aquatherm  Rosca 1/2",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Joelho%20Transi%C3%A7%C3%A3o%20CPVC%20Rosc%C3%A1vel%20Liso"
+  },
+  {
+    "id": 40,
+    "descricao": "Tê 90° CPVC Liso para Condução de Água Quente 22mm ou 3/4\" Aquatherm Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=90%C2%B0%20CPVC%20Liso%20para%20Condu%C3%A7%C3%A3o"
+  },
+  {
+    "id": 41,
+    "descricao": "Torneira Registro Esfera Maquina Tanque 1/4 De Volta Torneira Esferica Borboleta Metal",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Torneira%20Registro%20Esfera%20Maquina%20Tanque"
+  },
+  {
+    "id": 42,
+    "descricao": "Cola para CPVC Frasco 175g Aquatherm Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cola%20para%20CPVC%20Frasco%20175g"
+  },
+  {
+    "id": 43,
+    "descricao": "Abraçadeira 3/4\" Cinza",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Abra%C3%A7adeira%203%2F4%22%20Cinza"
+  },
+  {
+    "id": 44,
+    "descricao": "Abraçadeira 1/2\" Cinza",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Abra%C3%A7adeira%201%2F2%22%20Cinza"
+  },
+  {
+    "id": 45,
+    "descricao": "Abracadeira Pvc Branco Pro 1\"",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Abracadeira%20Pvc%20Branco%20Pro"
+  },
+  {
+    "id": 46,
+    "descricao": "Tubo Pex 20mm Para Gás 10 Metros Amanco",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Tubo%20Pex%2020mm%20Para%20G%C3%A1s"
+  },
+  {
+    "id": 47,
+    "descricao": "Cotovelo 20 Mm X 20 Mm Para Tubo Pex 20mm De Gás",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cotovelo%20Para%20Tubo%20Pex%2020mm"
+  },
+  {
+    "id": 48,
+    "descricao": "União Metálica 16 Pex Gás Amanco",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Uni%C3%A3o%20Met%C3%A1lica%20Pex%20G%C3%A1s%20Amanco"
+  },
+  {
+    "id": 49,
+    "descricao": "Cotovelo Multicamadas Pex Gás 16mm X 1/2\"",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cotovelo%20Multicamadas%20Pex%20G%C3%A1s%2016mm"
+  },
+  {
+    "id": 50,
+    "descricao": "Cotovelo Multicamadas Pex Gás 16mm X 1/2\"(f) Com Suporte",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cotovelo%20Multicamadas%20Pex%20G%C3%A1s%2016mm"
+  },
+  {
+    "id": 51,
+    "descricao": "Tee Metálico 16 Pex Gás Amanco",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Tee%20Met%C3%A1lico%20Pex%20G%C3%A1s%20Amanco"
+  },
+  {
+    "id": 52,
+    "descricao": "Conduíte Corrugado 3/4''     50 Metros",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Condu%C3%ADte%20Corrugado%203%2F4''%20Metros"
+  },
+  {
+    "id": 53,
+    "descricao": "Conduíte Corrugado 1\"                   25 Metros",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Condu%C3%ADte%20Corrugado%20Metros"
+  },
+  {
+    "id": 54,
+    "descricao": "Abraçadeira D com Cunha para Instalações Hidráulicas e Elétricas 3/4\" Aço Zincado",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Abra%C3%A7adeira%20com%20Cunha%20para%20Instala%C3%A7%C3%B5es"
+  },
+  {
+    "id": 55,
+    "descricao": "Abraçadeira D com Cunha para Instalações Hidráulicas e Elétricas 1/2\" Aço Zincado",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Abra%C3%A7adeira%20com%20Cunha%20para%20Instala%C3%A7%C3%B5es"
+  },
+  {
+    "id": 56,
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Amarelo Rolo 50 Metros - Ilumnação",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fio%20Cabo%20Flex%C3%ADvel%20Sil%201%2C5Mm"
+  },
+  {
+    "id": 57,
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Branco Rolo 50 Metros - Ilumnação",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fio%20Cabo%20Flex%C3%ADvel%20Sil%201%2C5Mm"
+  },
+  {
+    "id": 58,
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Amarelo Rolo 100 Metros - Ilumnação",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fio%20Cabo%20Flex%C3%ADvel%20Sil%201%2C5Mm"
+  },
+  {
+    "id": 59,
+    "descricao": "Fio Cabo Flexível Sil 1,5Mm Branco Rolo 100 Metros - Ilumnação",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fio%20Cabo%20Flex%C3%ADvel%20Sil%201%2C5Mm"
+  },
+  {
+    "id": 60,
+    "descricao": "Cabo Flexível 2,5mm 100Metros Azul 750V - Neutro Ilumnação",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cabo%20Flex%C3%ADvel%202%2C5mm%20100Metros%20Azul"
+  },
+  {
+    "id": 61,
+    "descricao": "Cabo Flexível 2,5mm 100Metros Verde 750V - Terra",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cabo%20Flex%C3%ADvel%202%2C5mm%20100Metros%20Verde"
+  },
+  {
+    "id": 62,
+    "descricao": "Cabo Flexível 4mm 100Metros Preto 750V SIL Fios",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cabo%20Flex%C3%ADvel%204mm%20100Metros%20Preto"
+  },
+  {
+    "id": 63,
+    "descricao": "Cabo Flexível 4mm 100Metros Vermelho 750V SIL Fios",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cabo%20Flex%C3%ADvel%204mm%20100Metros%20Vermelho"
+  },
+  {
+    "id": 64,
+    "descricao": "Quadro De Distribuição 18/24 + Barramentos Embutir Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Quadro%20Distribui%C3%A7%C3%A3o%2018%2F24%20Barramentos%20Embutir"
+  },
+  {
+    "id": 65,
+    "descricao": "Caixa de Distribuição de Embutir com Barramento 27/36 Disjuntores Tigre",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Caixa%20Distribui%C3%A7%C3%A3o%20Embutir%20com%20Barramento"
+  },
+  {
+    "id": 66,
+    "descricao": "Disjuntor DR Tripola 63A/30MA Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Tripola%2063A%2F30MA%20Steck"
+  },
+  {
+    "id": 67,
+    "descricao": "DPS Monopolar 45000A Front 275V Clamper",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=DPS%20Monopolar%2045000A%20Front%20275V"
+  },
+  {
+    "id": 68,
+    "descricao": "Disjuntor Din Monopolar Curva C 16A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Monopolar%20Curva%2016A"
+  },
+  {
+    "id": 69,
+    "descricao": "Disjuntor Din Monopolar Curva A 20A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Monopolar%20Curva%2020A"
+  },
+  {
+    "id": 70,
+    "descricao": "Disjuntor Din Monopolar Curva A 32A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Monopolar%20Curva%2032A"
+  },
+  {
+    "id": 71,
+    "descricao": "Disjuntor Din Bipolar Curva A 16A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Bipolar%20Curva%2016A"
+  },
+  {
+    "id": 72,
+    "descricao": "Disjuntor Din Bipolar Curva A 20A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Bipolar%20Curva%2020A"
+  },
+  {
+    "id": 73,
+    "descricao": "Disjuntor Din Bipolar Curva C 25A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Bipolar%20Curva%2025A"
+  },
+  {
+    "id": 74,
+    "descricao": "Disjuntor Din Bipolar Curva A 32A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Bipolar%20Curva%2032A"
+  },
+  {
+    "id": 75,
+    "descricao": "Disjuntor Din Monopolar Curva A 40A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Monopolar%20Curva%2040A"
+  },
+  {
+    "id": 76,
+    "descricao": "Disjuntor Din Bipolar Curva C 63A Steck",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disjuntor%20Din%20Bipolar%20Curva%2063A"
+  },
+  {
+    "id": 77,
+    "descricao": "Suporte para Placa 4x2 Horizontal Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Suporte%20para%20Placa%204x2%20Horizontal"
+  },
+  {
+    "id": 78,
+    "descricao": "Suporte para Placa 4x2 Vertical Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Suporte%20para%20Placa%204x2%20Vertical"
+  },
+  {
+    "id": 79,
+    "descricao": "Suporte para Placa 4x4 Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Suporte%20para%20Placa%204x4%20Pial"
+  },
+  {
+    "id": 80,
+    "descricao": "Placa sem Suporte 4x2 Horizontal 1Módulo Branco Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20sem%20Suporte%204x2%20Horizontal"
+  },
+  {
+    "id": 81,
+    "descricao": "Placa sem Suporte 4x2 Vertical 1 Módulo Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20sem%20Suporte%204x2%20Vertical"
+  },
+  {
+    "id": 82,
+    "descricao": "Placa sem Suporte 4x2 2 Módulos Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20sem%20Suporte%204x2%20M%C3%B3dulos"
+  },
+  {
+    "id": 83,
+    "descricao": "Placa sem Suporte 4x2 3 Módulos Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20sem%20Suporte%204x2%20M%C3%B3dulos"
+  },
+  {
+    "id": 84,
+    "descricao": "Placa Cega 4x2 Branco Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20Cega%204x2%20Branco%20Pial"
+  },
+  {
+    "id": 85,
+    "descricao": "Placa sem Suporte 4x4 2 Módulos Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20sem%20Suporte%204x4%20M%C3%B3dulos"
+  },
+  {
+    "id": 86,
+    "descricao": "Placa 4 Módulos + Suporte 4x4 - Pial Plus",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20M%C3%B3dulos%20Suporte%204x4%20Pial"
+  },
+  {
+    "id": 87,
+    "descricao": "Placa 6 Módulos 4x4 - Pial Plus",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20M%C3%B3dulos%204x4%20Pial%20Plus"
+  },
+  {
+    "id": 88,
+    "descricao": "Placa sem Suporte Cega 4x4 Branco Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Placa%20sem%20Suporte%20Cega%204x4"
+  },
+  {
+    "id": 89,
+    "descricao": "Módulo de Interruptor Simples 10A Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=M%C3%B3dulo%20Interruptor%20Simples%2010A%20Pial"
+  },
+  {
+    "id": 90,
+    "descricao": "Módulo de Interruptor Paralelo 10A Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=M%C3%B3dulo%20Interruptor%20Paralelo%2010A%20Pial"
+  },
+  {
+    "id": 91,
+    "descricao": "Módulo de Interruptor Intermediário 10A Pial Plus Pial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=M%C3%B3dulo%20Interruptor%20Intermedi%C3%A1rio%2010A%20Pial"
+  },
+  {
+    "id": 92,
+    "descricao": "Módulo de Tomada de Energia 10A Pial PlusPial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=M%C3%B3dulo%20Tomada%20Energia%2010A%20Pial"
+  },
+  {
+    "id": 93,
+    "descricao": "Módulo de Tomada de Energia 20A Pial PlusPial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=M%C3%B3dulo%20Tomada%20Energia%2020A%20Pial"
+  },
+  {
+    "id": 94,
+    "descricao": "Módulo de Tomada de Energia 20A Vermelho Pial PlusPial Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=M%C3%B3dulo%20Tomada%20Energia%2020A%20Vermelho"
+  },
+  {
+    "id": 95,
+    "descricao": "Conjunto 1 Tomada Energia 10A 4x2 Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Conjunto%20Tomada%20Energia%2010A%204x2"
+  },
+  {
+    "id": 96,
+    "descricao": "Conjunto 1 Tomada Energia 20A 4x2 Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Conjunto%20Tomada%20Energia%2020A%204x2"
+  },
+  {
+    "id": 97,
+    "descricao": "Conjunto 2 Tomadas Energia 10A 4x2 Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Conjunto%20Tomadas%20Energia%2010A%204x2"
+  },
+  {
+    "id": 98,
+    "descricao": "Conjunto 2 Interruptores Simples - Pial Plus - 612100",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Conjunto%20Interruptores%20Simples%20Pial%20Plus"
+  },
+  {
+    "id": 99,
+    "descricao": "Conjunto 1 Tomada e 1 Interruptor Energia Simples 10A 4x2 Branco Pial Plus Legrand",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Conjunto%20Tomada%20Interruptor%20Energia%20Simples"
+  },
+  {
+    "id": 100,
+    "descricao": "Módulo Dimmer Bivolt- Branco - Pial Plus",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=M%C3%B3dulo%20Dimmer%20Bivolt-%20Branco%20Pial"
+  },
+  {
+    "id": 101,
+    "descricao": "Cabo De Rede Cat6 Cmx Cx 305m Azul Sohoplus",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cabo%20Rede%20Cat6%20Cmx%20305m"
+  },
+  {
+    "id": 102,
+    "descricao": "Fio Som Cristal 2x12 -2,50 100m Alum Cobreado",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fio%20Som%20Cristal%202x12%20-2%2C50"
+  },
+  {
+    "id": 103,
+    "descricao": "Conduíte Corrugado 3/4''     50 Metros",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Condu%C3%ADte%20Corrugado%203%2F4''%20Metros"
+  },
+  {
+    "id": 104,
+    "descricao": "Cunha Para Azulejo - C/ 100 Peças Niveladora para Piso",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cunha%20Para%20Azulejo%20100%20Pe%C3%A7as"
+  },
+  {
+    "id": 105,
+    "descricao": "Espaçador Nivelador 1,0mm Smart Cortag Pacote com 100 Unidades",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Espa%C3%A7ador%20Nivelador%201%2C0mm%20Smart%20Cortag"
+  },
+  {
+    "id": 106,
+    "descricao": "Espaçador Plástico 1,0mm (Embalagem com 100 peças) Cruszeta",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Espa%C3%A7ador%20Pl%C3%A1stico%201%2C0mm%20(Embalagem%20com"
+  },
+  {
+    "id": 107,
+    "descricao": "Kit Com 10 Barras Rodapé Liso 10cmx1,5cmx220cm Mdf Revestido Casablanca 33m Branco",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Kit%20Com%20Barras%20Rodap%C3%A9%20Liso"
+  },
+  {
+    "id": 108,
+    "descricao": "Kit Com 10 Barras Rodapé De Mdf 15cm X 15mm X 2.20m Revestido Liso Casablanca 22m Branco",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Kit%20Com%20Barras%20Rodap%C3%A9%20Mdf"
+  },
+  {
+    "id": 109,
+    "descricao": "Kit Com 10 Barras Rodapé De Mdf 15cm X 15mm X 2.20m Mdf Revestido Frisado Casablanca 22m Branco",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Kit%20Com%20Barras%20Rodap%C3%A9%20Mdf"
+  },
+  {
+    "id": 110,
+    "descricao": "Cola para Rodapé Balde 5Kg Santa Luzia",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cola%20para%20Rodap%C3%A9%20Balde%205Kg"
+  },
+  {
+    "id": 111,
+    "descricao": "Piso Laminado com rodapé de 10 cm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Piso%20Laminado%20com%20rodap%C3%A9"
+  },
+  {
+    "id": 112,
+    "descricao": "Piso Vinilico  com rodapé de 10 cm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Piso%20Vinilico%20com%20rodap%C3%A9"
+  },
+  {
+    "id": 113,
+    "descricao": "Piso de Madeira Taco 7x45 / 10x40",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Piso%20Madeira%20Taco%207x45%2010x40"
+  },
+  {
+    "id": 114,
+    "descricao": "Piso Assolaho de Madeira 10 / 15 / 20",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Piso%20Assolaho%20Madeira"
+  },
+  {
+    "id": 115,
+    "descricao": "Rodapé Invertido, Mod \"l\", Alumínio Epóxi Preto Fosco , 13 X 30 X 3000 Mm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Rodap%C3%A9%20Invertido%2C%20Mod%20%22l%22%2C%20Alum%C3%ADnio"
+  },
+  {
+    "id": 116,
+    "descricao": "Porcelanato Cimentício Acetinado Borda Reta Interno 80x80cm Hit Fendi Natural Portobello",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Porcelanato%20Ciment%C3%ADcio%20Acetinado%20Borda%20Reta"
+  },
+  {
+    "id": 117,
+    "descricao": "Porcelanato Cimentício Natural Borda Reta Interno 120x120cm Belgique Clair Portobello",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Porcelanato%20Ciment%C3%ADcio%20Natural%20Borda%20Reta"
+  },
+  {
+    "id": 118,
+    "descricao": "Porcelanato Marmorizado Acetinado Borda Reta Interno 90x90cm Chiaro di Versilia Natural Portobello",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Porcelanato%20Marmorizado%20Acetinado%20Borda%20Reta"
+  },
+  {
+    "id": 119,
+    "descricao": "Porcelanato Cimentício Acetinado Borda Reta Interno 120x120cm Hit Camel Natural Portobello",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Porcelanato%20Ciment%C3%ADcio%20Acetinado%20Borda%20Reta"
+  },
+  {
+    "id": 120,
+    "descricao": "Porcelanato Amadeirado Acetinado Borda Reta Interno 20x120cm Arca Nordic ST Natural Portobello",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Porcelanato%20Amadeirado%20Acetinado%20Borda%20Reta"
+  },
+  {
+    "id": 121,
+    "descricao": "Porcelanato Marmorizado Polido Borda Reta Interno 120x120cm Mare D'Autunno Portobello",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Porcelanato%20Marmorizado%20Polido%20Borda%20Reta"
+  },
+  {
+    "id": 122,
+    "descricao": "Rejunte para Porcelanato Cinza Platina 5kg Quartzolit",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Rejunte%20para%20Porcelanato%20Cinza%20Platina"
+  },
+  {
+    "id": 123,
+    "descricao": "Rejunte Acrílico Bege 1 Kg Quartzolit",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Rejunte%20Acr%C3%ADlico%20Bege%20Quartzolit"
+  },
+  {
+    "id": 124,
+    "descricao": "Rejunte Epóxi Cinza Claro 1 Kg Axton",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Rejunte%20Ep%C3%B3xi%20Cinza%20Claro%20Axton"
+  },
+  {
+    "id": 125,
+    "descricao": "Argamassa Porcelanato Interno 20kg Cinza Fortaleza",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Argamassa%20Porcelanato%20Interno%2020kg%20Cinza"
+  },
+  {
+    "id": 126,
+    "descricao": "Argamassa ACIII Interno e Externo 20kg Branco CimentCola Quartzolit",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Argamassa%20ACIII%20Interno%20Externo%2020kg"
+  },
+  {
+    "id": 127,
+    "descricao": "Lona Plástica 4x50m Preta",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Lona%20Pl%C3%A1stica%204x50m%20Preta"
+  },
+  {
+    "id": 128,
+    "descricao": "Tinta Acrílica Toque Premium Fosco Completo Interno e Externo Branco Neve 20L Suvinil",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Tinta%20Acr%C3%ADlica%20Toque%20Premium%20Fosco"
+  },
+  {
+    "id": 129,
+    "descricao": "Aguarrás 0,9L",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Aguarr%C3%A1s%200%2C9L"
+  },
+  {
+    "id": 130,
+    "descricao": "Massa Corrida 25Kg",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Massa%20Corrida%2025Kg"
+  },
+  {
+    "id": 131,
+    "descricao": "Selador Acrílico Suvinil 18L",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Selador%20Acr%C3%ADlico%20Suvinil%2018L"
+  },
+  {
+    "id": 132,
+    "descricao": "Thinner 900ml",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Thinner%20900ml"
+  },
+  {
+    "id": 133,
+    "descricao": "Lixa Massa - Grão 180",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Lixa%20Massa%20Gr%C3%A3o%20180"
+  },
+  {
+    "id": 134,
+    "descricao": "Lixa Massa - Grão 150",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Lixa%20Massa%20Gr%C3%A3o%20150"
+  },
+  {
+    "id": 135,
+    "descricao": "Lixa para Madeira e Massa Grão 120 225x275cm 1 Unidade",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Lixa%20para%20Madeira%20Massa%20Gr%C3%A3o"
+  },
+  {
+    "id": 136,
+    "descricao": "Tinta Esmalte Sintético Base Solvente Sempre Branco Acetinado 3,6L Suvinil",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Tinta%20Esmalte%20Sint%C3%A9tico%20Base%20Solvente"
+  },
+  {
+    "id": 137,
+    "descricao": "Disco Diamantado para Makita Segmentado Para Concreto E Alvenaria",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disco%20Diamantado%20para%20Makita%20Segmentado"
+  },
+  {
+    "id": 138,
+    "descricao": "Disco de Lixa para Mármore Grão 50 100mm 4 \" 1 unidade G50 Stamaco",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disco%20Lixa%20para%20M%C3%A1rmore%20Gr%C3%A3o"
+  },
+  {
+    "id": 139,
+    "descricao": "Disco De Corte Fino De Ferro E Aço De Esmerilhadeira 10 Pçs",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Disco%20Corte%20Fino%20Ferro%20A%C3%A7o"
+  },
+  {
+    "id": 140,
+    "descricao": "TRILHOS MAGNÉTICOS Embutir  1 METRO VOLTAGEM: 48V NECESSÁRIO FONTE",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=TRILHOS%20MAGN%C3%89TICOS%20Embutir%20METRO%20VOLTAGEM%3A"
+  },
+  {
+    "id": 141,
+    "descricao": "TODOS OS MODELOS: COMPRIMENTO: 1 METRO TENSÃO: 48V NECESSÁRIO FONTE",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=TODOS%20MODELOS%3A%20COMPRIMENTO%3A%20METRO%20TENS%C3%83O%3A"
+  },
+  {
+    "id": 142,
+    "descricao": "Cuba Pia Cozinha Gourmet Aço Inox 304 Retangular Acabamento Escovado 58x40 Tubrax",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cuba%20Pia%20Cozinha%20Gourmet%20A%C3%A7o"
+  },
+  {
+    "id": 143,
+    "descricao": "Cuba Cozinha Luxo Gourmet Inox com Acessórios Aquas Tubrax",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cuba%20Cozinha%20Luxo%20Gourmet%20Inox"
+  },
+  {
+    "id": 144,
+    "descricao": "Tanque 55 X 45 X 22 Cm Aço Inox 304 Com Válvula Tubrax",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Tanque%20A%C3%A7o%20Inox%20304%20Com"
+  },
+  {
+    "id": 145,
+    "descricao": "Cuba Dupla Inox com Torneira Gourmet, Dispenser, Lixeira, Cesto, Porta Facas e Acessórios",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cuba%20Dupla%20Inox%20com%20Torneira"
+  },
+  {
+    "id": 146,
+    "descricao": "Banheiro Luxo Preto Fosco Completo Deca Torneira Petra 1.1/4",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Banheiro%20Luxo%20Preto%20Fosco%20Completo"
+  },
+  {
+    "id": 147,
+    "descricao": "Torneira Cozinha Monocomando Gourmet Aço Escovado",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Torneira%20Cozinha%20Monocomando%20Gourmet%20A%C3%A7o"
+  },
+  {
+    "id": 148,
+    "descricao": "Vaso Sanitário Monobloco Completo - Caixa Acoplada Privada Acies Tubrax",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Vaso%20Sanit%C3%A1rio%20Monobloco%20Completo%20Caixa"
+  },
+  {
+    "id": 149,
+    "descricao": "Ducha Higiênica Aço Inox Escovado Com Registro Nox15 Doan",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Ducha%20Higi%C3%AAnica%20A%C3%A7o%20Inox%20Escovado"
+  },
+  {
+    "id": 150,
+    "descricao": "Banheiro Luxo Cromada Completo Deca Torneira Quadrada Alta 1.1/4 - Soft Inox",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Banheiro%20Luxo%20Cromada%20Completo%20Deca"
+  },
+  {
+    "id": 151,
+    "descricao": "Cuba de Banheiro 40,5cm L73 Deca com Sifão Válvula e Fita Veda-Rosca",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Cuba%20Banheiro%2040%2C5cm%20L73%20Deca"
+  },
+  {
+    "id": 152,
+    "descricao": "Torneira Monocomando Gourmet de Pia para Cozinha com Bica Alta Flexível Preto Fosco Tomas Delinia",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Torneira%20Monocomando%20Gourmet%20Pia%20para"
+  },
+  {
+    "id": 153,
+    "descricao": "Torneira Monocomando Gourmet de Pia para Cozinha com Bica Alta Flexível Inox Escovado Tomas Delinia",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Torneira%20Monocomando%20Gourmet%20Pia%20para"
+  },
+  {
+    "id": 154,
+    "descricao": "Ar Condicionado Split Rotativo Frio 18000 BTUs 220V TPRO 2.0 Wi Fi TCL",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Condicionado%20Split%20Rotativo%20Frio%2018000"
+  },
+  {
+    "id": 155,
+    "descricao": "Frigobar Branco 93 Litros Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Frigobar%20Branco%20Litros%20Midea"
+  },
+  {
+    "id": 156,
+    "descricao": "Frigobar Branco 124 Litros Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Frigobar%20Branco%20124%20Litros%20Midea"
+  },
+  {
+    "id": 157,
+    "descricao": "Frigobar Black Edition Preto 124 Litros Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Frigobar%20Black%20Edition%20Preto%20124"
+  },
+  {
+    "id": 158,
+    "descricao": "Geladeira Inverse Frost Free 347L Inverter cor Inox Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Geladeira%20Inverse%20Frost%20Free%20347L"
+  },
+  {
+    "id": 159,
+    "descricao": "Geladeira Inverse Frost Free 416L Inverter cor Inox Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Geladeira%20Inverse%20Frost%20Free%20416L"
+  },
+  {
+    "id": 160,
+    "descricao": "Geladeira Frost Free Duplex 491L Inverter cor Inox Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Geladeira%20Frost%20Free%20Duplex%20491L"
+  },
+  {
+    "id": 161,
+    "descricao": "Geladeira Side by Side 511L Inverter Preta Conectada Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Geladeira%20Side%20Side%20511L%20Inverter"
+  },
+  {
+    "id": 162,
+    "descricao": "Geladeira Side by Side 511L Inverter Cor Inox Conectada Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Geladeira%20Side%20Side%20511L%20Inverter"
+  },
+  {
+    "id": 163,
+    "descricao": "Geladeira Side by Side 570L Dispenser Água e Gelo Inverter cor Inox Midea",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Geladeira%20Side%20Side%20570L%20Dispenser"
+  },
+  {
+    "id": 164,
+    "descricao": "Smart Tv Samsung 55\" Uhd 4k 2024 55du7700",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Smart%20Samsung%2055%22%20Uhd%202024"
+  },
+  {
+    "id": 165,
+    "descricao": "Smart Tv Samsung 65\" Uhd 4k 2024 55du7700",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Smart%20Samsung%2065%22%20Uhd%202024"
+  },
+  {
+    "id": 166,
+    "descricao": "Smart Tv Samsung 75\" Uhd 4k 2024 55du7700",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Smart%20Samsung%2075%22%20Uhd%202024"
+  },
+  {
+    "id": 167,
+    "descricao": "Aquecedor Rinnai 27 Litros E27 Feh Glp Prata (digital) + Kit Ligação De 40cm",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Aquecedor%20Rinnai%20Litros%20E27%20Feh"
+  },
+  {
+    "id": 168,
+    "descricao": "Fechadura Eletrônica Digital Elsys com Biometria e Senha",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Fechadura%20Eletr%C3%B4nica%20Digital%20Elsys%20com"
+  },
+  {
+    "id": 169,
+    "descricao": "Interruptor Dimmer Inteligente",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Dimmer%20Inteligente"
+  },
+  {
+    "id": 170,
+    "descricao": "Interruptor Inteligente Série Touch Zigbee/Wi-Fi - 1 Circuito",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20S%C3%A9rie%20Touch%20Zigbee%2FWi-Fi"
+  },
+  {
+    "id": 171,
+    "descricao": "Interruptor Inteligente Cortina Persiana Wifi",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20Cortina%20Persiana%20Wifi"
+  },
+  {
+    "id": 172,
+    "descricao": "Interruptor Inteligente Série Touch Zigbee/Wi-Fi - 1 Circuito",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20S%C3%A9rie%20Touch%20Zigbee%2FWi-Fi"
+  },
+  {
+    "id": 173,
+    "descricao": "Interruptor Inteligente Série Touch 2.5d Zigbee/Wi-Fi - 2 Circuitos",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20S%C3%A9rie%20Touch%202.5d"
+  },
+  {
+    "id": 174,
+    "descricao": "Interruptor Inteligente Touch Zigbee/Wi-Fi - 4X4 - 4 Circuitos",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20Touch%20Zigbee%2FWi-Fi%204X4"
+  },
+  {
+    "id": 175,
+    "descricao": "Interruptor Inteligente Série Touch 2.5d Zigbee/Wi-Fi - 3 Circuitos",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20S%C3%A9rie%20Touch%202.5d"
+  },
+  {
+    "id": 176,
+    "descricao": "Interruptor Inteligente Série Touch - Zigbee/Wi-Fi - 4 Circuitos",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20S%C3%A9rie%20Touch%20Zigbee%2FWi-Fi"
+  },
+  {
+    "id": 177,
+    "descricao": "Interruptor Inteligente Touch Zigbee/Wi-Fi - 4X4 - 6 Circuitos",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20Touch%20Zigbee%2FWi-Fi%204X4"
+  },
+  {
+    "id": 178,
+    "descricao": "Interruptor com Tomada  20A Touch 1 Cirtcuito \nWIFI",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20com%20Tomada%2020A%20Touch"
+  },
+  {
+    "id": 179,
+    "descricao": "Interruptor Com Tomada 20A Touch - 1Circruito WIFI",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Com%20Tomada%2020A%20Touch"
+  },
+  {
+    "id": 180,
+    "descricao": "Interruptor Com Tomada 20A Touch - 2 Circruitos WIFI",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Com%20Tomada%2020A%20Touch"
+  },
+  {
+    "id": 181,
+    "descricao": "Interruptor Inteligente com 2 Tomadas 4x4 WiFi",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Interruptor%20Inteligente%20com%20Tomadas%204x4"
+  },
+  {
+    "id": 182,
+    "descricao": "Double with USB-A+USB-C 16A - Glass",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Double%20with%20USB-A%2BUSB-C%2016A%20Glass"
+  },
+  {
+    "id": 183,
+    "descricao": "MINI MÓDULO PARALELO 1 CANAL",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=MINI%20M%C3%93DULO%20PARALELO%20CANAL"
+  },
+  {
+    "id": 184,
+    "descricao": "MONITOR DE ENERGIA INTELIGENTE WIFI 80A",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=MONITOR%20ENERGIA%20INTELIGENTE%20WIFI%2080A"
+  },
+  {
+    "id": 185,
+    "descricao": "Box para Banheiro 90x185cm Vidro Incolor Frontal de Abrir 2 Folhas",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Box%20para%20Banheiro%2090x185cm%20Vidro"
+  },
+  {
+    "id": 186,
+    "descricao": "Box para Banheiro 130x190cm Vidro Incolor",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Box%20para%20Banheiro%20130x190cm%20Vidro"
+  },
+  {
+    "id": 187,
+    "descricao": "Box para Banheiro 110x200cm Vidro Incolor Frontal de Correr 2 Folhas",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Box%20para%20Banheiro%20110x200cm%20Vidro"
+  },
+  {
+    "id": 188,
+    "descricao": "Piso Teto -  90x2400 - Vidro Incolor Frontal de Abrir 2 Folhas",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Piso%20Teto%2090x2400%20Vidro%20Incolor"
+  },
+  {
+    "id": 189,
+    "descricao": "Piso Teto - 130x2400 - Vidro Incolor",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Piso%20Teto%20130x2400%20Vidro%20Incolor"
+  },
+  {
+    "id": 190,
+    "descricao": "Espelho Com Chassi para Led",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Espelho%20Com%20Chassi%20para%20Led"
+  },
+  {
+    "id": 191,
+    "descricao": "Espelho",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Espelho"
+  },
+  {
+    "id": 192,
+    "descricao": "Espelho Orgânico",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Espelho%20Org%C3%A2nico"
+  },
+  {
+    "id": 193,
+    "descricao": "Espelhos tamanhos Especiais",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Espelhos%20tamanhos%20Especiais"
+  },
+  {
+    "id": 194,
+    "descricao": "Envidraçamento Sacada 10MM - Sistema sem roldana",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Envidra%C3%A7amento%20Sacada%2010MM%20Sistema%20sem"
+  },
+  {
+    "id": 195,
+    "descricao": "Envidraçamento Sacada 10MM - Sistema com roldana",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Envidra%C3%A7amento%20Sacada%2010MM%20Sistema%20com"
+  },
+  {
+    "id": 196,
+    "descricao": "Envidraçamento Sacada 12MM - Sistema sem roldana",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Envidra%C3%A7amento%20Sacada%2012MM%20Sistema%20sem"
+  },
+  {
+    "id": 197,
+    "descricao": "Envidraçamento Sacada 12MM - Sistema com roldana",
+    "urlBusca": "https://www.leroymerlin.com.br/search?term=Envidra%C3%A7amento%20Sacada%2012MM%20Sistema%20com"
+  }
+]

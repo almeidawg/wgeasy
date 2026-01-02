@@ -14,18 +14,20 @@ import { createClient, PostgrestError } from "@supabase/supabase-js";
 // ------------------------------------------------------------
 // CONFIGURAÇÃO BASE (usa o mesmo supabaseUrl e anonKey do projeto)
 // ------------------------------------------------------------
-export const supabaseUrl = "https://ahlqzzkxuutwoepirpzr.supabase.co";
+export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://ahlqzzkxuutwoepirpzr.supabase.co';
 const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseAnon) {
-  throw new Error(
-    [
-      "VITE_SUPABASE_ANON_KEY não foi definido.",
-      "Crie ou atualize o arquivo .env com a chave pública do Supabase:",
-      'VITE_SUPABASE_ANON_KEY="sua-chave-publica"',
-      "Em seguida reinicie o servidor (npm run dev).",
-    ].join(" ")
-  );
+  throw new Error([
+    'VITE_SUPABASE_ANON_KEY não foi definido.',
+    'Crie ou atualize o arquivo .env com a chave pública do Supabase:',
+    'VITE_SUPABASE_ANON_KEY="sua-chave-publica"',
+    'Em seguida reinicie o servidor (npm run dev).',
+  ].join(' '));
+}
+
+if (!import.meta.env.VITE_SUPABASE_URL) {
+  console.warn('VITE_SUPABASE_URL não definido — usando fallback. Verifique variáveis de ambiente.');
 }
 
 export const supabaseRaw = createClient(supabaseUrl, supabaseAnon, {

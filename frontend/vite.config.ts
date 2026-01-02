@@ -18,6 +18,7 @@ export default defineConfig(() => {
       strictPort: false,
       allowedHosts: [
         ".trycloudflare.com",
+        "host.docker.internal",
         ...(dynamicHost
           ? [dynamicHost.replace("https://", "").replace("http://", "")]
           : []),

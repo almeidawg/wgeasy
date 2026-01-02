@@ -265,9 +265,9 @@ const CobrancasPage = () => {
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
-            <Button onClick={() => setIsDialogOpen(true)} className="bg-[#F25C26] hover:bg-[#d94d1f] h-8 px-3 text-xs">
+            <Button onClick={() => setIsDialogOpen(true)} className="bg-[#F25C26] hover:bg-[#d94d1f] h-8 px-3 text-xs whitespace-nowrap shrink-0">
               <Plus size={14} className="mr-1" />
-              Nova
+              <span>Nova Cobrança</span>
             </Button>
           </div>
         </div>

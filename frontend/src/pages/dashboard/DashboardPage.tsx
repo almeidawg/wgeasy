@@ -66,6 +66,7 @@ import {
   type CEOChecklist,
 } from "@/lib/ceoChecklistApi";
 import { obterFraseDoDiaComFallback, type FraseMotivacional } from "@/lib/frasesMotivacionaisApi";
+import GoogleCalendarWidget from "@/components/dashboard/GoogleCalendarWidget";
 import "@/styles/dashboard.css";
 
 type DadosCliente = {
@@ -1020,6 +1021,17 @@ export default function DashboardPage() {
           )}
         </section>
       )}
+
+      {/* ====== GOOGLE CALENDAR ====== */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">Minha Agenda</h2>
+            <p className="text-sm text-gray-500">Eventos sincronizados com Google Calendar</p>
+          </div>
+        </div>
+        <GoogleCalendarWidget />
+      </section>
 
       {/* ====== GRID PRINCIPAL ====== */}
       <section className="grid gap-8 lg:grid-cols-2">

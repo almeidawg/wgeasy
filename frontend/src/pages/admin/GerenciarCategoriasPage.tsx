@@ -209,6 +209,22 @@ export default function GerenciarCategoriasPage() {
     }
   }, [toast]);
 
+  // Função que recarrega dados mantendo a posição do scroll
+  const carregarDadosMantendoScroll = useCallback(async () => {
+    // Salvar posição do scroll do container principal
+    const container = document.querySelector('.layout-content');
+    const scrollTop = container?.scrollTop || 0;
+
+    await carregarDados();
+
+    // Restaurar posição do scroll após um pequeno delay para garantir que o DOM atualizou
+    requestAnimationFrame(() => {
+      if (container) {
+        container.scrollTop = scrollTop;
+      }
+    });
+  }, [carregarDados]);
+
   useEffect(() => {
     carregarDados();
   }, [carregarDados]);
@@ -281,9 +297,10 @@ export default function GerenciarCategoriasPage() {
   };
 
   const iniciarEdicaoCategoria = (categoria: CategoriaDB) => {
+    // Sempre usar o código do banco, não auto-gerar
     setFormCategoria({
       nome: categoria.nome,
-      codigo: categoria.codigo || getCodigoCategoria(categoria.nome),
+      codigo: categoria.codigo || "",
       tipo: categoria.tipo || "material",
       ordem: categoria.ordem || 0,
       cor: categoria.cor || getCorCategoria(categoria.nome),
@@ -306,6 +323,26 @@ export default function GerenciarCategoriasPage() {
     });
   };
 
+  // Função para gerar código único
+  const gerarCodigoUnico = (codigoBase: string): string => {
+    const codigoNormalizado = codigoBase.toUpperCase().trim();
+    const codigosExistentes = categoriasDB.map(c => (c.codigo || "").toUpperCase());
+
+    // Se o código base não existe, usar ele
+    if (!codigosExistentes.includes(codigoNormalizado)) {
+      return codigoNormalizado;
+    }
+
+    // Se existe, adicionar número sequencial
+    let contador = 1;
+    let codigoTentativa = `${codigoNormalizado}${contador}`;
+    while (codigosExistentes.includes(codigoTentativa)) {
+      contador++;
+      codigoTentativa = `${codigoNormalizado}${contador}`;
+    }
+    return codigoTentativa;
+  };
+
   const salvarCategoria = async () => {
     if (!formCategoria.nome.trim()) {
       toast({
@@ -319,10 +356,14 @@ export default function GerenciarCategoriasPage() {
     setSalvando(true);
     try {
       if (novaCategoria) {
+        // Gerar código único antes de criar
+        const codigoBase = formCategoria.codigo.trim() || formCategoria.nome.substring(0, 3).toUpperCase();
+        const codigoFinal = gerarCodigoUnico(codigoBase);
+
         // Criar nova categoria
         const novaCat = await criarCategoria({
           nome: formCategoria.nome.trim(),
-          codigo: formCategoria.codigo.trim() || formCategoria.nome.substring(0, 3).toUpperCase(),
+          codigo: codigoFinal,
           tipo: formCategoria.tipo as any,
           ordem: formCategoria.ordem,
           ativo: formCategoria.ativo,
@@ -342,9 +383,31 @@ export default function GerenciarCategoriasPage() {
 
         toast({
           title: "Categoria criada",
-          description: `"${formCategoria.nome}" criada com ${SUBCATEGORIAS_PADRAO.length} subcategorias padrão.`,
+          description: `"${formCategoria.nome}" (${codigoFinal}) criada com ${SUBCATEGORIAS_PADRAO.length} subcategorias padrão.`,
         });
       } else if (editandoCategoria) {
+        // Buscar código original da categoria sendo editada
+        const categoriaOriginal = categoriasDB.find(c => c.id === editandoCategoria);
+        const codigoOriginal = (categoriaOriginal?.codigo || "").toUpperCase();
+        const codigoAtual = formCategoria.codigo.trim().toUpperCase();
+
+        // Só verificar duplicados se o código foi ALTERADO
+        if (codigoOriginal !== codigoAtual) {
+          const codigoEmUso = categoriasDB.find(
+            c => c.id !== editandoCategoria && (c.codigo || "").toUpperCase() === codigoAtual
+          );
+
+          if (codigoEmUso) {
+            toast({
+              title: "Código duplicado",
+              description: `O código "${codigoAtual}" já está em uso pela categoria "${codigoEmUso.nome}".`,
+              variant: "destructive",
+            });
+            setSalvando(false);
+            return;
+          }
+        }
+
         // Atualizar categoria existente
         await atualizarCategoria(editandoCategoria, {
           nome: formCategoria.nome.trim(),
@@ -361,7 +424,7 @@ export default function GerenciarCategoriasPage() {
       }
 
       cancelarEdicao();
-      await carregarDados();
+      await carregarDadosMantendoScroll();
     } catch (error) {
       console.error("Erro ao salvar categoria:", error);
       toast({
@@ -405,7 +468,7 @@ export default function GerenciarCategoriasPage() {
         description: `"${categoria.nome}" foi excluída.`,
       });
 
-      await carregarDados();
+      await carregarDadosMantendoScroll();
     } catch (error) {
       console.error("Erro ao excluir categoria:", error);
       toast({
@@ -460,7 +523,7 @@ export default function GerenciarCategoriasPage() {
         description: `${faltantes.length} subcategorias foram adicionadas.`,
       });
 
-      await carregarDados();
+      await carregarDadosMantendoScroll();
     } catch (error) {
       console.error("Erro ao adicionar subcategorias:", error);
       toast({
@@ -595,8 +658,8 @@ export default function GerenciarCategoriasPage() {
         [categoriaId]: (prev[categoriaId] || []).filter(item => item.id !== itemId),
       }));
 
-      // Recarregar contagem
-      await carregarDados();
+      // Recarregar contagem mantendo scroll
+      await carregarDadosMantendoScroll();
 
       toast({
         title: "Item classificado",
@@ -604,6 +667,81 @@ export default function GerenciarCategoriasPage() {
       });
     } catch (error) {
       console.error("Erro ao atualizar subcategoria:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível mover o item.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Reclassificar item de uma subcategoria para outra
+  const reclassificarItem = async (itemId: string, novaSubcategoriaId: string, subcategoriaAtualId: string, categoriaId: string) => {
+    try {
+      const { error } = await supabase
+        .from("pricelist_itens")
+        .update({ subcategoria_id: novaSubcategoriaId })
+        .eq("id", itemId);
+
+      if (error) throw error;
+
+      // Remover item da lista da subcategoria atual
+      setItensSubcategoria(prev => ({
+        ...prev,
+        [subcategoriaAtualId]: (prev[subcategoriaAtualId] || []).filter(item => item.id !== itemId),
+      }));
+
+      // Recarregar contagem mantendo scroll
+      await carregarDadosMantendoScroll();
+
+      // Buscar nome da nova subcategoria
+      const novaSub = subcategoriasDB.find(s => s.id === novaSubcategoriaId);
+
+      toast({
+        title: "Item reclassificado",
+        description: `Item movido para "${novaSub?.nome || 'subcategoria'}".`,
+      });
+    } catch (error) {
+      console.error("Erro ao reclassificar item:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível mover o item.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Mover item para outra categoria (mantém na raiz da nova categoria)
+  const moverParaOutraCategoria = async (itemId: string, novaCategoriaId: string, categoriaAtualId: string) => {
+    try {
+      const { error } = await supabase
+        .from("pricelist_itens")
+        .update({
+          categoria_id: novaCategoriaId,
+          subcategoria_id: null // Vai para raiz da nova categoria
+        })
+        .eq("id", itemId);
+
+      if (error) throw error;
+
+      // Remover item da lista da categoria atual
+      setItensRaiz(prev => ({
+        ...prev,
+        [categoriaAtualId]: (prev[categoriaAtualId] || []).filter(item => item.id !== itemId),
+      }));
+
+      // Recarregar dados mantendo scroll
+      await carregarDadosMantendoScroll();
+
+      // Buscar nome da nova categoria
+      const novaCat = categoriasDB.find(c => c.id === novaCategoriaId);
+
+      toast({
+        title: "Item transferido",
+        description: `Item movido para categoria "${novaCat?.nome || 'nova categoria'}".`,
+      });
+    } catch (error) {
+      console.error("Erro ao mover item para outra categoria:", error);
       toast({
         title: "Erro",
         description: "Não foi possível mover o item.",
@@ -706,8 +844,8 @@ export default function GerenciarCategoriasPage() {
       // Limpar seleção
       setItensSelecionados(prev => ({ ...prev, [categoriaId]: new Set() }));
 
-      // Recarregar contagem
-      await carregarDados();
+      // Recarregar contagem mantendo scroll
+      await carregarDadosMantendoScroll();
 
       toast({
         title: "Itens classificados",
@@ -769,7 +907,7 @@ export default function GerenciarCategoriasPage() {
         title: "Subcategoria excluída",
         description: `"${sub.nome}" foi removida com sucesso.`,
       });
-      await carregarDados();
+      await carregarDadosMantendoScroll();
     } catch (error) {
       console.error("Erro ao excluir subcategoria:", error);
       toast({
@@ -835,9 +973,11 @@ export default function GerenciarCategoriasPage() {
     const height = rect.height;
 
     let position: "top" | "bottom" | "center";
-    if (y < height * 0.25) {
+    // Zonas: top (0-15%), center (15-85%), bottom (85-100%)
+    // Centro maior para facilitar conversão em subcategoria
+    if (y < height * 0.15) {
       position = "top";
-    } else if (y > height * 0.75) {
+    } else if (y > height * 0.85) {
       position = "bottom";
     } else {
       position = "center";
@@ -926,22 +1066,45 @@ export default function GerenciarCategoriasPage() {
     try {
       if (dragState.overPosition === "center" && targetType === "categoria") {
         // DROP NO CENTRO = Tornar subcategoria
+
+        // Verificar se não está tentando tornar uma categoria subcategoria de si mesma
+        if (draggedCategoria.id === targetId) {
+          toast({
+            title: "Operação inválida",
+            description: "Não é possível tornar uma categoria subcategoria de si mesma.",
+            variant: "destructive",
+          });
+          handleDragEnd();
+          setSalvando(false);
+          return;
+        }
+
+        // Verificar se já existe subcategoria com mesmo nome na categoria alvo
+        const existentesSubcats = getSubcategoriasDaCategoria(targetId);
+        const subcatDuplicada = existentesSubcats.find(
+          s => s.nome.toLowerCase().trim() === draggedCategoria.nome.toLowerCase().trim()
+        );
+
+        if (subcatDuplicada) {
+          toast({
+            title: "Subcategoria já existe",
+            description: `A categoria "${targetCategoria.nome}" já possui uma subcategoria "${subcatDuplicada.nome}". Escolha outro nome ou mova para outra categoria.`,
+            variant: "destructive",
+          });
+          handleDragEnd();
+          setSalvando(false);
+          return;
+        }
+
         // Verificar se a categoria arrastada tem itens
         const totalItens = getContagemCategoria(draggedCategoria.id);
 
-        // Criar como subcategoria da categoria alvo
-        const existentesSubcats = getSubcategoriasDaCategoria(targetId);
         const ordemNova = existentesSubcats.length > 0
           ? Math.max(...existentesSubcats.map(s => s.ordem || 0)) + 10
           : 10;
 
-        // Buscar prefixo de subcategoria baseado no nome
-        const prefixo = SUBCATEGORIAS_PADRAO.find(
-          s => s.nome.toLowerCase() === draggedCategoria.nome.toLowerCase()
-        )?.prefixo || draggedCategoria.nome.substring(0, 3).toUpperCase();
-
         // Criar subcategoria
-        await criarSubcategoria({
+        const novaSubcat = await criarSubcategoria({
           categoria_id: targetId,
           nome: draggedCategoria.nome,
           tipo: draggedCategoria.tipo as any || "material",
@@ -949,37 +1112,54 @@ export default function GerenciarCategoriasPage() {
           ativo: true,
         });
 
-        // Se não tem itens, pode excluir a categoria original e reordenar as demais
-        if (totalItens === 0) {
-          // Excluir subcategorias da categoria arrastada primeiro
-          const subsParaExcluir = getSubcategoriasDaCategoria(draggedCategoria.id);
+        // Mover TODOS os itens para a nova subcategoria (incluindo itens de subcategorias)
+        if (novaSubcat?.id) {
+          // Buscar subcategorias DIRETAMENTE do banco (não do estado React)
+          const { data: subsDoDb } = await supabase
+            .from("pricelist_subcategorias")
+            .select("id")
+            .eq("categoria_id", draggedCategoria.id);
+
+          const subsParaExcluir = subsDoDb || [];
+
+          // Primeiro: mover TODOS os itens da categoria arrastada para a nova subcategoria
+          // (independente de subcategoria)
+          await supabase
+            .from("pricelist_itens")
+            .update({
+              categoria_id: targetId,
+              subcategoria_id: novaSubcat.id,
+            })
+            .eq("categoria_id", draggedCategoria.id);
+
+          // Depois: excluir subcategorias antigas (já sem itens vinculados)
           for (const sub of subsParaExcluir) {
-            await deletarSubcategoria(sub.id);
+            try {
+              await deletarSubcategoria(sub.id);
+            } catch (err) {
+              console.warn(`Não foi possível excluir subcategoria ${sub.id}:`, err);
+            }
           }
-          // Excluir a categoria
-          await deletarCategoria(draggedCategoria.id);
+        }
 
-          // RECÁLCULO EM CASCATA: Atualizar ordem das categorias restantes
-          const categoriasRestantes = categoriasDB
-            .filter(c => c.id !== draggedCategoria.id)
-            .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+        // Excluir a categoria original
+        await deletarCategoria(draggedCategoria.id);
 
-          const { alteradas, detalhes } = await recalcularOrdensEmCascata(categoriasRestantes);
+        // RECÁLCULO EM CASCATA: Atualizar ordem das categorias restantes
+        const categoriasRestantes = categoriasDB
+          .filter(c => c.id !== draggedCategoria.id)
+          .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
-          toast({
-            title: "Subcategoria criada",
-            description: `"${draggedCategoria.nome}" agora é subcategoria de "${targetCategoria.nome}".${alteradas.length > 0 ? ` ${alteradas.length} categoria(s) reordenada(s).` : ""}`,
-          });
+        const { alteradas, detalhes } = await recalcularOrdensEmCascata(categoriasRestantes);
 
-          // Se houve muitas alterações, mostrar detalhes
-          if (detalhes.length > 0) {
-            console.log("Categorias reordenadas:", detalhes.join(", "));
-          }
-        } else {
-          toast({
-            title: "Subcategoria criada",
-            description: `"${draggedCategoria.nome}" agora é subcategoria de "${targetCategoria.nome}". Categoria original mantida pois possui ${totalItens} item(ns).`,
-          });
+        toast({
+          title: "Categoria convertida",
+          description: `"${draggedCategoria.nome}" agora é subcategoria de "${targetCategoria.nome}"${totalItens > 0 ? ` com ${totalItens} item(ns) transferido(s)` : ""}.${alteradas.length > 0 ? ` ${alteradas.length} categoria(s) reordenada(s).` : ""}`,
+        });
+
+        // Se houve muitas alterações, mostrar detalhes
+        if (detalhes.length > 0) {
+          console.log("Categorias reordenadas:", detalhes.join(", "));
         }
       } else {
         // DROP EM CIMA OU EMBAIXO = Reordenar
@@ -1029,7 +1209,7 @@ export default function GerenciarCategoriasPage() {
         }
       }
 
-      await carregarDados();
+      await carregarDadosMantendoScroll();
     } catch (error) {
       console.error("Erro ao mover categoria:", error);
       toast({
@@ -1364,12 +1544,11 @@ export default function GerenciarCategoriasPage() {
                               value={formCategoria.nome}
                               onChange={(e) => {
                                 const nome = e.target.value;
-                                // Auto-gerar código baseado no nome
-                                const codigoAuto = getCodigoCategoria(nome);
+                                // Só auto-gerar código se for categoria NOVA
+                                // Se editando existente, manter código original
                                 setFormCategoria(f => ({
                                   ...f,
                                   nome,
-                                  codigo: codigoAuto,
                                 }));
                               }}
                               title="Nome da categoria"
@@ -1840,7 +2019,7 @@ export default function GerenciarCategoriasPage() {
                                           })}
                                         </span>
 
-                                        {/* Select de Subcategoria */}
+                                        {/* Select de Subcategoria ou Categoria */}
                                         {subcategorias.length > 0 ? (
                                           <select
                                             className="text-[10px] px-2 py-1 border border-gray-300 rounded bg-white text-gray-700 cursor-pointer hover:border-[#F25C26] focus:border-[#F25C26] focus:ring-1 focus:ring-[#F25C26] focus:outline-none min-w-[100px]"
@@ -1865,12 +2044,26 @@ export default function GerenciarCategoriasPage() {
                                             })}
                                           </select>
                                         ) : (
-                                          <span
-                                            className="text-[10px] px-2 py-1 border border-gray-200 rounded bg-gray-50 text-gray-400 cursor-not-allowed min-w-[100px] inline-block text-center"
-                                            title="Adicione subcategorias primeiro clicando em '+Adicionar Padrão'"
+                                          <select
+                                            className="text-[10px] px-2 py-1 border border-amber-300 rounded bg-amber-50 text-gray-700 cursor-pointer hover:border-[#F25C26] focus:border-[#F25C26] focus:ring-1 focus:ring-[#F25C26] focus:outline-none min-w-[110px]"
+                                            defaultValue=""
+                                            onChange={(e) => {
+                                              if (e.target.value) {
+                                                moverParaOutraCategoria(item.id, e.target.value, cat.id);
+                                              }
+                                            }}
+                                            title="Mover para outra categoria (sem subcategorias nesta)"
                                           >
-                                            Sem subcategorias
-                                          </span>
+                                            <option value="">Mover p/ →</option>
+                                            {categoriasDB
+                                              .filter(c => c.id !== cat.id) // Excluir categoria atual
+                                              .sort((a, b) => (a.ordem || 0) - (b.ordem || 0))
+                                              .map((outraCat) => (
+                                                <option key={outraCat.id} value={outraCat.id}>
+                                                  {String(outraCat.ordem || 0).padStart(2, "0")} {outraCat.nome}
+                                                </option>
+                                              ))}
+                                          </select>
                                         )}
                                       </div>
                                     );
@@ -1941,30 +2134,51 @@ export default function GerenciarCategoriasPage() {
                                     {itens.map((item, idx) => (
                                       <div
                                         key={item.id}
-                                        className="flex items-center justify-between py-2 px-4 hover:bg-gray-50"
+                                        className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 gap-2"
                                       >
-                                        <div className="flex items-center gap-2 min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0 flex-1">
                                           <span
                                             className="text-[9px] font-mono font-medium px-1.5 py-0.5 rounded shrink-0"
                                             style={{ backgroundColor: corCategoria + "15", color: corCategoria }}
                                           >
                                             #{String(idx + 1).padStart(3, "0")}
                                           </span>
-                                          <span className="text-sm text-gray-700 truncate">{item.nome}</span>
-                                          {item.codigo && (
-                                            <span className="text-xs text-gray-400 font-mono hidden md:inline">
-                                              {item.codigo}
-                                            </span>
-                                          )}
+                                          <span className="text-xs text-gray-700 truncate">{item.nome}</span>
                                         </div>
-                                        <div className="flex items-center gap-3 shrink-0">
-                                          <span className="text-xs text-gray-400">{item.unidade}</span>
-                                          <span className="text-sm font-semibold text-gray-700">
+                                        <div className="flex items-center gap-2 shrink-0">
+                                          <span className="text-xs text-gray-400 hidden sm:inline">{item.unidade}</span>
+                                          <span className="text-xs font-semibold text-gray-600 hidden sm:inline">
                                             {(item.preco || 0).toLocaleString("pt-BR", {
                                               style: "currency",
                                               currency: "BRL",
                                             })}
                                           </span>
+                                          {/* Select para mover para outra subcategoria */}
+                                          <select
+                                            className="text-[10px] px-2 py-1 border border-gray-300 rounded bg-white text-gray-700 cursor-pointer hover:border-[#F25C26] focus:border-[#F25C26] focus:ring-1 focus:ring-[#F25C26] focus:outline-none min-w-[90px]"
+                                            defaultValue=""
+                                            onChange={(e) => {
+                                              if (e.target.value) {
+                                                reclassificarItem(item.id, e.target.value, sub.id, cat.id);
+                                                e.target.value = "";
+                                              }
+                                            }}
+                                            title="Mover para outra subcategoria"
+                                          >
+                                            <option value="">Mover →</option>
+                                            {subcategorias
+                                              .filter(s => s.id !== sub.id) // Excluir subcategoria atual
+                                              .map((outraSub) => {
+                                                const prefixoOutra = SUBCATEGORIAS_PADRAO.find(
+                                                  s => s.nome.toLowerCase() === outraSub.nome.toLowerCase()
+                                                )?.prefixo || outraSub.nome.substring(0, 3).toUpperCase();
+                                                return (
+                                                  <option key={outraSub.id} value={outraSub.id}>
+                                                    [{prefixoOutra}] {outraSub.nome}
+                                                  </option>
+                                                );
+                                              })}
+                                          </select>
                                         </div>
                                       </div>
                                     ))}

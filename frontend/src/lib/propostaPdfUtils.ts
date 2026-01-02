@@ -265,7 +265,7 @@ export async function gerarPropostaPDF(proposta: PropostaCompleta) {
         margin: { left: margin, right: marginRight },
       });
 
-      yPos = (doc as any).lastAutoTable.finalY + 10;
+      yPos = ((doc as any).lastAutoTable?.finalY ?? 0) + 10;
 
       // Verificar se precisa de nova página
       if (yPos > pageHeight - 60) {
@@ -373,7 +373,7 @@ export async function gerarPropostaPDF(proposta: PropostaCompleta) {
       margin: { left: margin, right: marginRight },
     });
 
-    yPos = (doc as any).lastAutoTable.finalY + 4;
+    yPos = ((doc as any).lastAutoTable?.finalY ?? 0) + 4;
 
     // Subtotal
     if (proposta.exibir_valores && subtotal > 0) {
@@ -513,7 +513,7 @@ export async function gerarPropostaPDF(proposta: PropostaCompleta) {
         margin: { left: margin, right: marginRight },
       });
 
-      yPos = (doc as any).lastAutoTable.finalY + 4;
+      yPos = ((doc as any).lastAutoTable?.finalY ?? 0) + 4;
 
       // Subtotal Mao de Obra (mais discreto)
       if (proposta.exibir_valores && subtotais.engenharia.maoDeObra > 0) {
@@ -581,7 +581,7 @@ export async function gerarPropostaPDF(proposta: PropostaCompleta) {
         margin: { left: margin, right: marginRight },
       });
 
-      yPos = (doc as any).lastAutoTable.finalY + 4;
+      yPos = ((doc as any).lastAutoTable?.finalY ?? 0) + 4;
 
       // Subtotal Materiais (mais discreto)
       if (proposta.exibir_valores && subtotais.engenharia.materiais > 0) {

@@ -1,5 +1,5 @@
 // backend/src/server.ts
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -7,6 +7,39 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Simple in-memory rate limiter (replace with redis-backed in production)
+const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS || 60000);
+const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX || 30);
+const rateMap = new Map<string, { count: number; reset: number }>();
+
+function rateLimitMiddleware(req: Request, res: Response, next: NextFunction) {
+  const key = (req.headers['x-internal-key'] as string) || req.ip || 'global';
+  const now = Date.now();
+  const entry = rateMap.get(key) || { count: 0, reset: now + RATE_LIMIT_WINDOW_MS };
+  if (now > entry.reset) {
+    entry.count = 0;
+    entry.reset = now + RATE_LIMIT_WINDOW_MS;
+  }
+  entry.count++;
+  rateMap.set(key, entry);
+  if (entry.count > RATE_LIMIT_MAX) {
+    return res.status(429).json({ error: 'Too many requests' });
+  }
+  next();
+}
+
+// Simple internal auth middleware — require INTERNAL_API_KEY in env and header `x-internal-key` or Bearer token
+function requireInternalKey(req: Request, res: Response, next: NextFunction) {
+  const expected = process.env.INTERNAL_API_KEY;
+  if (!expected) {
+    console.warn('No INTERNAL_API_KEY set — internal endpoints are not protected');
+    return res.status(500).json({ error: 'Server misconfiguration' });
+  }
+  const token = (req.headers['x-internal-key'] as string) || (req.headers.authorization ? String(req.headers.authorization).split(' ')[1] : undefined);
+  if (!token || token !== expected) return res.status(401).json({ error: 'Unauthorized' });
+  next();
+}
 
 // Middleware
 app.use(cors({
@@ -33,7 +66,7 @@ app.get("/health", (_req: Request, res: Response) => {
 });
 
 // Proxy para OpenAI Chat Completions
-app.post("/api/openai/chat", async (req: Request, res: Response) => {
+app.post("/api/openai/chat", requireInternalKey, rateLimitMiddleware, async (req: Request, res: Response) => {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
 
@@ -69,7 +102,7 @@ app.post("/api/openai/chat", async (req: Request, res: Response) => {
 });
 
 // Proxy para Anthropic Claude
-app.post("/api/anthropic/messages", async (req: Request, res: Response) => {
+app.post("/api/anthropic/messages", requireInternalKey, rateLimitMiddleware, async (req: Request, res: Response) => {
   try {
     const apiKey = process.env.ANTHROPIC_API_KEY;
 

@@ -29,7 +29,8 @@ export function gerarPdfFinanceiro(lancamentos: Lancamento[]) {
 
     const total = lancamentos.reduce((soma, l) => soma + l.valor, 0);
     doc.setFontSize(12);
-    doc.text(`Total Geral: R$ ${total.toFixed(2)}`, 14, doc.lastAutoTable.finalY + 10);
+    const finalY = (doc as any).lastAutoTable?.finalY ?? 0;
+    doc.text(`Total Geral: R$ ${total.toFixed(2)}`, 14, finalY + 10);
   }
 
   doc.save("resumo_financeiro.pdf");

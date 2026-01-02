@@ -207,28 +207,120 @@ button, .btn {
 
 /* ============================= */
 /*   RESPONSIVIDADE MOBILE WG    */
+/*   Otimizado para parecer App  */
 /* ============================= */
 
 @media (max-width: 768px) {
-  /* Tipografia Mobile - textos maiores para melhor leitura */
+  /* ======== TIPOGRAFIA MOBILE (reduzida 10%) ======== */
   :root {
-    --wg-text-h1: 1.25rem;
-    --wg-text-h2: 1.125rem;
-    --wg-text-h3: 1rem;
-    --wg-text-body: 0.875rem;
-    --wg-text-sm: 0.8125rem;
-    --wg-text-xs: 0.75rem;
-    --wg-text-tag: 0.6875rem;
+    --wg-text-h1: 1.125rem;   /* 18px - reduzido 10% de 1.25rem */
+    --wg-text-h2: 1rem;        /* 16px - reduzido 10% */
+    --wg-text-h3: 0.875rem;    /* 14px - reduzido 10% */
+    --wg-text-body: 0.8125rem; /* 13px - reduzido 10% */
+    --wg-text-sm: 0.75rem;     /* 12px - reduzido 10% */
+    --wg-text-xs: 0.6875rem;   /* 11px - reduzido 10% */
+    --wg-text-tag: 0.625rem;   /* 10px - reduzido 10% */
+  }
+
+  /* ======== PREVENÇÃO DE OVERFLOW HORIZONTAL ======== */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    position: relative;
+  }
+
+  /* Prevenir overflow em todos os containers */
+  *, *::before, *::after {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Fix para elementos que podem causar overflow */
+  .layout,
+  .layout-main,
+  .layout-content,
+  main,
+  section,
+  article,
+  div[class*="container"],
+  div[class*="wrapper"] {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
   }
 
   /* Container principal com padding menor */
   .layout-content {
-    padding: 0.75rem !important;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 0.625rem !important;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-x: hidden !important;
   }
 
-  /* Grids devem virar 1 coluna no mobile */
-  .grid-cols-2,
+  /* ======== ÍCONES E EMOJIS REDUZIDOS ======== */
+  /* Ícones lucide-react */
+  svg[class*="lucide"],
+  svg[stroke="currentColor"],
+  .icon,
+  [class*="icon"] svg {
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Ícones em headers/títulos */
+  h1 svg, h2 svg, h3 svg,
+  .text-xl svg, .text-2xl svg, .text-3xl svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* Ícones menores em badges/tags */
+  .badge svg, .tag svg,
+  [class*="badge"] svg, [class*="tag"] svg,
+  .text-xs svg, .text-sm svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  /* Emojis reduzidos */
+  span[role="img"],
+  .emoji,
+  [class*="emoji"] {
+    font-size: 0.875rem !important;
+    line-height: 1 !important;
+  }
+
+  /* ======== CARDS E CONTAINERS ======== */
+  /* Cards com padding reduzido e overflow controlado */
+  .wg-card,
+  .wg-card-compact,
+  .bg-white.rounded-xl,
+  .bg-white.rounded-lg,
+  .bg-white.rounded-md,
+  [class*="card"] {
+    padding: 0.625rem !important;
+    overflow: hidden !important;
+    word-wrap: break-word !important;
+  }
+
+  /* Cards em flex com ícones - prevenir overflow */
+  .flex.items-center,
+  .flex.items-start {
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Texto em cards deve truncar */
+  .flex.items-center > span,
+  .flex.items-center > p,
+  .flex.items-center > div:not([class*="icon"]) {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+  }
+
+  /* ======== GRIDS RESPONSIVOS ======== */
+  /* Grids de 3+ colunas viram 1 coluna */
   .grid-cols-3,
   .grid-cols-4,
   .grid-cols-5,
@@ -237,205 +329,263 @@ button, .btn {
     grid-template-columns: 1fr !important;
   }
 
-  /* Exceção: grids de 2 colunas em alguns casos */
-  .grid-cols-2.mobile-keep,
-  .mobile-grid-2 {
+  /* Grids de 2 colunas ficam em 2 (stats cards) */
+  .grid-cols-2 {
     grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
   }
 
-  /* Cards com padding reduzido */
-  .wg-card,
-  .wg-card-compact,
-  .bg-white.rounded-xl,
-  .bg-white.rounded-lg {
-    padding: 0.75rem !important;
+  /* Exceção: forçar 1 coluna */
+  .grid-cols-2.mobile-1-col,
+  .mobile-grid-1 {
+    grid-template-columns: 1fr !important;
   }
 
-  /* Headers de página */
-  .text-2xl,
-  .text-3xl {
-    font-size: 1.25rem !important;
+  /* Stats cards sempre em 2 colunas */
+  .grid.grid-cols-5,
+  .grid.grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
   }
 
-  /* Tabelas responsivas - scroll horizontal */
+  /* ======== HEADERS DE PÁGINA ======== */
+  .text-2xl { font-size: 1.125rem !important; }
+  .text-3xl { font-size: 1.25rem !important; }
+  .text-xl { font-size: 1rem !important; }
+  .text-lg { font-size: 0.9375rem !important; }
+
+  /* ======== TABELAS RESPONSIVAS ======== */
   table {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     width: 100%;
+    font-size: 0.75rem !important;
   }
 
-  table thead,
-  table tbody,
-  table tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
+  table th, table td {
+    padding: 0.5rem 0.375rem !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap;
   }
 
-  /* Cards em linha viram coluna */
-  .flex.items-center.gap-4,
-  .flex.items-center.gap-6 {
+  /* ======== FLEX RESPONSIVO ======== */
+  /* Cards em linha viram coluna (exceto com ícones pequenos) */
+  .flex.items-center.gap-4:not(.mobile-flex-row),
+  .flex.items-center.gap-6:not(.mobile-flex-row) {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
 
-  /* Exceção: manter flex row em alguns casos */
-  .mobile-flex-row {
+  /* Manter flex row em casos específicos */
+  .mobile-flex-row,
+  .flex.items-center.gap-2,
+  .flex.items-center.gap-1,
+  .flex.gap-2,
+  .flex.gap-1 {
     flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow: hidden !important;
   }
 
-  /* Botões maiores para touch */
+  /* ======== BOTÕES TOUCH-FRIENDLY ======== */
   button,
   .btn,
   [type="button"],
   [type="submit"] {
-    min-height: 44px;
-    padding: 0.75rem 1rem !important;
+    min-height: 40px;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8125rem !important;
   }
 
-  /* Botões de ícone pequenos */
+  /* Botões de ícone */
   button.p-2,
   button.p-1\.5,
-  button.p-1 {
-    min-height: 40px;
-    min-width: 40px;
-    padding: 0.5rem !important;
+  button.p-1,
+  button[class*="rounded-full"],
+  .btn-icon {
+    min-height: 36px !important;
+    min-width: 36px !important;
+    padding: 0.375rem !important;
   }
 
-  /* Inputs maiores para touch */
+  /* ======== INPUTS TOUCH-FRIENDLY ======== */
   input,
   select,
   textarea {
-    min-height: 44px;
-    padding: 0.75rem !important;
-    font-size: 1rem !important; /* Previne zoom no iOS */
+    min-height: 40px;
+    padding: 0.5rem 0.625rem !important;
+    font-size: 16px !important; /* Previne zoom no iOS */
   }
 
-  /* Modais fullscreen no mobile */
+  /* ======== MODAIS FULLSCREEN ======== */
   .fixed.inset-0 > div,
   [class*="modal"],
-  [class*="Modal"] {
+  [class*="Modal"],
+  [role="dialog"] {
     max-width: 100% !important;
     max-height: 100% !important;
     margin: 0 !important;
-    border-radius: 0 !important;
+    border-radius: 12px 12px 0 0 !important;
+    width: 100% !important;
   }
 
   /* Drawer de baixo para cima */
   .mobile-drawer {
-    max-height: 90vh !important;
+    max-height: 85vh !important;
+    border-radius: 16px 16px 0 0 !important;
   }
 
-  /* Max width containers */
+  /* ======== CONTAINERS ======== */
   .max-w-7xl,
   .max-w-6xl,
   .max-w-5xl,
   .max-w-4xl,
+  .max-w-3xl,
+  .max-w-2xl,
+  .max-w-xl,
   [class*="max-w-\["] {
     max-width: 100% !important;
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding-left: 0.625rem !important;
+    padding-right: 0.625rem !important;
   }
 
-  /* Stats cards em 2 colunas */
-  .grid.grid-cols-5,
-  .grid.grid-cols-4 {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+  /* ======== ESPAÇAMENTOS REDUZIDOS ======== */
+  .gap-4 { gap: 0.375rem !important; }
+  .gap-6 { gap: 0.5rem !important; }
+  .gap-8 { gap: 0.75rem !important; }
 
-  /* Gaps menores */
-  .gap-4 { gap: 0.5rem !important; }
-  .gap-6 { gap: 0.75rem !important; }
-  .gap-8 { gap: 1rem !important; }
+  .p-4 { padding: 0.5rem !important; }
+  .p-6 { padding: 0.625rem !important; }
+  .p-8 { padding: 0.75rem !important; }
+  .px-4 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+  .px-6 { padding-left: 0.625rem !important; padding-right: 0.625rem !important; }
+  .px-8 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  .py-4 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+  .py-6 { padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; }
+  .py-8 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
 
-  /* Padding menores */
-  .p-6 { padding: 0.75rem !important; }
-  .p-8 { padding: 1rem !important; }
-  .px-6 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
-  .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
-  .py-6 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
-  .py-8 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
-
-  /* Sidebar escondida */
-  .wg-sidebar:not(.open) {
-    transform: translateX(-100%);
-  }
-
-  /* Topbar mais compacto */
+  /* ======== TOPBAR COMPACTO ======== */
   .topbar,
   [class*="topbar"] {
-    padding: 0.5rem 0.75rem !important;
+    padding: 0.375rem 0.625rem !important;
+    height: 48px !important;
+    min-height: 48px !important;
   }
 
-  /* Tabs de navegação com scroll */
+  /* ======== TABS COM SCROLL ======== */
   .tab-navigation,
-  [class*="tab-nav"] {
+  [class*="tab-nav"],
+  .tabs,
+  [role="tablist"] {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    flex-wrap: nowrap !important;
+    gap: 0.25rem !important;
   }
 
   .tab-navigation::-webkit-scrollbar,
-  [class*="tab-nav"]::-webkit-scrollbar {
+  [class*="tab-nav"]::-webkit-scrollbar,
+  .tabs::-webkit-scrollbar {
     display: none;
   }
 
-  /* Kanban cards mais compactos */
+  /* Tab items mais compactos */
+  [role="tab"],
+  .tab-item,
+  [class*="tab-"] {
+    padding: 0.375rem 0.625rem !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ======== KANBAN COMPACTO ======== */
   [class*="kanban"] {
-    gap: 0.5rem !important;
+    gap: 0.375rem !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /* Charts responsivos */
-  .recharts-wrapper {
+  /* ======== CHARTS RESPONSIVOS ======== */
+  .recharts-wrapper,
+  [class*="chart"] {
     width: 100% !important;
+    max-width: 100% !important;
     height: auto !important;
-    min-height: 200px;
+    min-height: 180px;
+    overflow: hidden !important;
   }
 
-  /* Legendas de charts abaixo do gráfico */
   .recharts-legend-wrapper {
     position: relative !important;
     width: 100% !important;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
+    font-size: 0.625rem !important;
   }
 
-  /* Esconder elementos não essenciais no mobile */
+  /* ======== VISIBILIDADE MOBILE ======== */
   .mobile-hide,
-  .hidden-mobile {
+  .hidden-mobile,
+  .md\:block:not(.mobile-show),
+  .lg\:block:not(.mobile-show) {
     display: none !important;
   }
 
-  /* Mostrar elementos só no mobile */
   .mobile-show,
   .visible-mobile {
     display: block !important;
   }
 
-  /* Texto truncado com ellipsis */
-  .mobile-truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 150px;
+  .mobile-flex {
+    display: flex !important;
   }
 
-  /* Cards de núcleo empilhados */
+  /* ======== TEXTO TRUNCADO ======== */
+  .mobile-truncate,
+  .truncate {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+
+  /* ======== NÚCLEOS E CARDS ESPECÍFICOS ======== */
   .nucleo-cards,
   [class*="nucleo"] {
     flex-direction: column !important;
+    gap: 0.5rem !important;
   }
 
-  /* Ações inline viram dropdown */
-  .inline-actions {
-    position: relative;
-  }
-
-  /* Fix para z-index de dropdowns */
+  /* ======== Z-INDEX FIXES ======== */
   .dropdown-content,
-  [class*="dropdown"] {
-    z-index: 1000;
+  [class*="dropdown"],
+  [class*="popover"],
+  [class*="tooltip"] {
+    z-index: 1000 !important;
+  }
+
+  /* ======== SCROLL SUAVE ESTILO APP ======== */
+  .layout-content,
+  main,
+  [class*="scroll"] {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* ======== ANIMAÇÕES REDUZIDAS (performance) ======== */
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      transition-duration: 0.15s !important;
+    }
+  }
+
+  /* ======== SAFE AREAS (iPhone X+) ======== */
+  .layout-content {
+    padding-left: max(0.625rem, env(safe-area-inset-left)) !important;
+    padding-right: max(0.625rem, env(safe-area-inset-right)) !important;
   }
 }
 

@@ -43,7 +43,9 @@ export function gerarPdfMarcenaria(obraId: string, itens: Item[]) {
       head: [["Descrição", "Qtd", "Medidas", "Acabamento", "Valor"]],
       body: dados,
       styles: { fontSize: 10 },
-      didDrawPage: (d) => (y = d.cursor.y + 10),
+      didDrawPage: (d) => {
+        y = (d.cursor?.y ?? y) + 10;
+      },
     });
 
     const totalAmbiente = grupo.reduce((soma, i) => soma + i.valor_total, 0);

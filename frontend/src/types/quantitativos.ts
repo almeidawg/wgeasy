@@ -60,6 +60,8 @@ export interface QuantitativoAmbiente {
   largura: number | null;
   comprimento: number | null;
   area: number | null;
+  // Compatibilidade: alguns lugares usam `area_m2`
+  area_m2?: number | null;
   pe_direito: number | null;
   perimetro: number | null;
 
@@ -69,6 +71,8 @@ export interface QuantitativoAmbiente {
   // Auditoria
   criado_em: string;
   atualizado_em: string;
+  // Possíveis joins usados na UI
+  categorias?: QuantitativoCategoriaCompleta[];
 }
 
 // ============================================================
@@ -89,6 +93,8 @@ export interface QuantitativoCategoria {
   // Auditoria
   criado_em: string;
   atualizado_em: string;
+  // Alguns componentes esperam `itens` mesmo na tipagem base
+  itens?: QuantitativoItem[];
 }
 
 // ============================================================
@@ -229,6 +235,7 @@ export interface QuantitativoAmbienteFormData {
   largura?: number;
   comprimento?: number;
   area?: number;
+  area_m2?: number;
   pe_direito?: number;
   perimetro?: number;
   ordem?: number;

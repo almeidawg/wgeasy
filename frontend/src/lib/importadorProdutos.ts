@@ -36,15 +36,29 @@ export async function importarProdutoPorLink(url: string): Promise<ProdutoImport
       return await importarMercadoLivre(url);
     }
 
-    // Para outros sites, usar extração automática via proxy (SEM IA)
-    // A opção de IA é separada e escolhida pelo usuário
+    // 1. Tentar proxy CORS primeiro (mais rápido)
     try {
+      console.log('[ImportadorProdutos] Tentando proxy CORS...');
       const produto = await importarViaProxy(url, hostname);
+      if (produto && produto.titulo && !produto.titulo.includes('Just a moment')) {
+        console.log('[ImportadorProdutos] ✅ Produto extraído via proxy');
+        return produto;
+      }
+      console.log('[ImportadorProdutos] Proxy retornou dados inválidos (Cloudflare?)');
+    } catch (e) {
+      console.log('[ImportadorProdutos] Proxy CORS falhou:', e);
+    }
+
+    // 2. Se proxy falhar, usar Edge Function (contorna Cloudflare)
+    try {
+      console.log('[ImportadorProdutos] Tentando Edge Function...');
+      const produto = await importarViaEdgeFunction(url);
       if (produto && produto.titulo) {
+        console.log('[ImportadorProdutos] ✅ Produto extraído via Edge Function');
         return produto;
       }
     } catch (e) {
-      console.log('Proxy CORS falhou:', e);
+      console.log('[ImportadorProdutos] Edge Function falhou:', e);
     }
 
     // Fallback com dados básicos (sem IA)
@@ -59,6 +73,51 @@ export async function importarProdutoPorLink(url: string): Promise<ProdutoImport
     console.error('Erro ao importar produto:', error);
     throw new Error('Não foi possível importar o produto. Verifique a URL e tente novamente.');
   }
+}
+
+/**
+ * Importa usando Edge Function com extração direta (sem IA)
+ */
+async function importarViaEdgeFunction(url: string): Promise<ProdutoImportado> {
+  console.log('[ImportadorProdutos] Chamando Edge Function extrair_direto:', url);
+
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+
+  const response = await fetch(EDGE_FUNCTION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      termoBusca: url,
+      tipo: 'extrair_direto'
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Edge Function retornou ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  if (data.error || !data.produto) {
+    throw new Error(data.error || 'Produto não encontrado');
+  }
+
+  const p = data.produto;
+
+  return {
+    titulo: p.titulo || 'Produto não encontrado',
+    preco: parseFloat(p.preco) || 0,
+    marca: p.marca,
+    categoria: p.categoria,
+    descricao: p.descricao,
+    sku: p.sku,
+    imagem_url: p.imagem_url,
+    url_origem: url,
+  };
 }
 
 /**

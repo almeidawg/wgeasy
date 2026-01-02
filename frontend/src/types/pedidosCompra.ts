@@ -52,7 +52,7 @@ export interface PedidoCompraCompleto extends PedidoCompra {
     email?: string;
     telefone?: string;
   };
-  itens?: PedidoCompraItem[];
+  itens?: PedidoCompraItemCompleto[];
 }
 
 // ============================================================

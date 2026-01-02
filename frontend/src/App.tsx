@@ -70,6 +70,7 @@ const PricelistSubcategoriasPage = lazy(() => import("@/pages/pricelist/Pricelis
 const ExportarImportarPricelistPage = lazy(() => import("@/pages/pricelist/ExportarImportarPricelistPage"));
 const ImportarImagensPage = lazy(() => import("@/pages/pricelist/ImportarImagensPage"));
 const ImportarLotePage = lazy(() => import("@/pages/pricelist/ImportarLotePage"));
+const GerenciarCategoriasPage = lazy(() => import("@/pages/admin/GerenciarCategoriasPage"));
 
 /* ===================== LAZY IMPORTS - MEMORIAL DE ACABAMENTOS ===================== */
 const MemorialAcabamentosPage = lazy(() => import("@/pages/MemorialAcabamentosPage"));
@@ -123,6 +124,9 @@ const OrcamentosPageNew = lazy(() => import("@/pages/planejamento/OrcamentosPage
 const AprovacoesPage = lazy(() => import("@/pages/planejamento/AprovacoesPage"));
 const ComposicoesPage = lazy(() => import("@/pages/planejamento/ComposicoesPage"));
 const OrcamentoMateriaisPage = lazy(() => import("@/pages/planejamento/OrcamentoMateriaisPage"));
+const PedidoMateriaisObraPage = lazy(() => import("@/pages/planejamento/PedidoMateriaisObraPage"));
+const PedidoMateriaisObraPage2 = lazy(() => import("@/pages/planejamento/PedidoMateriaisObraPage2"));
+const ConsolidacaoObraPage = lazy(() => import("@/pages/planejamento/ConsolidacaoObraPage"));
 const QuantitativosListPage = lazy(() => import("@/pages/quantitativos/QuantitativosListPage"));
 const QuantitativoFormPage = lazy(() => import("@/pages/quantitativos/QuantitativoFormPage"));
 const QuantitativoEditorPage = lazy(() => import("@/pages/quantitativos/QuantitativoEditorPage"));
@@ -424,6 +428,9 @@ export default function App() {
             <Route path="/planejamento/orcamentos/modelos" element={<ModelosOrcamentoPage />} />
             <Route path="/planejamento/orcamentos/composicoes" element={<ComposicoesPage />} />
             <Route path="/planejamento/orcamentos/materiais" element={<OrcamentoMateriaisPage />} />
+            <Route path="/planejamento/pedido-materiais" element={<PedidoMateriaisObraPage />} />
+            <Route path="/planejamento/pedido-materiais-2" element={<PedidoMateriaisObraPage2 />} />
+            <Route path="/planejamento/consolidacao" element={<ConsolidacaoObraPage />} />
             <Route path="/planejamento/orcamentos/novo" element={<NovoOrcamentoPage />} />
             <Route path="/planejamento/orcamentos/:id" element={<OrcamentoDetalhePage />} />
             <Route path="/planejamento/orcamentos/:id/itens" element={<OrcamentoItensPage />} />
@@ -487,8 +494,9 @@ export default function App() {
             <Route path="/pricelist/novo" element={<PricelistItemFormPage />} />
             <Route path="/pricelist/editar/:id" element={<PricelistItemFormPage />} />
             <Route path="/pricelist/:id" element={<PricelistItemFormPage />} />
-            <Route path="/pricelist/categorias" element={<PricelistCategoriasPage />} />
-            <Route path="/pricelist/subcategorias" element={<PricelistSubcategoriasPage />} />
+            <Route path="/pricelist/categorias" element={<GerenciarCategoriasPage />} />
+            <Route path="/pricelist/subcategorias" element={<Navigate replace to="/pricelist/categorias" />} />
+            <Route path="/pricelist/gerenciar-categorias" element={<Navigate replace to="/pricelist/categorias" />} />
             <Route path="/pricelist/importar" element={<Navigate replace to="/pricelist/exportar-importar" />} />
             <Route path="/pricelist/importar-catalogo" element={<ImportarCatalogoIAPage />} />
             <Route path="/pricelist/importar-catalogo-excel" element={<ImportarCatalogoExcelPage />} />

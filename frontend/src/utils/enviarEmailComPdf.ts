@@ -58,7 +58,8 @@ export async function enviarEmailComPdf(
     const result = await emailjs.sendForm(
       "YOUR_SERVICE_ID",
       "YOUR_TEMPLATE_ID",
-      formData,
+      // sendForm expects an HTMLFormElement or selector; cast to any to allow FormData here
+      formData as unknown as any,
       "YOUR_PUBLIC_KEY"
     );
 

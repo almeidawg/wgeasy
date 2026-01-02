@@ -16,6 +16,7 @@ import {
   buscarProdutoNaInternet,
   type ProdutoImportado,
 } from "@/lib/importadorProdutos";
+import type { ItemPriceList } from "@/types/pricelist";
 
 interface Cliente {
   id: string;
@@ -26,15 +27,7 @@ interface Cliente {
   avatar?: string | null;
 }
 
-interface ItemPriceList {
-  id: string;
-  codigo: string;
-  nome: string;
-  descricao?: string;
-  categoria?: string;
-  preco: number;
-  unidade: string;
-}
+
 
 interface CategoriaPriceList {
   id: string;

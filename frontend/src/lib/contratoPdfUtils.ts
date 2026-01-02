@@ -305,7 +305,7 @@ export async function gerarContratoPDF(
         margin: { left: margin, right: margin },
       });
 
-      yPos = (doc as any).lastAutoTable.finalY + 8;
+      yPos = ((doc as any).lastAutoTable?.finalY ?? 0) + 8;
     };
 
     // Criar tabela de Mão de Obra

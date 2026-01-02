@@ -1,0 +1,470 @@
+﻿src/components/oportunidades/OportunidadeModal.tsx(182,21): error TS2322: Type 'OportunidadeUI' is not assignable to type 'OportunidadePDFData'.
+  Types of property 'origem' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+src/components/oportunidades/OportunidadeModal.tsx(183,21): error TS2322: Type 'OportunidadeClienteUI | null | undefined' is not assignable to type 'ClientePDF'.
+  Type 'undefined' is not assignable to type 'ClientePDF'.
+src/lib/exportarEVF.ts(45,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(47,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(52,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(54,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(59,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(61,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(65,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(67,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(76,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(78,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(83,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(85,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(93,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(160,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/exportarEVF.ts(162,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/pdfFichaColaborador.ts(53,5): error TS2322: Type '(string | { nome: string; })[][]' is not assignable to type 'RowInput[]'.
+  Type '(string | { nome: string; })[]' is not assignable to type 'RowInput'.
+    Type '(string | { nome: string; })[]' is not assignable to type 'CellInput[]'.
+      Type 'string | { nome: string; }' is not assignable to type 'CellInput'.
+        Type '{ nome: string; }' is not assignable to type 'CellInput'.
+src/lib/supabaseClient.ts(144,9): error TS2345: Argument of type 'PostgrestFilterBuilder<any, any, any, any[], string, unknown, "POST">' is not assignable to parameter of type 'Promise<QueryResult<T[]>>'.
+  Type 'PostgrestFilterBuilder<any, any, any, any[], string, unknown, "POST">' is missing the following properties from type 'Promise<QueryResult<T[]>>': catch, finally, [Symbol.toStringTag]
+src/modules/propostas-v2/components/PropostaEmissaoPageV3.tsx(391,22): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/modules/propostas-v2/components/PropostaEmissaoPageV3.tsx(391,22): error TS2345: Argument of type '(prev: any) => any' is not assignable to parameter of type 'ItemProposta[]'.
+src/modules/propostas-v2/components/PropostaEmissaoPageV3.tsx(391,39): error TS7006: Parameter 'itemProp' implicitly has an 'any' type.
+src/modules/propostas-v2/hooks/useSugestoesIA.ts(59,26): error TS2345: Argument of type '{ id: string; nome: string; largura: number; comprimento: number; pe_direito: number; area_piso: number; area_parede: number; area_teto: number; perimetro: number; }' is not assignable to parameter of type 'Ambiente'.
+  Type '{ id: string; nome: string; largura: number; comprimento: number; pe_direito: number; area_piso: number; area_parede: number; area_teto: number; perimetro: number; }' is missing the following properties from type 'Ambiente': area_paredes_bruta, area_paredes_liquida, portas, janelas, and 2 more.
+src/modules/propostas-v2/hooks/useSugestoesIA.ts(168,26): error TS2345: Argument of type '{ id: string; nome: string; largura: number; comprimento: number; pe_direito: number; area_piso: number; area_parede: number; area_teto: number; perimetro: number; }' is not assignable to parameter of type 'Ambiente'.
+  Type '{ id: string; nome: string; largura: number; comprimento: number; pe_direito: number; area_piso: number; area_parede: number; area_teto: number; perimetro: number; }' is missing the following properties from type 'Ambiente': area_paredes_bruta, area_paredes_liquida, portas, janelas, and 2 more.
+src/pages/admin/GerenciarCategoriasPage.tsx(159,23): error TS2345: Argument of type 'PricelistCategoria[]' is not assignable to parameter of type 'SetStateAction<CategoriaDB[]>'.
+  Type 'PricelistCategoria[]' is not assignable to type 'CategoriaDB[]'.
+    Type 'PricelistCategoria' is not assignable to type 'CategoriaDB'.
+      Types of property 'codigo' are incompatible.
+        Type 'string | null' is not assignable to type 'string | undefined'.
+          Type 'null' is not assignable to type 'string | undefined'.
+src/pages/admin/GerenciarCategoriasPage.tsx(1953,55): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ material: { label: string; bg: string; desc: string; }; mao_obra: { label: string; bg: string; desc: string; }; servico: { label: string; bg: string; desc: string; }; produto: { label: string; bg: string; desc: string; }; insumo: { ...; }; }'.
+src/pages/analise-projeto/AnaliseProjetoEditorPage.tsx(918,11): error TS2345: Argument of type '{ nome: string; area: number | null | undefined; largura: number | null | undefined; comprimento: number | null | undefined; }[]' is not assignable to parameter of type 'AmbienteExtraido[]'.
+  Type '{ nome: string; area: number | null | undefined; largura: number | null | undefined; comprimento: number | null | undefined; }' is not assignable to type 'AmbienteExtraido'.
+    Types of property 'largura' are incompatible.
+      Type 'number | null | undefined' is not assignable to type 'number | undefined'.
+        Type 'null' is not assignable to type 'number | undefined'.
+src/pages/AreaClientePage.tsx(2483,48): error TS2552: Cannot find name 'panoramaData'. Did you mean 'panorama'?
+src/pages/AreaClientePage.tsx(2485,14): error TS2552: Cannot find name 'panoramaData'. Did you mean 'panorama'?
+src/pages/AreaClientePage.tsx(2486,20): error TS2552: Cannot find name 'panoramaData'. Did you mean 'panorama'?
+src/pages/AreaClientePage.tsx(2486,64): error TS2552: Cannot find name 'panoramaData'. Did you mean 'panorama'?
+src/pages/AreaClientePage.tsx(2490,14): error TS2552: Cannot find name 'panoramaData'. Did you mean 'panorama'?
+src/pages/AreaClientePage.tsx(2491,29): error TS2552: Cannot find name 'panoramaData'. Did you mean 'panorama'?
+src/pages/AreaClientePage.tsx(2934,15): error TS2304: Cannot find name 'carregarCliente'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(11,8): error TS2459: Module '"@/lib/assistenciaApi"' declares 'OrdemServicoCompleta' locally, but it is not exported.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(12,8): error TS2459: Module '"@/lib/assistenciaApi"' declares 'ItemOSFormData' locally, but it is not exported.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(74,37): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusOS, string>'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(211,37): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusOS, string>'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(213,12): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusOS, string>'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(217,37): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<PrioridadeOS, string>'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(220,18): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<PrioridadeOS, string>'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(223,12): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<TipoAtendimento, string>'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(496,46): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(549,35): error TS7006: Parameter 'h' implicitly has an 'any' type.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(560,58): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusOS, string>'.
+src/pages/assistencia/AssistenciaDetalhePage.tsx(561,58): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusOS, string>'.
+src/pages/assistencia/AssistenciaFormPage.tsx(8,8): error TS2459: Module '"@/lib/assistenciaApi"' declares 'OrdemServicoFormData' locally, but it is not exported.
+src/pages/assistencia/AssistenciaFormPage.tsx(9,8): error TS2459: Module '"@/lib/assistenciaApi"' declares 'OrdemServicoCompleta' locally, but it is not exported.
+src/pages/assistencia/AssistenciaPage.tsx(8,8): error TS2459: Module '"@/lib/assistenciaApi"' declares 'OrdemServicoCompleta' locally, but it is not exported.
+src/pages/assistencia/AssistenciaPage.tsx(9,8): error TS2459: Module '"@/lib/assistenciaApi"' declares 'OSEstatisticas' locally, but it is not exported.
+src/pages/assistencia/AssistenciaPage.tsx(261,49): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusOS, string>'.
+src/pages/assistencia/AssistenciaPage.tsx(263,24): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusOS, string>'.
+src/pages/assistencia/AssistenciaPage.tsx(269,49): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<PrioridadeOS, string>'.
+src/pages/assistencia/AssistenciaPage.tsx(272,30): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<PrioridadeOS, string>'.
+src/pages/cliente/ConfirmacaoDadosPage.tsx(356,40): error TS2345: Argument of type 'string | null | undefined' is not assignable to parameter of type 'string | null'.
+  Type 'undefined' is not assignable to type 'string | null'.
+src/pages/cliente/ConfirmacaoDadosPage.tsx(378,39): error TS2345: Argument of type 'string | null | undefined' is not assignable to parameter of type 'string | null'.
+  Type 'undefined' is not assignable to type 'string | null'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(47,29): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(53,53): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(54,60): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(56,45): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(75,24): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(93,19): error TS2322: Type '"default" | "secondary" | "outline" | "destructive"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(203,49): error TS2322: Type '{ children: Element; variant: "ghost"; size: "sm"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(341,49): error TS2322: Type '{ children: Element; variant: "ghost"; size: "sm"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(370,27): error TS2322: Type '"default" | "secondary"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/colaborador/ColaboradorDashboardPage.tsx(390,65): error TS2322: Type '{ children: Element; className: string; variant: "outline"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/colaborador/ColaboradorFinanceiroPage.tsx(55,29): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorFinanceiroPage.tsx(60,48): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorFinanceiroPage.tsx(61,60): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorFinanceiroPage.tsx(73,24): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorProjetosPage.tsx(43,29): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorProjetosPage.tsx(47,70): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorProjetosPage.tsx(57,24): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorProjetosPage.tsx(117,16): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/colaborador/ColaboradorProjetosPage.tsx(215,57): error TS2322: Type '{ children: Element; variant: "outline"; size: "sm"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/colaborador/ColaboradorProjetosPage.tsx(221,55): error TS2322: Type '{ children: Element; variant: "ghost"; size: "sm"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/colaborador/ColaboradorSolicitacoesPage.tsx(53,29): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorSolicitacoesPage.tsx(58,43): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorSolicitacoesPage.tsx(69,24): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/colaborador/ColaboradorSolicitacoesPage.tsx(137,17): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/colaborador/ColaboradorSolicitacoesPage.tsx(214,42): error TS2322: Type '{ children: Element; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/compras/ComprasDetalhePage.tsx(7,8): error TS2459: Module '"@/lib/comprasApi"' declares 'PedidoCompraCompleto' locally, but it is not exported.
+src/pages/compras/ComprasDetalhePage.tsx(53,37): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusPedidoCompra, string>'.
+src/pages/compras/ComprasDetalhePage.tsx(135,37): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusPedidoCompra, string>'.
+src/pages/compras/ComprasDetalhePage.tsx(137,12): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusPedidoCompra, string>'.
+src/pages/compras/ComprasDetalhePage.tsx(284,50): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/pages/compras/ComprasFormPage.tsx(10,8): error TS2459: Module '"@/lib/comprasApi"' declares 'PedidoCompraFormData' locally, but it is not exported.
+src/pages/compras/ComprasFormPage.tsx(11,8): error TS2459: Module '"@/lib/comprasApi"' declares 'PedidoCompraItemFormData' locally, but it is not exported.
+src/pages/compras/ComprasFormPage.tsx(12,8): error TS2459: Module '"@/lib/comprasApi"' declares 'PedidoCompraCompleto' locally, but it is not exported.
+src/pages/compras/ComprasFormPage.tsx(13,8): error TS2459: Module '"@/lib/comprasApi"' declares 'PedidoCompraItem' locally, but it is not exported.
+src/pages/compras/ComprasPage.tsx(8,8): error TS2459: Module '"@/lib/comprasApi"' declares 'PedidoCompraCompleto' locally, but it is not exported.
+src/pages/compras/ComprasPage.tsx(9,8): error TS2459: Module '"@/lib/comprasApi"' declares 'PedidosCompraEstatisticas' locally, but it is not exported.
+src/pages/compras/ComprasPage.tsx(218,49): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusPedidoCompra, string>'.
+src/pages/compras/ComprasPage.tsx(220,24): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<StatusPedidoCompra, string>'.
+src/pages/contratos/ContratoDetalhePage.tsx(439,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | Date'.
+      Type 'undefined' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number'.
+      Type 'undefined' is not assignable to type 'string | number'.
+src/pages/contratos/ContratoFormPage.tsx(395,53): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/contratos/ContratoFormPage.tsx(642,53): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/pages/contratos/ContratoFormPage.tsx(646,20): error TS2345: Argument of type '"objeto"' is not assignable to parameter of type '"descricao" | "forma_pagamento" | "observacoes" | "cliente_id" | "cliente_nome" | "cliente_email" | "cliente_telefone" | "percentual_entrada" | "numero_parcelas" | "nucleos_selecionados" | ... 24 more ... | `nucleos_selecionados.${number}`'.
+src/pages/contratos/ContratoFormPage.tsx(646,43): error TS2339: Property 'objeto' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(647,20): error TS2345: Argument of type '"data_inicio"' is not assignable to parameter of type '"descricao" | "forma_pagamento" | "observacoes" | "cliente_id" | "cliente_nome" | "cliente_email" | "cliente_telefone" | "percentual_entrada" | "numero_parcelas" | "nucleos_selecionados" | ... 24 more ... | `nucleos_selecionados.${number}`'.
+src/pages/contratos/ContratoFormPage.tsx(648,20): error TS2345: Argument of type '"prazo_execucao_dias"' is not assignable to parameter of type '"descricao" | "forma_pagamento" | "observacoes" | "cliente_id" | "cliente_nome" | "cliente_email" | "cliente_telefone" | "percentual_entrada" | "numero_parcelas" | "nucleos_selecionados" | ... 24 more ... | `nucleos_selecionados.${number}`'.
+src/pages/contratos/ContratoFormPage.tsx(648,56): error TS2339: Property 'prazo_execucao_dias' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(653,48): error TS2339: Property 'cliente_cpf' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(654,47): error TS2551: Property 'cliente_rg' does not exist on type 'ContratoCompleto'. Did you mean 'cliente'?
+src/pages/contratos/ContratoFormPage.tsx(655,53): error TS2339: Property 'cliente_telefone' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(656,50): error TS2551: Property 'cliente_email' does not exist on type 'ContratoCompleto'. Did you mean 'cliente_id'?
+src/pages/contratos/ContratoFormPage.tsx(657,53): error TS2339: Property 'cliente_endereco' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(658,51): error TS2339: Property 'cliente_bairro' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(659,51): error TS2551: Property 'cliente_cidade' does not exist on type 'ContratoCompleto'. Did you mean 'cliente_id'?
+src/pages/contratos/ContratoFormPage.tsx(660,51): error TS2339: Property 'cliente_estado' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(661,48): error TS2339: Property 'cliente_cep' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(662,58): error TS2339: Property 'cliente_nacionalidade' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(663,57): error TS2339: Property 'cliente_estado_civil' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(664,54): error TS2339: Property 'cliente_profissao' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(671,28): error TS2339: Property 'imovel_endereco' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(675,28): error TS2339: Property 'imovel_endereco' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(679,28): error TS2339: Property 'imovel_numero' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(683,28): error TS2339: Property 'imovel_complemento' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(687,28): error TS2339: Property 'imovel_apartamento' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(691,28): error TS2339: Property 'imovel_torre' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(695,28): error TS2339: Property 'imovel_condominio' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(699,28): error TS2339: Property 'imovel_bairro' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(703,28): error TS2339: Property 'imovel_cidade' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(707,28): error TS2339: Property 'imovel_estado' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(711,28): error TS2339: Property 'imovel_cep' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(715,28): error TS2339: Property 'imovel_matricula' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(719,28): error TS2339: Property 'imovel_inscricao' does not exist on type 'ContratoCompleto'.
+src/pages/contratos/ContratoFormPage.tsx(912,9): error TS2353: Object literal may only specify known properties, and 'pagamento_por_nucleo' does not exist in type 'ContratoMultiNucleoFormData'.
+src/pages/contratos/ContratosPage.tsx(212,42): error TS2339: Property 'data_criacao' does not exist on type 'Contrato'.
+src/pages/contratos/ContratosPage.tsx(299,40): error TS2367: This comparison appears to be unintentional because the types 'StatusContrato' and '"em_execucao"' have no overlap.
+src/pages/cronograma/CronogramaCatalogPage.tsx(215,17): error TS2339: Property 'success' does not exist on type 'false | { success: boolean; message: string; } | { success: boolean; message?: undefined; }'.
+  Property 'success' does not exist on type 'false'.
+src/pages/cronograma/CronogramaCatalogPage.tsx(221,98): error TS2339: Property 'message' does not exist on type 'false | { success: boolean; message: string; } | { success: boolean; message?: undefined; }'.
+  Property 'message' does not exist on type 'false'.
+src/pages/cronograma/CronogramaDashboardPage.tsx(234,50): error TS2367: This comparison appears to be unintentional because the types 'StatusProjeto' and '"atrasado"' have no overlap.
+src/pages/cronograma/CronogramaDashboardPage.tsx(256,11): error TS2741: Property 'href' is missing in type '{ label: string; }' but required in type 'BreadcrumbItem'.
+src/pages/cronograma/CronogramaKanbanPage.tsx(12,26): error TS2339: Property 'tasks' does not exist on type 'Projeto'.
+src/pages/cronograma/CronogramaKanbanPage.tsx(55,50): error TS2339: Property 'name' does not exist on type 'Projeto'.
+src/pages/cronograma/CronogramaProjectsPage.tsx(277,37): error TS2367: This comparison appears to be unintentional because the types 'StatusProjeto' and '"atrasado"' have no overlap.
+src/pages/cronograma/CronogramaProjectsPage.tsx(287,11): error TS2741: Property 'href' is missing in type '{ label: string; }' but required in type 'BreadcrumbItem'.
+src/pages/cronograma/CronogramaTimelinePage.tsx(17,3): error TS2305: Module '"@/types/cronograma"' has no exported member 'TarefaComComentarios'.
+src/pages/cronograma/CronogramaTimelinePage.tsx(18,3): error TS2305: Module '"@/types/cronograma"' has no exported member 'ProjetoCompletoTimeline'.
+src/pages/cronograma/CronogramaTimelinePage.tsx(20,3): error TS2305: Module '"@/types/cronograma"' has no exported member 'CategoriaTarefa'.
+src/pages/cronograma/CronogramaTimelinePage.tsx(106,35): error TS2345: Argument of type '{ id: any; ordem_customizada: number; }[]' is not assignable to parameter of type '{ id: string; ordem: number; }[]'.
+  Property 'ordem' is missing in type '{ id: any; ordem_customizada: number; }' but required in type '{ id: string; ordem: number; }'.
+src/pages/cronograma/CronogramaTimelinePage.tsx(134,41): error TS2353: Object literal may only specify known properties, and 'status_tarefa' does not exist in type 'Partial<CronogramaTarefaFormData>'.
+src/pages/cronograma/CronogramaTimelinePage.tsx(150,31): error TS2353: Object literal may only specify known properties, and 'task_id' does not exist in type 'ComentarioTarefaFormData'.
+src/pages/cronograma/CronogramaTimelinePage.tsx(459,35): error TS7006: Parameter 'comentario' implicitly has an 'any' type.
+src/pages/cronograma/ProjectDetailPage.tsx(527,24): error TS2345: Argument of type '(prev: MembroEquipe[]) => (MembroEquipe | { id: any; pessoa: { id: any; nome: any; tipo: any; cargo: any; profissao: any; rg: any; cpf: any; telefone: any; email: any; avatar_url: any; }[]; funcao_no_projeto: any; data_entrada: any; })[]' is not assignable to parameter of type 'SetStateAction<MembroEquipe[]>'.
+  Type '(prev: MembroEquipe[]) => (MembroEquipe | { id: any; pessoa: { id: any; nome: any; tipo: any; cargo: any; profissao: any; rg: any; cpf: any; telefone: any; email: any; avatar_url: any; }[]; funcao_no_projeto: any; data_entrada: any; })[]' is not assignable to type '(prevState: MembroEquipe[]) => MembroEquipe[]'.
+    Type '(MembroEquipe | { id: any; pessoa: { id: any; nome: any; tipo: any; cargo: any; profissao: any; rg: any; cpf: any; telefone: any; email: any; avatar_url: any; }[]; funcao_no_projeto: any; data_entrada: any; })[]' is not assignable to type 'MembroEquipe[]'.
+      Type 'MembroEquipe | { id: any; pessoa: { id: any; nome: any; tipo: any; cargo: any; profissao: any; rg: any; cpf: any; telefone: any; email: any; avatar_url: any; }[]; funcao_no_projeto: any; data_entrada: any; }' is not assignable to type 'MembroEquipe'.
+        Type '{ id: any; pessoa: { id: any; nome: any; tipo: any; cargo: any; profissao: any; rg: any; cpf: any; telefone: any; email: any; avatar_url: any; }[]; funcao_no_projeto: any; data_entrada: any; }' is not assignable to type 'MembroEquipe'.
+          Types of property 'pessoa' are incompatible.
+            Type '{ id: any; nome: any; tipo: any; cargo: any; profissao: any; rg: any; cpf: any; telefone: any; email: any; avatar_url: any; }[]' is missing the following properties from type 'Pessoa': id, nome, tipo
+src/pages/cronograma/ProjectDetailPage.tsx(1108,11): error TS2741: Property 'href' is missing in type '{ label: string; }' but required in type 'BreadcrumbItem'.
+src/pages/cronograma/ProjectDetailPage.tsx(1316,17): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/pages/cronograma/ProjectDetailPage.tsx(1317,17): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/pages/cronograma/ProjectFormPage.tsx(32,13): error TS18047: 'p' is possibly 'null'.
+src/pages/cronograma/ProjectFormPage.tsx(33,16): error TS18047: 'p' is possibly 'null'.
+src/pages/cronograma/ProjectFormPage.tsx(34,18): error TS18047: 'p' is possibly 'null'.
+src/pages/cronograma/ProjectFormPage.tsx(35,15): error TS18047: 'p' is possibly 'null'.
+src/pages/cronograma/ProjectFormPage.tsx(36,12): error TS18047: 'p' is possibly 'null'.
+src/pages/cronograma/ProjectsDashboardPage.tsx(53,43): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/pages/cronograma/ProjetosFinanceirosPage.tsx(10,15): error TS2305: Module '"@/types/cronograma"' has no exported member 'ProjetoCompletoTimeline'.
+src/pages/cronograma/SuperCronogramaGanttPage.tsx(315,18): error TS2345: Argument of type '(prev: TarefaGantt[]) => (TarefaGantt | { parent_id: null; id: string; nome: string; descricao?: string | undefined; categoria?: string | undefined; nucleo?: string | undefined; ... 10 more ...; valor_pendente?: number | undefined; })[]' is not assignable to parameter of type 'SetStateAction<TarefaGantt[]>'.
+  Type '(prev: TarefaGantt[]) => (TarefaGantt | { parent_id: null; id: string; nome: string; descricao?: string | undefined; categoria?: string | undefined; nucleo?: string | undefined; ... 10 more ...; valor_pendente?: number | undefined; })[]' is not assignable to type '(prevState: TarefaGantt[]) => TarefaGantt[]'.
+    Type '(TarefaGantt | { parent_id: null; id: string; nome: string; descricao?: string | undefined; categoria?: string | undefined; nucleo?: string | undefined; data_inicio?: string | undefined; ... 9 more ...; valor_pendente?: number | undefined; })[]' is not assignable to type 'TarefaGantt[]'.
+      Type 'TarefaGantt | { parent_id: null; id: string; nome: string; descricao?: string | undefined; categoria?: string | undefined; nucleo?: string | undefined; data_inicio?: string | undefined; ... 9 more ...; valor_pendente?: number | undefined; }' is not assignable to type 'TarefaGantt'.
+        Type '{ parent_id: null; id: string; nome: string; descricao?: string; categoria?: string; nucleo?: string; data_inicio?: string; data_termino?: string; progresso: number; status: string; ordem: number; ... 5 more ...; valor_pendente?: number; }' is not assignable to type 'TarefaGantt'.
+          Types of property 'parent_id' are incompatible.
+            Type 'null' is not assignable to type 'string | undefined'.
+src/pages/engenharia/ObraEtapas.tsx(342,13): error TS2322: Type 'ObraEtapa[]' is not assignable to type 'ObraEtapaCompleta[]'.
+  Type 'ObraEtapa' is missing the following properties from type 'ObraEtapaCompleta': total_checklist, checklist_concluidos, total_evidencias, total_assinaturas, and 2 more.
+src/pages/engenharia/ObraEtapas.tsx(353,17): error TS2740: Type 'ObraEtapa' is missing the following properties from type 'ObraEtapaCompleta': total_checklist, checklist_concluidos, total_evidencias, total_assinaturas, and 2 more.
+src/pages/engenharia/ObraEtapas.tsx(354,52): error TS2345: Argument of type 'ObraEtapa' is not assignable to parameter of type 'SetStateAction<ObraEtapaCompleta | null>'.
+  Type 'ObraEtapa' is missing the following properties from type 'ObraEtapaCompleta': total_checklist, checklist_concluidos, total_evidencias, total_assinaturas, and 2 more.
+src/pages/engenharia/ObrasPorPessoaDashboard.tsx(3,25): error TS2724: '"@/lib/pessoasApi"' has no exported member named 'listarObrasPessoa'. Did you mean 'listarPessoas'?
+src/pages/evf/EVFEditorPage.tsx(235,11): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/pages/financeiro/ComissionamentoPage.tsx(401,38): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/financeiro/ComissionamentoPage.tsx(596,29): error TS2322: Type '{ children: string; variant: "outline"; style: { borderColor: string; color: string; }; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'style' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/pages/financeiro/FinanceiroFormPage.tsx(45,5): error TS2322: Type 'null' is not assignable to type 'string | undefined'.
+src/pages/financeiro/FinanceiroFormPage.tsx(310,49): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/pages/financeiro/ImportarExtratoPage.tsx(700,34): error TS2322: Type '"default" | "secondary"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/financeiro/LancamentosPage.tsx(203,47): error TS18048: 'l.data_competencia' is possibly 'undefined'.
+src/pages/financeiro/LancamentosPage.tsx(207,47): error TS18048: 'l.data_competencia' is possibly 'undefined'.
+src/pages/financeiro/LancamentosPage.tsx(496,29): error TS2345: Argument of type '{ descricao: string; valor_total: number; tipo: TipoLancamento; categoria_id: string | null; status: StatusLancamento; data_competencia: string; vencimento: null; pessoa_id: string | null; ... 4 more ...; referencia_tipo: string; }' is not assignable to parameter of type 'Omit<LancamentoFinanceiro, "id" | "created_at" | "updated_at">'.
+  Types of property 'vencimento' are incompatible.
+    Type 'null' is not assignable to type 'string | undefined'.
+src/pages/financeiro/LancamentosPage.tsx(827,106): error TS2322: Type '{ className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+src/pages/financeiro/LancamentosPage.tsx(829,106): error TS2322: Type '{ className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+src/pages/financeiro/ObrasFinanceiroPage.tsx(371,25): error TS2322: Type '{ children: string; className: string; onClick: () => void; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'onClick' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/pages/fornecedor/FornecedorCotacoesPage.tsx(50,29): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/fornecedor/FornecedorCotacoesPage.tsx(54,73): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/fornecedor/FornecedorCotacoesPage.tsx(64,24): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/fornecedor/FornecedorCotacoesPage.tsx(115,19): error TS2322: Type '"default" | "secondary" | "outline" | "destructive"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/fornecedor/FornecedorCotacoesPage.tsx(267,36): error TS2322: Type '"secondary" | "destructive"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/fornecedor/FornecedorCotacoesPage.tsx(279,35): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/fornecedor/FornecedorCotacoesPage.tsx(326,59): error TS2322: Type '{ children: Element; variant: "ghost"; size: "sm"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/fornecedor/FornecedorDashboardPage.tsx(54,60): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/fornecedor/FornecedorDashboardPage.tsx(107,19): error TS2322: Type '"default" | "secondary" | "outline" | "destructive"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/fornecedor/FornecedorDashboardPage.tsx(256,29): error TS2322: Type '"secondary" | "destructive"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/fornecedor/FornecedorDashboardPage.tsx(278,21): error TS2322: Type '{ children: Element; variant: "ghost"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/fornecedor/FornecedorDashboardPage.tsx(296,49): error TS2322: Type '{ children: Element; variant: "ghost"; size: "sm"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/fornecedor/FornecedorDashboardPage.tsx(431,62): error TS2322: Type '{ children: Element; variant: "outline"; className: string; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+src/pages/fornecedor/FornecedorDashboardPage.tsx(469,34): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/fornecedor/FornecedorServicosPage.tsx(42,29): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/fornecedor/FornecedorServicosPage.tsx(46,70): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/fornecedor/FornecedorServicosPage.tsx(56,24): error TS2339: Property 'pessoa_id' does not exist on type 'UsuarioCompleto'.
+src/pages/marcenaria/AmbienteDetalhePage.tsx(6,3): error TS2305: Module '"@/lib/ambientesApi"' has no exported member 'AmbienteQuantitativo'.
+src/pages/marcenaria/AmbienteDetalhePage.tsx(8,3): error TS2305: Module '"@/lib/ambientesApi"' has no exported member 'listarQuantitativosAmbiente'.
+src/pages/marcenaria/AmbienteDetalhePage.tsx(24,38): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/pages/marcenaria/AmbienteFormPage.tsx(9,3): error TS2305: Module '"@/lib/ambientesApi"' has no exported member 'gerarQuantitativosBasicos'.
+src/pages/marcenaria/AmbienteFormPage.tsx(10,3): error TS2724: '"@/lib/ambientesApi"' has no exported member named 'recalcularQuantitativosAmbiente'. Did you mean 'calcularTotaisAmbientes'?
+src/pages/marcenaria/AmbienteFormPage.tsx(36,42): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/pages/marcenaria/AmbienteFormPage.tsx(52,9): error TS2740: Type '{ id: string; obra_id: any; nome: string; area_m2: number; perimetro_ml: number; pe_direito_m: number; pavimento: string | null; uso: string | null; criado_em: string; atualizado_em: string; }' is missing the following properties from type 'Ambiente': proposta_id, largura, comprimento, pe_direito, and 4 more.
+src/pages/marcenaria/AmbienteFormPage.tsx(55,22): error TS2339: Property 'obra_id' does not exist on type 'Partial<Ambiente>'.
+src/pages/marcenaria/AmbienteFormPage.tsx(80,44): error TS2345: Argument of type 'Partial<Ambiente>' is not assignable to parameter of type 'AmbienteInput'.
+  Types of property 'proposta_id' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/pages/marcenaria/AmbienteFormPage.tsx(228,42): error TS7006: Parameter 'q' implicitly has an 'any' type.
+src/pages/marcenaria/AmbienteFormPage.tsx(228,45): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+src/pages/marcenaria/MarcenariaPage.tsx(90,34): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/pages/MemorialAcabamentosPage.tsx(135,19): error TS2345: Argument of type '{ id: any; nome: any; cliente: { nome: any; }[]; }[]' is not assignable to parameter of type 'SetStateAction<Projeto[]>'.
+  Type '{ id: any; nome: any; cliente: { nome: any; }[]; }[]' is not assignable to type 'Projeto[]'.
+    Type '{ id: any; nome: any; cliente: { nome: any; }[]; }' is not assignable to type 'Projeto'.
+      Types of property 'cliente' are incompatible.
+        Property 'nome' is missing in type '{ nome: any; }[]' but required in type '{ nome: string; }'.
+src/pages/MemorialAcabamentosPage.tsx(587,28): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/MemorialAcabamentosPage.tsx(681,69): error TS2322: Type '{ className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+src/pages/MemorialAcabamentosPage.tsx(722,9): error TS2322: Type '{ children: string; style: { backgroundColor: string; color: string; }; className: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+  Property 'style' does not exist on type 'IntrinsicAttributes & BadgeProps'.
+src/pages/oportunidades/ArquiteturaOportunidadesKanbanPage.tsx(320,37): error TS2322: Type 'Oportunidade' is not assignable to type 'OportunidadePDFData'.
+  Types of property 'origem' are incompatible.
+    Type 'string | null' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+src/pages/oportunidades/ArquiteturaOportunidadesKanbanPage.tsx(321,37): error TS2322: Type 'OportunidadeClienteUI | null | undefined' is not assignable to type 'ClientePDF'.
+  Type 'undefined' is not assignable to type 'ClientePDF'.
+src/pages/oportunidades/EngenhariaOportunidadesKanbanPage.tsx(347,13): error TS2353: Object literal may only specify known properties, and '':hover'' does not exist in type 'Properties<string | number, string & {}>'.
+src/pages/oportunidades/MarcenariaOportunidadesKanbanPage.tsx(347,13): error TS2353: Object literal may only specify known properties, and '':hover'' does not exist in type 'Properties<string | number, string & {}>'.
+src/pages/orcamentos/OrcamentosPage.tsx(23,5): error TS2353: Object literal may only specify known properties, and 'descricao' does not exist in type 'Orcamento | (() => Orcamento)'.
+src/pages/orcamentos/OrcamentosPage.tsx(72,32): error TS2339: Property 'descricao' does not exist on type 'Orcamento'.
+src/pages/orcamentos/OrcamentosPage.tsx(108,9): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/pages/orcamentos/OrcamentosPage.tsx(116,21): error TS2339: Property 'descricao' does not exist on type 'Orcamento'.
+src/pages/pessoas/ImportarPessoasPage.tsx(133,19): error TS2345: Argument of type 'unknown[]' is not assignable to parameter of type 'Record<string, any>[] | PromiseLike<Record<string, any>[]>'.
+  Type 'unknown[]' is not assignable to type 'Record<string, any>[]'.
+    Type 'unknown' is not assignable to type 'Record<string, any>'.
+src/pages/pessoas/ImportarPessoasPage.tsx(505,36): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/pessoas/painel/InfoTab.tsx(3,15): error TS2459: Module '"../PessoaPanelPage"' declares 'Pessoa' locally, but it is not exported.
+src/pages/pessoas/PessoaDetalhePage.tsx(262,25): error TS2322: Type '{ pessoaId: any; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'pessoaId' does not exist on type 'IntrinsicAttributes & Props'.
+src/pages/pessoas/PessoaDetalhePage.tsx(267,20): error TS2322: Type '{ pessoaId: any; }' is not assignable to type 'IntrinsicAttributes & Props'.
+  Property 'pessoaId' does not exist on type 'IntrinsicAttributes & Props'.
+src/pages/pessoas/PessoaDetalhePage.tsx(272,31): error TS2322: Type '{ pessoaId: any; }' is not assignable to type 'IntrinsicAttributes & OportunidadeTimelineProps'.
+  Property 'pessoaId' does not exist on type 'IntrinsicAttributes & OportunidadeTimelineProps'.
+src/pages/planejamento/OrcamentosPage.tsx(14,11): error TS2430: Interface 'OrcamentoComCliente' incorrectly extends interface 'Orcamento'.
+  Types of property 'cliente' are incompatible.
+    Type '{ nome: string; } | undefined' is not assignable to type 'string | null | undefined'.
+      Type '{ nome: string; }' is not assignable to type 'string'.
+src/pages/pricelist/ImportarCatalogoIAPage.tsx(125,30): error TS2345: Argument of type '{ index: number; fornecedor: string; status: "erro" | "valido"; erro: string | undefined; selecionado: boolean; codigo?: string | undefined; nome?: string | undefined; descricao?: string | undefined; ... 4 more ...; tipo?: "mao_obra" | ... 1 more ... | undefined; }' is not assignable to parameter of type 'ProdutoExtraido'.
+  Types of property 'codigo' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/pages/pricelist/PricelistItemFormPage.tsx(103,5): error TS2322: Type 'Resolver<{ nome: string; tipo: "mao_obra" | "material" | "servico" | "produto"; nucleo_id: string; unidade: string; preco: number; descricao?: string | undefined; codigo?: string | undefined; ... 10 more ...; estoque_atual?: number | ... 1 more ... | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ nome: string; tipo: "mao_obra" | "material" | "servico" | "produto"; nucleo_id: string; unidade: string; preco: number; controla_estoque: boolean; descricao?: string | undefined; codigo?: string | undefined; ... 9 more ...; estoque_atual?: number | ... 1 more ... | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ nome: string; tipo: "mao_obra" | "material" | "servico" | "produto"; nucleo_id: string; unidade: string; preco: number; controla_estoque: boolean; descricao?: string | undefined; codigo?: string | undefined; ... 9 more ...; estoque_atual?: number | ... 1 more ... | undefined; }>' is not assignable to type 'ResolverOptions<{ nome: string; tipo: "mao_obra" | "material" | "servico" | "produto"; nucleo_id: string; unidade: string; preco: number; descricao?: string | undefined; codigo?: string | undefined; ... 10 more ...; estoque_atual?: number | ... 1 more ... | undefined; }>'.
+      Type 'boolean | undefined' is not assignable to type 'boolean'.
+        Type 'undefined' is not assignable to type 'boolean'.
+src/pages/pricelist/PricelistItemFormPage.tsx(255,22): error TS2345: Argument of type '""' is not assignable to parameter of type '"mao_obra" | "material" | "servico" | "produto"'.
+src/pages/pricelist/PricelistItemFormPage.tsx(351,41): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/pages/pricelist/PricelistItemFormPage.tsx(431,9): error TS2322: Type 'number | null | undefined' is not assignable to type 'number | undefined'.
+  Type 'null' is not assignable to type 'number | undefined'.
+src/pages/pricelist/PricelistItemFormPage.tsx(432,9): error TS2322: Type 'number | null | undefined' is not assignable to type 'number | undefined'.
+  Type 'null' is not assignable to type 'number | undefined'.
+src/pages/pricelist/PricelistItemFormPage.tsx(507,36): error TS2345: Argument of type '(data: { nome: string; tipo: "mao_obra" | "material" | "servico" | "produto"; nucleo_id: string; unidade: string; preco: number; controla_estoque: boolean; descricao?: string | undefined; codigo?: string | undefined; ... 9 more ...; estoque_atual?: number | ... 1 more ... | undefined; }) => Promise<...>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ nome: string; tipo: "mao_obra" | "material" | "servico" | "produto"; nucleo_id: string; unidade: string; preco: number; controla_estoque: boolean; descricao?: string | undefined; codigo?: string | undefined; ... 9 more ...; estoque_atual?: number | ... 1 more ... | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ nome: string; tipo: "mao_obra" | "material" | "servico" | "produto"; nucleo_id: string; unidade: string; preco: number; controla_estoque: boolean; descricao?: string | undefined; codigo?: string | undefined; ... 9 more ...; estoque_atual?: number | ... 1 more ... | undefined; }': nome, tipo, nucleo_id, unidade, and 2 more.
+src/pages/pricelist/PricelistItemFormPage.tsx(526,38): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ Arquitetura: { color: string; icon: string; }; Engenharia: { color: string; icon: string; }; Marcenaria: { color: string; icon: string; }; Materiais: { color: string; icon: string; }; Produtos: { color: string; icon: string; }; }'.
+src/pages/pricelist/PricelistPage.tsx(185,35): error TS2345: Argument of type 'Partial<Pick<PricelistItemCompleto, "tipo" | "nucleo_id" | "categoria_id" | "subcategoria_id" | "preco">>' is not assignable to parameter of type 'Partial<PricelistItemFormData>'.
+  Types of property 'categoria_id' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+src/pages/pricelist/PricelistPage.tsx(925,21): error TS18047: 'i.estoque_atual' is possibly 'null'.
+src/pages/pricelist/PricelistPage.tsx(925,39): error TS18047: 'i.estoque_minimo' is possibly 'null'.
+src/pages/PropostaEmissaoPage.tsx(4821,25): error TS2322: Type '{ ambiente: string; atividade: string; descricao: string; itemSugerido?: ItemPriceList | undefined; }' is not assignable to type 'ItemImportado'.
+  Types of property 'itemSugerido' are incompatible.
+    Type 'ItemPriceList | undefined' is not assignable to type 'ItemPriceList | undefined'. Two different types with this name exist, but they are unrelated.
+      Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+        Types of property 'nucleo' are incompatible.
+          Type 'NucleoItem | undefined' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+            Type '"produtos"' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+src/pages/PropostaEmissaoPage.tsx(4823,25): error TS2719: Type 'ItemPriceList[]' is not assignable to type 'ItemPriceList[]'. Two different types with this name exist, but they are unrelated.
+  Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+    Types of property 'nucleo' are incompatible.
+      Type 'NucleoItem | undefined' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+        Type '"produtos"' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+src/pages/PropostaEmissaoPage.tsx(4824,25): error TS2719: Type '(index: number, itemPricelist: ItemPriceList) => void' is not assignable to type '(index: number, itemPricelist: ItemPriceList) => void'. Two different types with this name exist, but they are unrelated.
+  Types of parameters 'itemPricelist' and 'itemPricelist' are incompatible.
+    Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+      Types of property 'nucleo' are incompatible.
+        Type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined' is not assignable to type 'NucleoItem | undefined'.
+          Type 'null' is not assignable to type 'NucleoItem | undefined'.
+src/pages/PropostaEmissaoPage.tsx(4825,25): error TS2719: Type '(index: number, novoItem: ItemPriceList) => void' is not assignable to type '(index: number, novoItem: ItemPriceList) => void'. Two different types with this name exist, but they are unrelated.
+  Types of parameters 'novoItem' and 'novoItem' are incompatible.
+    Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+      Types of property 'nucleo' are incompatible.
+        Type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined' is not assignable to type 'NucleoItem | undefined'.
+          Type 'null' is not assignable to type 'NucleoItem | undefined'.
+src/pages/PropostaEmissaoPage.tsx(5131,29): error TS2719: Type 'ItemPriceList | undefined' is not assignable to type 'ItemPriceList | undefined'. Two different types with this name exist, but they are unrelated.
+  Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+    Types of property 'nucleo' are incompatible.
+      Type 'NucleoItem | undefined' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+        Type '"produtos"' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+src/pages/PropostaEmissaoPage.tsx(5134,27): error TS2719: Type 'ItemPriceList[]' is not assignable to type 'ItemPriceList[]'. Two different types with this name exist, but they are unrelated.
+  Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+    Types of property 'nucleo' are incompatible.
+      Type 'NucleoItem | undefined' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+        Type '"produtos"' is not assignable to type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined'.
+src/pages/PropostaEmissaoPage.tsx(5135,27): error TS2719: Type '(index: number, itemPricelist: ItemPriceList) => void' is not assignable to type '(index: number, itemPricelist: ItemPriceList) => void'. Two different types with this name exist, but they are unrelated.
+  Types of parameters 'itemPricelist' and 'itemPricelist' are incompatible.
+    Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+      Types of property 'nucleo' are incompatible.
+        Type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined' is not assignable to type 'NucleoItem | undefined'.
+          Type 'null' is not assignable to type 'NucleoItem | undefined'.
+src/pages/PropostaEmissaoPage.tsx(5136,27): error TS2719: Type '(index: number, novoItem: ItemPriceList) => void' is not assignable to type '(index: number, novoItem: ItemPriceList) => void'. Two different types with this name exist, but they are unrelated.
+  Types of parameters 'novoItem' and 'novoItem' are incompatible.
+    Type 'ItemPriceList' is not assignable to type 'ItemPriceList'. Two different types with this name exist, but they are unrelated.
+      Types of property 'nucleo' are incompatible.
+        Type '{ id: string; nome: string; } | { id: string; nome: string; }[] | null | undefined' is not assignable to type 'NucleoItem | undefined'.
+          Type 'null' is not assignable to type 'NucleoItem | undefined'.
+src/pages/propostas/PropostaAcaoClientePage.tsx(84,18): error TS2352: Conversion of type '{ nome: any; }[]' to type '{ nome: string; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'nome' is missing in type '{ nome: any; }[]' but required in type '{ nome: string; }'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(476,21): error TS2339: Property 'area_m2' does not exist on type 'QuantitativoAmbiente'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(478,25): error TS2339: Property 'area_m2' does not exist on type 'QuantitativoAmbiente'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(531,21): error TS2339: Property 'categorias' does not exist on type 'QuantitativoAmbiente'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(531,44): error TS2339: Property 'categorias' does not exist on type 'QuantitativoAmbiente'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(532,22): error TS2339: Property 'categorias' does not exist on type 'QuantitativoAmbiente'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(532,38): error TS7006: Parameter 'categoria' implicitly has an 'any' type.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(532,49): error TS7006: Parameter 'catIdx' implicitly has an 'any' type.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(536,45): error TS2339: Property 'categorias' does not exist on type 'QuantitativoAmbiente'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(675,22): error TS2339: Property 'itens' does not exist on type 'QuantitativoCategoria'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(675,41): error TS2339: Property 'itens' does not exist on type 'QuantitativoCategoria'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(697,30): error TS2339: Property 'itens' does not exist on type 'QuantitativoCategoria'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(697,41): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(773,5): error TS2353: Object literal may only specify known properties, and 'area_m2' does not exist in type 'Partial<QuantitativoAmbienteFormData> | (() => Partial<QuantitativoAmbienteFormData>)'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(773,24): error TS2339: Property 'area_m2' does not exist on type 'QuantitativoAmbiente'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(833,33): error TS2339: Property 'area_m2' does not exist on type 'Partial<QuantitativoAmbienteFormData>'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(835,46): error TS2353: Object literal may only specify known properties, and 'area_m2' does not exist in type 'SetStateAction<Partial<QuantitativoAmbienteFormData>>'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(1029,37): error TS2339: Property 'preco_venda' does not exist on type 'PricelistItemCompleto'.
+src/pages/quantitativos/QuantitativoEditorPage.tsx(1136,80): error TS2339: Property 'preco_venda' does not exist on type 'PricelistItemCompleto'.
+src/pages/quantitativos/QuantitativoFormPage.tsx(67,5): error TS2322: Type 'Resolver<{ nome: string; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; status?: "aprovado" | "revisao" | "em_elaboracao" | "arquivado" | undefined; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ nome: string; status: "aprovado" | "revisao" | "em_elaboracao" | "arquivado"; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ nome: string; status: "aprovado" | "revisao" | "em_elaboracao" | "arquivado"; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; }>' is not assignable to type 'ResolverOptions<{ nome: string; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; status?: "aprovado" | "revisao" | "em_elaboracao" | "arquivado" | undefined; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; }>'.
+      Type '"aprovado" | "revisao" | "em_elaboracao" | "arquivado" | undefined' is not assignable to type '"aprovado" | "revisao" | "em_elaboracao" | "arquivado"'.
+        Type 'undefined' is not assignable to type '"aprovado" | "revisao" | "em_elaboracao" | "arquivado"'.
+src/pages/quantitativos/QuantitativoFormPage.tsx(159,13): error TS2345: Argument of type 'QuantitativoProjeto' is not assignable to parameter of type '{ nome: string; status: "aprovado" | "revisao" | "em_elaboracao" | "arquivado"; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; } | { ...; } | ResetAction<...> | undefined'.
+  Type 'QuantitativoProjeto' is not assignable to type '{ nome: string; status: "aprovado" | "revisao" | "em_elaboracao" | "arquivado"; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; } | { ...; } | ResetAction<...>'.
+    Type 'QuantitativoProjeto' is not assignable to type '{ nome?: string | undefined; status?: "aprovado" | "revisao" | "em_elaboracao" | "arquivado" | undefined; nucleo?: "arquitetura" | "engenharia" | "marcenaria" | undefined; cliente_id?: string | undefined; ... 7 more ...; area_construida?: number | undefined; }'.
+      Types of property 'nucleo_id' are incompatible.
+        Type 'string | null' is not assignable to type 'string | undefined'.
+          Type 'null' is not assignable to type 'string | undefined'.
+src/pages/quantitativos/QuantitativoFormPage.tsx(245,36): error TS2345: Argument of type '(data: ProjetoFormData) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ nome: string; status: "aprovado" | "revisao" | "em_elaboracao" | "arquivado"; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ nome: string; status: "aprovado" | "revisao" | "em_elaboracao" | "arquivado"; nucleo: "arquitetura" | "engenharia" | "marcenaria"; cliente_id: string; nucleo_id?: string | undefined; ... 6 more ...; area_construida?: number | undefined; }': nome, status, nucleo, cliente_id
+src/pages/sistema/CadastrosPendentesPage.tsx(574,29): error TS2322: Type '"default" | "secondary"' is not assignable to type 'BadgeVariant | undefined'.
+  Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/sistema/CentralLinksPage.tsx(385,26): error TS2352: Conversion of type '{ id: string; token: string; tipo_solicitado: TipoCadastro; status: "aguardando_preenchimento"; expira_em: string; url: string; reutilizavel: boolean; pessoaVinculadaNome?: string; }' to type 'CadastroPendente' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; token: string; tipo_solicitado: TipoCadastro; status: "aguardando_preenchimento"; expira_em: string; url: string; reutilizavel: boolean; pessoaVinculadaNome?: string | undefined; }' is missing the following properties from type 'CadastroPendente': nome, email, telefone, cpf_cnpj, and 19 more.
+src/pages/WgStorePage.tsx(336,19): error TS2339: Property 'url_referencia' does not exist on type 'ProdutoLoja'.
+src/pages/WgStorePage.tsx(344,33): error TS2339: Property 'url_referencia' does not exist on type 'ProdutoLoja'.
+src/pages/WgStorePage.tsx(368,37): error TS2339: Property 'url_referencia' does not exist on type 'ProdutoLoja'.
+src/pages/WgStorePage.tsx(683,24): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/WgStorePage.tsx(692,24): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/WgStorePage.tsx(701,24): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/pages/WgStorePage.tsx(988,24): error TS2322: Type '"secondary"' is not assignable to type 'BadgeVariant | undefined'.
+src/services/extratoIAService.ts(154,7): error TS2322: Type 'string | undefined' is not assignable to type 'string | null'.
+  Type 'undefined' is not assignable to type 'string | null'.
+src/services/extratoIAService.ts(166,7): error TS2322: Type 'string | undefined' is not assignable to type 'string | null'.
+  Type 'undefined' is not assignable to type 'string | null'.
+src/services/extratoParserService.ts(489,27): error TS2345: Argument of type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' is not assignable to parameter of type 'RenderParameters'.
+  Property 'canvas' is missing in type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' but required in type 'RenderParameters'.
+src/services/extratoParserService.ts(901,15): error TS2484: Export declaration conflicts with exported declaration of 'LinhaExtrato'.
+src/services/extratoParserService.ts(901,29): error TS2484: Export declaration conflicts with exported declaration of 'ResultadoParsing'.
+src/services/googleDriveService.ts(6,24): error TS2307: Cannot find module 'googleapis' or its corresponding type declarations.
+src/services/tabTitleService.ts(78,23): error TS7015: Element implicitly has an 'any' type because index expression is not of type 'number'.
+src/utils/enviarEmailComPdf.ts(61,7): error TS2345: Argument of type 'FormData' is not assignable to parameter of type 'string | HTMLFormElement'.
+  Type 'FormData' is missing the following properties from type 'HTMLFormElement': acceptCharset, action, autocomplete, elements, and 331 more.
+src/utils/gerarPdfFinanceiro.ts(32,61): error TS2339: Property 'lastAutoTable' does not exist on type 'jsPDF'.
+src/utils/gerarPdfMarcenaria.ts(46,7): error TS2322: Type '(d: HookData) => number' is not assignable to type 'PageHook'.
+  Type 'number' is not assignable to type 'boolean | void'.
+src/utils/gerarPdfMarcenaria.ts(46,32): error TS18047: 'd.cursor' is possibly 'null'.
+src/utils/gerarPdfOportunidade.ts(77,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(80,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(91,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(94,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(113,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(117,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(139,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(143,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(152,19): error TS2322: Type 'string | undefined' is not assignable to type 'CellInput'.
+  Type 'undefined' is not assignable to type 'CellInput'.
+src/utils/gerarPdfOportunidade.ts(172,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/utils/gerarPdfOportunidade.ts(176,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.

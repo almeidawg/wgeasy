@@ -61,13 +61,13 @@ interface ComentarioTimeline {
 
 interface GanttChartProps {
   tarefas: TarefaGantt[];
-  dataInicio?: string;
-  dataFim?: string;
+  dataInicio?: string | null;
+  dataFim?: string | null;
   onEdit?: (tarefa: TarefaGantt) => void;
   onComment?: (tarefa: TarefaGantt) => void;
   onProgressoChange?: (tarefaId: string, progresso: number) => void;
   onReorder?: (tarefas: TarefaGantt[]) => void;
-  onDateChange?: (dataInicio: string, dataFim: string) => void;
+  onDateChange?: (dataInicio: string | null, dataFim: string | null) => void;
   onTimelineComment?: (tarefaId: string, data: string) => void;
   onDependencyCreate?: (tarefaId: string, dependeDe: string) => void;
   projetoNome?: string;

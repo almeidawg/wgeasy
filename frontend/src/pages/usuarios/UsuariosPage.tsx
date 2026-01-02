@@ -13,6 +13,8 @@ import {
   type UsuarioCompleto,
   type TipoUsuario,
 } from "@/lib/usuariosApi";
+import { ResponsiveTable } from "@/components/ResponsiveTable";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,13 +74,14 @@ import { useToast } from "@/components/ui/use-toast";
 export default function UsuariosPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [usuarios, setUsuarios] = useState<UsuarioCompleto[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filtroTipo, setFiltroTipo] = useState<TipoUsuario | "TODOS">("TODOS");
-  const [filtroAtivo, setFiltroAtivo] = useState<"TODOS" | "ATIVOS" | "INATIVOS">(
-    "ATIVOS"
-  );
+  const [filtroAtivo, setFiltroAtivo] = useState<
+    "TODOS" | "ATIVOS" | "INATIVOS"
+  >("ATIVOS");
   const [estatisticas, setEstatisticas] = useState({
     total: 0,
     ativos: 0,
@@ -290,7 +293,11 @@ CREDENCIAIS DE ACESSO
 
 Nome: ${credenciaisGeradas.nome}
 ${loginInfo.fieldLabel}: ${loginInfo.value}
-${credenciaisGeradas.email ? `Email de contato: ${credenciaisGeradas.email}` : ""}
+${
+  credenciaisGeradas.email
+    ? `Email de contato: ${credenciaisGeradas.email}`
+    : ""
+}
 
 SENHA TEMPORARIA: ${credenciaisGeradas.senha}
 
@@ -305,7 +312,9 @@ Atenciosamente,
 Equipe WG Easy
     `.trim();
 
-    const mailtoUrl = `mailto:${credenciaisGeradas.email || ""}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+    const mailtoUrl = `mailto:${
+      credenciaisGeradas.email || ""
+    }?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
     window.location.href = mailtoUrl;
 
     toast({
@@ -349,7 +358,11 @@ ${usuario.email ? `*Email:* ${usuario.email}` : ""}
 
 *COMO ACESSAR:*
 1. Acesse: https://easy.wgalmeida.com.br
-2. Use ${usuario.email ? `seu e-mail (${usuario.email})` : `seu CPF: ${formatarCPF(usuario.cpf)}`} como login
+2. Use ${
+        usuario.email
+          ? `seu e-mail (${usuario.email})`
+          : `seu CPF: ${formatarCPF(usuario.cpf)}`
+      } como login
 3. Use a senha: ${novaSenha}
 
 *IMPORTANTE:* Altere sua senha no primeiro acesso!
@@ -362,7 +375,9 @@ Equipe WG Easy
       navigator.clipboard.writeText(mensagemCompleta);
 
       // Abrir WhatsApp diretamente
-      const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensagemCompleta)}`;
+      const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(
+        mensagemCompleta
+      )}`;
       window.open(urlWhatsApp, "_blank");
 
       toast({
@@ -403,7 +418,8 @@ Equipe WG Easy
       } else {
         toast({
           title: "Exclusao parcial",
-          description: resultado.erros.join("; ") || "Alguns itens nao foram excluidos",
+          description:
+            resultado.erros.join("; ") || "Alguns itens nao foram excluidos",
           variant: "destructive",
         });
       }
@@ -628,7 +644,13 @@ Equipe WG Easy
                     </TableCell>
                     <TableCell>
                       <Badge
-                        className={`bg-${obterCorTipoUsuario(usuario.tipo_usuario)}-50 text-${obterCorTipoUsuario(usuario.tipo_usuario)}-700 border-${obterCorTipoUsuario(usuario.tipo_usuario)}-200`}
+                        className={`bg-${obterCorTipoUsuario(
+                          usuario.tipo_usuario
+                        )}-50 text-${obterCorTipoUsuario(
+                          usuario.tipo_usuario
+                        )}-700 border-${obterCorTipoUsuario(
+                          usuario.tipo_usuario
+                        )}-200`}
                       >
                         {obterLabelTipoUsuario(usuario.tipo_usuario)}
                       </Badge>
@@ -684,7 +706,9 @@ Equipe WG Easy
                             <Eye className="w-4 h-4 mr-2" />
                             Ver Detalhes
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEditar(usuario.id)}>
+                          <DropdownMenuItem
+                            onClick={() => handleEditar(usuario.id)}
+                          >
                             <Edit className="w-4 h-4 mr-2" />
                             Editar
                           </DropdownMenuItem>
@@ -713,7 +737,11 @@ Equipe WG Easy
                             onClick={() =>
                               handleAlterarStatus(usuario.id, usuario.ativo)
                             }
-                            className={usuario.ativo ? "text-orange-600" : "text-green-600"}
+                            className={
+                              usuario.ativo
+                                ? "text-orange-600"
+                                : "text-green-600"
+                            }
                           >
                             {usuario.ativo ? (
                               <>
@@ -729,7 +757,9 @@ Equipe WG Easy
                           </DropdownMenuItem>
 
                           <DropdownMenuItem
-                            onClick={() => handleExcluirUsuario(usuario.id, usuario.nome)}
+                            onClick={() =>
+                              handleExcluirUsuario(usuario.id, usuario.nome)
+                            }
                             className="text-red-600"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
@@ -755,7 +785,8 @@ Equipe WG Easy
               Credenciais de Acesso Geradas
             </DialogTitle>
             <DialogDescription>
-              Senha temporária gerada com sucesso. Compartilhe as instruções abaixo com o usuário.
+              Senha temporária gerada com sucesso. Compartilhe as instruções
+              abaixo com o usuário.
             </DialogDescription>
           </DialogHeader>
 
@@ -815,11 +846,16 @@ Equipe WG Easy
                   <li>Acesse o sistema WG Easy</li>
                   <li>
                     Use o {loginInfoAtual.shortLabel}{" "}
-                    <span className="font-mono font-semibold">{loginInfoAtual.value}</span> como login
+                    <span className="font-mono font-semibold">
+                      {loginInfoAtual.value}
+                    </span>{" "}
+                    como login
                   </li>
                   <li>
                     Use a senha temporária{" "}
-                    <span className="font-mono font-semibold">{credenciaisGeradas.senha}</span>
+                    <span className="font-mono font-semibold">
+                      {credenciaisGeradas.senha}
+                    </span>
                   </li>
                   <li>Altere sua senha no primeiro acesso</li>
                 </ol>
@@ -860,4 +896,3 @@ Equipe WG Easy
     </div>
   );
 }
-

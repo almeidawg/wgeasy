@@ -74,7 +74,7 @@ export async function buscarEmpresaPorCNPJ(cnpj: string): Promise<DadosEmpresaCN
       cnae_fiscal: dados.cnae_fiscal_principal?.codigo || dados.cnae_fiscal || '',
       cnae_fiscal_descricao: dados.cnae_fiscal_principal?.descricao || dados.cnae_fiscal_descricao || '',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erro ao buscar CNPJ:', error);
     throw error;
   }

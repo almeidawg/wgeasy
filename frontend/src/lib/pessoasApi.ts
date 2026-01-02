@@ -274,3 +274,20 @@ export async function criarAvaliacao(
     criado_em: data.criado_em ?? data.created_at ?? new Date().toISOString(),
   };
 }
+
+/**
+ * Listar obras associadas a uma pessoa
+ */
+export async function listarObrasPessoa(pessoaId: string): Promise<PessoaObra[]> {
+  const { data, error } = await supabase
+    .from("pessoas_obras")
+    .select("*")
+    .eq("pessoa_id", pessoaId);
+
+  if (error) {
+    console.error("[listarObrasPessoa] erro:", error);
+    throw error;
+  }
+
+  return data || [];
+}

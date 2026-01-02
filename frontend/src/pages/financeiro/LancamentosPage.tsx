@@ -169,7 +169,11 @@ export default function LancamentosPage() {
         }
 
         if (filterStatus) {
-          filtrados = filtrados.filter((l) => l.status === filterStatus);
+          filtrados = filtrados.filter((l) => {
+            // Tratar status null/undefined como "previsto" (padrão)
+            const statusLancamento = l.status || 'previsto';
+            return statusLancamento === filterStatus;
+          });
         }
 
         if (filterNucleo) {
@@ -206,6 +210,14 @@ export default function LancamentosPage() {
         if (filterCategoria) {
           filtrados = filtrados.filter((l) => l.categoria_id === filterCategoria);
         }
+
+        // DEBUG: Mostrar todos os status distintos para diagnóstico
+        const statusDistintos = [...new Set(lancs.map(l => l.status || 'NULL/UNDEFINED'))];
+        console.log("🔍 Status distintos no banco:", statusDistintos);
+        console.log("🔍 Contagem por status:", statusDistintos.map(s => ({
+          status: s,
+          count: lancs.filter(l => (l.status || 'NULL/UNDEFINED') === s).length
+        })));
 
         console.log("🎯 Filtros aplicados:", {
           total: lancs.length,
@@ -657,7 +669,7 @@ export default function LancamentosPage() {
                 {/* Linha de Filtros */}
                 {showFilters && (
                   <tr className="bg-gray-100/50">
-                    <th className="px-2 py-1.5 min-w-[200px]">
+                    <th className="px-2 py-1.5 min-w-[200px] sticky left-0 z-20 bg-gray-100/50">
                       <select
                         value={filterTipo}
                         onChange={(e) => setFilterTipo(e.target.value as TipoLancamento | "")}
@@ -745,7 +757,9 @@ export default function LancamentosPage() {
                         title="Filtrar por status"
                       >
                         <option value="">Todos</option>
+                        <option value="pendente">Pendente</option>
                         <option value="previsto">Previsto</option>
+                        <option value="parcialmente_pago">Parcial</option>
                         <option value="pago">Pago</option>
                         <option value="atrasado">Atrasado</option>
                         <option value="cancelado">Cancelado</option>
@@ -756,7 +770,7 @@ export default function LancamentosPage() {
                 )}
                 {/* Linha de Títulos */}
                 <tr>
-                  <th className="px-2 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wide min-w-[200px]">
+                  <th className="px-2 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wide min-w-[200px] sticky left-0 z-20 bg-gray-50">
                     Descrição
                   </th>
                   <th className="px-2 py-2 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wide min-w-[140px]">
@@ -806,8 +820,8 @@ export default function LancamentosPage() {
                     const nomeProjeto = l.projeto?.nome || "";
                     return (
                       <tr key={l.id} className="hover:bg-gray-50/50 group">
-                        {/* Descrição + Núcleo (2 linhas) */}
-                        <td className="px-2 py-1.5">
+                        {/* Descrição + Núcleo (2 linhas) - COLUNA FIXA */}
+                        <td className="px-2 py-1.5 sticky left-0 z-10 bg-white group-hover:bg-gray-50/50">
                           <div className="flex items-start gap-1.5">
                             {l.tipo === "entrada" ? (
                               <ArrowUpCircle className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" title="Entrada" />
@@ -909,13 +923,15 @@ export default function LancamentosPage() {
                           {editingStatusId === l.id ? (
                             <select
                               autoFocus
-                              value={l.status}
+                              value={l.status || 'previsto'}
                               onChange={(e) => alterarStatus(l.id!, e.target.value as StatusLancamento)}
                               onBlur={() => setEditingStatusId(null)}
                               title="Selecionar status do lançamento"
                               className="text-[10px] px-1 py-0.5 border border-gray-300 rounded bg-white focus:outline-none focus:ring-2 focus:ring-[#F25C26] cursor-pointer"
                             >
+                              <option value="pendente">Pendente</option>
                               <option value="previsto">Previsto</option>
+                              <option value="parcialmente_pago">Parcial</option>
                               <option value="pago">{l.tipo === "entrada" ? "Recebido" : "Pago"}</option>
                               <option value="atrasado">Atrasado</option>
                               <option value="cancelado">Cancelado</option>
@@ -939,6 +955,11 @@ export default function LancamentosPage() {
                                     Pago
                                   </span>
                                 )
+                              ) : l.status === "parcialmente_pago" ? (
+                                <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600">
+                                  <Calendar className="w-3 h-3" />
+                                  Parcial
+                                </span>
                               ) : l.status === "atrasado" ? (
                                 <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-red-50 text-red-600">
                                   <XCircle className="w-3 h-3" />
@@ -948,6 +969,11 @@ export default function LancamentosPage() {
                                 <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
                                   <XCircle className="w-3 h-3" />
                                   Cancelado
+                                </span>
+                              ) : l.status === "pendente" ? (
+                                <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-orange-50 text-orange-600">
+                                  <Calendar className="w-3 h-3" />
+                                  Pendente
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-600">
@@ -1321,7 +1347,9 @@ export default function LancamentosPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     title="Selecionar status"
                   >
+                    <option value="pendente">Pendente</option>
                     <option value="previsto">Previsto</option>
+                    <option value="parcialmente_pago">Parcialmente Pago</option>
                     <option value="pago">Pago</option>
                     <option value="atrasado">Atrasado</option>
                     <option value="cancelado">Cancelado</option>

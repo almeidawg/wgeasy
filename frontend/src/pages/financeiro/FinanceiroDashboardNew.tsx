@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   TrendingUp,
@@ -10,16 +10,18 @@ import {
   Wrench,
   Package,
   ShoppingCart,
-  Filter,
   RefreshCw,
   ArrowUpRight,
   ArrowDownRight,
+  CheckCircle2,
+  BarChart3,
+  Download,
+  Sun,
+  Moon,
 } from "lucide-react";
 import {
   BarChart,
   Bar,
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -33,7 +35,6 @@ import {
   Area,
 } from "recharts";
 import { supabaseRaw as supabase } from "@/lib/supabaseClient";
-import { Button } from "@/components/ui/button";
 
 // Cores dos núcleos WG
 const NUCLEO_COLORS = {
@@ -57,6 +58,8 @@ type DashboardData = {
     receitasTotal: number;
     projetosAtivos: number;
     valorContratosAtivos: number;
+    contratosConcluidos: number;
+    valorContratosConcluidos: number;
   };
   porNucleo: {
     nucleo: string;
@@ -79,25 +82,99 @@ type DashboardData = {
   topProjetos: { nome: string; valor: number; nucleo: string }[];
 };
 
+// Períodos disponíveis para filtro do gráfico
+const PERIODOS_FLUXO = [
+  { id: "3m", label: "3 Meses" },
+  { id: "6m", label: "6 Meses" },
+  { id: "ytd", label: "Este Ano" },
+  { id: "12m", label: "12 Meses" },
+  { id: "all", label: "Todos" },
+];
+
 export default function FinanceiroDashboardNew() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [nucleoFiltro, setNucleoFiltro] = useState<string>("todos");
+  const [periodoFluxo, setPeriodoFluxo] = useState<string>("all");
+  const [temaEscuro, setTemaEscuro] = useState<boolean>(true);
+
+  // Filtrar dados do fluxo mensal baseado no período selecionado
+  const fluxoMensalFiltrado = useMemo(() => {
+    if (!dashboardData?.fluxoMensal) return [];
+    const dados = dashboardData.fluxoMensal;
+
+    switch (periodoFluxo) {
+      case "3m":
+        return dados.slice(-3);
+      case "6m":
+        return dados.slice(-6);
+      case "ytd": {
+        const mesAtual = new Date().getMonth() + 1;
+        return dados.slice(-mesAtual);
+      }
+      case "12m":
+        return dados.slice(-12);
+      case "all":
+      default:
+        return dados;
+    }
+  }, [dashboardData?.fluxoMensal, periodoFluxo]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      // Buscar lançamentos financeiros
-      const { data: transacoes, error: transacoesError } = await supabase
+      // ============================================================
+      // BUSCAR LANÇAMENTOS FINANCEIROS - SEM LIMITE (em lotes)
+      // ============================================================
+      // Primeiro, contar o total de registros
+      const { count: totalNoBanco } = await supabase
         .from("financeiro_lancamentos")
-        .select("valor_total, tipo, data_competencia, categoria_id, unidade_negocio, descricao")
-        .range(0, 49999);
+        .select("*", { count: "exact", head: true });
+
+      console.log("📊 Total de lançamentos no banco:", totalNoBanco);
+
+      // Buscar em lotes de 1000 para pegar TODOS os registros
+      const BATCH_SIZE = 1000;
+      const totalBatches = Math.ceil((totalNoBanco || 0) / BATCH_SIZE);
+      let transacoes: { valor_total: number; tipo: string; data_competencia: string; categoria_id: string | null; unidade_negocio: string | null; descricao: string }[] = [];
+
+      for (let i = 0; i < totalBatches; i++) {
+        const from = i * BATCH_SIZE;
+        const to = from + BATCH_SIZE - 1;
+
+        const { data: batch, error: batchError } = await supabase
+          .from("financeiro_lancamentos")
+          .select("valor_total, tipo, data_competencia, categoria_id, unidade_negocio, descricao")
+          .range(from, to);
+
+        if (batchError) throw batchError;
+        if (batch && batch.length > 0) {
+          transacoes = [...transacoes, ...batch];
+        }
+      }
+
+      console.log("✅ Total de lançamentos carregados:", transacoes.length);
+      const transacoesError = null;
 
       // Buscar contratos ativos
       const { data: contratos, error: contratosError } = await supabase
         .from("contratos")
         .select("id, status, valor_total, unidade_negocio, titulo, cliente_id")
         .in("status", ["ativo", "em_andamento", "Em Andamento"]);
+
+      // Buscar clientes cadastrados (histórico = contratos concluídos antes do sistema)
+      // NOTA: O tipo está em MAIÚSCULO no banco de dados
+      const { count: totalClientes } = await supabase
+        .from("pessoas")
+        .select("id", { count: "exact", head: true })
+        .eq("tipo", "CLIENTE")
+        .eq("ativo", true);
+
+      // Buscar contratos concluídos (a partir de agora, quando o sistema estiver rodando)
+      const { count: totalContratosConcluidos } = await supabase
+        .from("contratos")
+        .select("id", { count: "exact", head: true })
+        .in("status", ["concluido", "Concluído", "finalizado", "Finalizado", "entregue", "Entregue"]);
 
       // Buscar categorias
       const { data: categorias } = await supabase
@@ -226,6 +303,9 @@ export default function FinanceiroDashboardNew() {
         (acc, c) => acc + Number(c.valor_total || 0), 0
       );
 
+      // Total de contratos concluídos = Clientes cadastrados (histórico) + Contratos finalizados (sistema)
+      const totalClientesCadastrados = (totalClientes || 0) + (totalContratosConcluidos || 0);
+
       const receitaEfetiva = totalEntradas > 0 ? totalEntradas : valorTotalContratosAtivos;
 
       // Alertas
@@ -265,6 +345,8 @@ export default function FinanceiroDashboardNew() {
           receitasTotal: receitaEfetiva,
           projetosAtivos: contratosAtivos.length,
           valorContratosAtivos: valorTotalContratosAtivos,
+          contratosConcluidos: totalClientesCadastrados,
+          valorContratosConcluidos: 0, // Histórico - valor não calculado
         },
         porNucleo,
         porCategoria,
@@ -307,128 +389,245 @@ export default function FinanceiroDashboardNew() {
 
   return (
     <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard Financeiro</h1>
-          <p className="text-gray-600 mt-1">Visão consolidada por núcleos e categorias</p>
-        </div>
-        <div className="flex items-center gap-3">
-          {/* Filtro por Núcleo */}
-          <div className="flex items-center gap-2 bg-white rounded-lg border border-gray-200 p-1">
+      {/* Dashboard Executivo - Gráfico + KPIs na primeira linha */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className={`rounded-2xl shadow-2xl p-6 transition-all duration-300 ${
+          temaEscuro
+            ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white"
+            : "bg-white text-gray-900 border border-gray-200"
+        }`}
+      >
+        {/* Header com título e filtros */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className={`p-2.5 rounded-xl shadow-lg ${
+              temaEscuro
+                ? "bg-gradient-to-br from-emerald-500 to-teal-600"
+                : "bg-gradient-to-br from-orange-500 to-amber-500"
+            }`}>
+              <BarChart3 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className={`text-xl font-bold ${temaEscuro ? "text-white" : "text-gray-900"}`}>Dashboard Financeiro</h2>
+              <p className={`text-sm ${temaEscuro ? "text-slate-400" : "text-gray-500"}`}>Visão executiva consolidada</p>
+            </div>
+          </div>
+
+          {/* Filtros de Período */}
+          <div className="flex items-center gap-2">
+            <div className={`flex items-center gap-1 rounded-lg p-1 ${temaEscuro ? "bg-slate-700/50" : "bg-gray-100 border border-gray-200"}`}>
+              {PERIODOS_FLUXO.map((periodo) => (
+                <button
+                  key={periodo.id}
+                  type="button"
+                  onClick={() => setPeriodoFluxo(periodo.id)}
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                    periodoFluxo === periodo.id
+                      ? temaEscuro
+                        ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md"
+                        : "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md"
+                      : temaEscuro
+                        ? "text-slate-300 hover:text-white hover:bg-slate-600/50"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
+                  }`}
+                >
+                  {periodo.label}
+                </button>
+              ))}
+            </div>
             <button
-              onClick={() => setNucleoFiltro("todos")}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                nucleoFiltro === "todos" ? "bg-[#F25C26] text-white" : "text-gray-600 hover:bg-gray-100"
+              type="button"
+              onClick={() => setTemaEscuro(!temaEscuro)}
+              className={`p-2 rounded-lg transition-all ${
+                temaEscuro
+                  ? "bg-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-600/50"
+                  : "bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 border border-gray-200"
               }`}
+              title={temaEscuro ? "Tema claro" : "Tema escuro"}
             >
-              Todos
+              {temaEscuro ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            {Object.entries(NUCLEO_COLORS).map(([nucleo, cor]) => (
-              <button
-                key={nucleo}
-                onClick={() => setNucleoFiltro(nucleo)}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  nucleoFiltro === nucleo ? "text-white" : "text-gray-600 hover:bg-gray-100"
-                }`}
-                style={{ backgroundColor: nucleoFiltro === nucleo ? cor : undefined }}
-              >
-                {nucleo.charAt(0).toUpperCase() + nucleo.slice(1)}
-              </button>
-            ))}
+            <button
+              type="button"
+              onClick={fetchData}
+              className={`p-2 rounded-lg transition-all ${
+                temaEscuro
+                  ? "bg-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-600/50"
+                  : "bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 border border-gray-200"
+              }`}
+              title="Atualizar dados"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className={`p-2 rounded-lg transition-all ${
+                temaEscuro
+                  ? "bg-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-600/50"
+                  : "bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 border border-gray-200"
+              }`}
+              title="Exportar dados"
+            >
+              <Download className="w-4 h-4" />
+            </button>
           </div>
-          <Button variant="outline" size="sm" onClick={fetchData}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Atualizar
-          </Button>
         </div>
-      </div>
 
-      {/* Cards Resumo Principal */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-green-100 text-sm font-medium">Saldo Atual</p>
-              <p className="text-2xl font-bold mt-1">{formatCurrency(dashboardData.resumo.saldoTotal)}</p>
-              <div className="flex items-center mt-2 text-green-100 text-sm">
-                <ArrowUpRight className="w-4 h-4 mr-1" />
-                <span>+12.5% este mês</span>
+        {/* 5 KPIs em linha - Degradê Laranja WG Progressivo */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+          {/* Saldo Atual - Laranja WG Escuro */}
+          <div className="rounded-xl p-4 shadow-lg" style={{ background: 'linear-gradient(to bottom right, #C2410C, #EA580C)' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-200 text-xs font-medium">Saldo Atual</p>
+                <p className="text-lg font-bold text-white mt-1">{formatCurrency(dashboardData.resumo.saldoTotal)}</p>
+                <div className="flex items-center mt-1 text-orange-200 text-xs">
+                  <ArrowUpRight className="w-3 h-3 mr-1" />
+                  <span>+12.5% mês</span>
+                </div>
+              </div>
+              <div className="p-2 bg-white/20 rounded-lg">
+                <DollarSign className="w-5 h-5 text-white" />
               </div>
             </div>
-            <div className="p-3 bg-white/20 rounded-lg">
-              <DollarSign className="w-8 h-8" />
-            </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-blue-100 text-sm font-medium">Receitas</p>
-              <p className="text-2xl font-bold mt-1">{formatCurrency(dashboardData.resumo.receitasTotal)}</p>
-              <div className="flex items-center mt-2 text-blue-100 text-sm">
-                <TrendingUp className="w-4 h-4 mr-1" />
-                <span>{dashboardData.resumo.projetosAtivos} contratos</span>
+          {/* Receitas - Laranja WG Médio-Escuro */}
+          <div className="rounded-xl p-4 shadow-lg" style={{ background: 'linear-gradient(to bottom right, #EA580C, #F25C26)' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-100 text-xs font-medium">Receitas</p>
+                <p className="text-lg font-bold text-white mt-1">{formatCurrency(dashboardData.resumo.receitasTotal)}</p>
+                <div className="flex items-center mt-1 text-orange-100 text-xs">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  <span>{dashboardData.resumo.projetosAtivos} contratos</span>
+                </div>
+              </div>
+              <div className="p-2 bg-white/20 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-white" />
               </div>
             </div>
-            <div className="p-3 bg-white/20 rounded-lg">
-              <TrendingUp className="w-8 h-8" />
-            </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl shadow-lg p-6 text-white"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-orange-100 text-sm font-medium">Custos Totais</p>
-              <p className="text-2xl font-bold mt-1">{formatCurrency(dashboardData.resumo.custosTotal)}</p>
-              <div className="flex items-center mt-2 text-orange-100 text-sm">
-                <ArrowDownRight className="w-4 h-4 mr-1" />
-                <span>4 categorias</span>
+          {/* Custos Totais - Laranja WG */}
+          <div className="rounded-xl p-4 shadow-lg" style={{ background: 'linear-gradient(to bottom right, #F25C26, #FB923C)' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-100 text-xs font-medium">Custos Totais</p>
+                <p className="text-lg font-bold text-white mt-1">{formatCurrency(dashboardData.resumo.custosTotal)}</p>
+                <div className="flex items-center mt-1 text-orange-100 text-xs">
+                  <ArrowDownRight className="w-3 h-3 mr-1" />
+                  <span>4 categorias</span>
+                </div>
+              </div>
+              <div className="p-2 bg-white/20 rounded-lg">
+                <TrendingDown className="w-5 h-5 text-white" />
               </div>
             </div>
-            <div className="p-3 bg-white/20 rounded-lg">
-              <TrendingDown className="w-8 h-8" />
-            </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-purple-100 text-sm font-medium">Contratos Ativos</p>
-              <p className="text-2xl font-bold mt-1">{dashboardData.resumo.projetosAtivos}</p>
-              <p className="text-purple-100 text-sm mt-1">
-                {formatCurrency(dashboardData.resumo.valorContratosAtivos)}
-              </p>
-            </div>
-            <div className="p-3 bg-white/20 rounded-lg">
-              <Building2 className="w-8 h-8" />
+          {/* Contratos Ativos - Laranja Claro */}
+          <div className="rounded-xl p-4 shadow-lg" style={{ background: 'linear-gradient(to bottom right, #FB923C, #FDBA74)' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-900 text-xs font-medium">Contratos Ativos</p>
+                <p className="text-lg font-bold text-orange-950 mt-1">{dashboardData.resumo.projetosAtivos}</p>
+                <p className="text-orange-800 text-xs mt-1">
+                  {formatCurrency(dashboardData.resumo.valorContratosAtivos)}
+                </p>
+              </div>
+              <div className="p-2 bg-white/30 rounded-lg">
+                <Building2 className="w-5 h-5 text-orange-900" />
+              </div>
             </div>
           </div>
-        </motion.div>
-      </div>
+
+          {/* Concluídos - Laranja Bem Claro */}
+          <div className="rounded-xl p-4 shadow-lg" style={{ background: 'linear-gradient(to bottom right, #FDBA74, #FED7AA)' }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-900 text-xs font-medium">Concluídos</p>
+                <p className="text-lg font-bold text-orange-950 mt-1">{dashboardData.resumo.contratosConcluidos}</p>
+                <p className="text-orange-800 text-xs mt-1">
+                  Histórico + Sistema
+                </p>
+              </div>
+              <div className="p-2 bg-white/30 rounded-lg">
+                <CheckCircle2 className="w-5 h-5 text-orange-900" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Gráfico de Fluxo de Caixa */}
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart data={fluxoMensalFiltrado}>
+            <defs>
+              <linearGradient id="colorEntradaExec" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10B981" stopOpacity={0.4}/>
+                <stop offset="95%" stopColor="#10B981" stopOpacity={0.05}/>
+              </linearGradient>
+              <linearGradient id="colorSaidaExec" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#F97316" stopOpacity={0.4}/>
+                <stop offset="95%" stopColor="#F97316" stopOpacity={0.05}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke={temaEscuro ? "#334155" : "#E5E7EB"} vertical={false} />
+            <XAxis
+              dataKey="mes"
+              stroke={temaEscuro ? "#64748B" : "#9CA3AF"}
+              tick={{ fill: temaEscuro ? '#94A3B8' : '#6B7280', fontSize: 12 }}
+              axisLine={{ stroke: temaEscuro ? '#334155' : '#D1D5DB' }}
+            />
+            <YAxis
+              tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+              stroke={temaEscuro ? "#64748B" : "#9CA3AF"}
+              tick={{ fill: temaEscuro ? '#94A3B8' : '#6B7280', fontSize: 12 }}
+              axisLine={{ stroke: temaEscuro ? '#334155' : '#D1D5DB' }}
+            />
+            <Tooltip
+              formatter={(value: any) => formatCurrency(value)}
+              contentStyle={{
+                backgroundColor: temaEscuro ? '#1E293B' : '#FFFFFF',
+                borderRadius: "12px",
+                border: temaEscuro ? "1px solid #334155" : "1px solid #E5E7EB",
+                boxShadow: temaEscuro ? "0 10px 40px rgba(0,0,0,0.3)" : "0 10px 40px rgba(0,0,0,0.1)"
+              }}
+              labelStyle={{ color: temaEscuro ? '#F8FAFC' : '#111827', fontWeight: 'bold' }}
+              itemStyle={{ color: temaEscuro ? '#CBD5E1' : '#374151' }}
+            />
+            <Legend
+              wrapperStyle={{ paddingTop: '20px' }}
+              formatter={(value) => <span style={{ color: temaEscuro ? '#94A3B8' : '#374151' }}>{value}</span>}
+            />
+            <Area
+              type="monotone"
+              dataKey="entrada"
+              stroke="#10B981"
+              fillOpacity={1}
+              fill="url(#colorEntradaExec)"
+              strokeWidth={3}
+              name="Entradas"
+              dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, stroke: '#10B981', strokeWidth: 2, fill: '#fff' }}
+            />
+            <Area
+              type="monotone"
+              dataKey="saida"
+              stroke="#F97316"
+              fillOpacity={1}
+              fill="url(#colorSaidaExec)"
+              strokeWidth={3}
+              name="Saídas"
+              dot={{ fill: '#F97316', strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, stroke: '#F97316', strokeWidth: 2, fill: '#fff' }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </motion.div>
 
       {/* Cards por Núcleo */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -487,7 +686,7 @@ export default function FinanceiroDashboardNew() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: 0.9 }}
         className="bg-white rounded-xl shadow-md border border-gray-100 p-6"
       >
         <h2 className="text-lg font-bold text-gray-900 mb-6">Custos por Categoria</h2>
@@ -512,58 +711,6 @@ export default function FinanceiroDashboardNew() {
           ))}
         </div>
       </motion.div>
-
-      {/* Gráficos */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Fluxo de Caixa */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-          className="bg-white rounded-xl shadow-md border border-gray-100 p-6 lg:col-span-2"
-        >
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Fluxo de Caixa Mensal</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={dashboardData.fluxoMensal}>
-              <defs>
-                <linearGradient id="colorEntrada" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                </linearGradient>
-                <linearGradient id="colorSaida" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#F25C26" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#F25C26" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis dataKey="mes" stroke="#6B7280" />
-              <YAxis tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`} stroke="#6B7280" />
-              <Tooltip
-                formatter={(value: any) => formatCurrency(value)}
-                contentStyle={{ borderRadius: "8px", border: "1px solid #E5E7EB" }}
-              />
-              <Legend />
-              <Area
-                type="monotone"
-                dataKey="entrada"
-                stroke="#10B981"
-                fillOpacity={1}
-                fill="url(#colorEntrada)"
-                strokeWidth={2}
-                name="Entradas"
-              />
-              <Area
-                type="monotone"
-                dataKey="saida"
-                stroke="#F25C26"
-                fillOpacity={1}
-                fill="url(#colorSaida)"
-                strokeWidth={2}
-                name="Saídas"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </motion.div>
 
         {/* Alertas */}
         <motion.div
@@ -611,7 +758,6 @@ export default function FinanceiroDashboardNew() {
             </div>
           )}
         </motion.div>
-      </div>
 
       {/* Distribuição por Núcleo - Gráfico de Pizza */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -1,7 +1,7 @@
 // Sidebar com suporte a mobile (off-canvas) e seções recolhidas
 import { useMemo, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import wgMenus, { MenuSection } from "@/config/wg-menus";
+import wgMenus, { MenuSection, MenuItem } from "@/config/wg-menus";
 import "@/styles/wg-sidebar.css";
 import { useUsuarioLogado } from "@/hooks/useUsuarioLogado";
 import {
@@ -146,7 +146,18 @@ export default function Sidebar({ open = false, onToggle }: SidebarProps) {
     }
 
     // Tipos com acesso total (MASTER, ADMIN, COMERCIAL, etc)
-    return wgMenus;
+    // Filtrar itens com restrictTo baseado no tipo de usuário
+    return wgMenus.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => {
+        // Se o item tem restrictTo, verificar se o usuário tem permissão
+        if (item.restrictTo) {
+          return tipoUsuario === item.restrictTo;
+        }
+        // Se não tem restrictTo, mostrar para todos
+        return true;
+      })
+    }));
   }, [usuario?.tipo_usuario]);
 
   const toggleSection = (section: string, path?: string, hasItems?: boolean) => {

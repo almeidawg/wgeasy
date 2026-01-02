@@ -1,3 +1,26 @@
+// Shared types for pricelist items to avoid duplicated local definitions
+export type ItemUnit = 'm2' | 'ml' | 'un' | 'diaria' | 'hora' | 'empreita';
+export type ItemType = 'material' | 'mao_obra' | 'servico' | 'produto' | 'ambos';
+
+export interface ItemPriceList {
+  id: string;
+  codigo: string;
+  nome: string;
+  descricao: string;
+  categoria: string;
+  // Tipo vindo do pricelist: agora suporta também serviço e produto
+  tipo: ItemType;
+  unidade: ItemUnit;
+  preco: number;
+  imagem_url?: string;
+  // Núcleo do item (arquitetura, engenharia, marcenaria, materiais, produtos, etc.)
+  nucleo?: any;
+}
+
+export interface ItemPriceListCompleto extends ItemPriceList {
+  estoque?: number | null;
+  fornecedor_nome?: string | null;
+}
 // ============================================================
 // TYPES: Módulo de Pricelist (Catálogo de Produtos e Serviços)
 // Sistema WG Easy - Grupo WG Almeida
@@ -160,6 +183,8 @@ export interface PricelistItemCompleto extends PricelistItem {
     email?: string;
   };
   nucleo?: PricelistNucleo | string; // Pode ser objeto (do join) ou string normalizada
+  // Compatibilidade com campos usados pela UI / Quantitativos
+  preco_venda?: number;
 }
 
 // ============================================================
@@ -178,9 +203,9 @@ export interface PricelistCategoriaFormData {
 // Interface: Formulário de item
 // ============================================================
 export interface PricelistItemFormData {
-  categoria_id?: string;
-  subcategoria_id?: string;
-  nucleo_id?: string;
+  categoria_id?: string | null;
+  subcategoria_id?: string | null;
+  nucleo_id?: string | null;
   codigo?: string;
   nome: string; // Obrigatório
   descricao?: string; // Opcional
@@ -236,8 +261,8 @@ export interface PricelistItemFormData {
   avaliacao?: number; // Nota média (ex: 4.8 estrelas)
   total_avaliacoes?: number; // Quantidade de avaliações
   controla_estoque?: boolean;
-  estoque_minimo?: number;
-  estoque_atual?: number;
+  estoque_minimo?: number | null;
+  estoque_atual?: number | null;
   ativo?: boolean;
 }
 

@@ -20,6 +20,7 @@ import {
   type CEOChecklistItem,
 } from "@/lib/ceoChecklistApi";
 import { obterFraseDoDiaComFallback, type FraseMotivacional } from "@/lib/frasesMotivacionaisApi";
+import { useDashboardPessoal } from "@/modules/financeiro-pessoal/hooks";
 import {
   AreaChart,
   Area,
@@ -74,6 +75,11 @@ import {
   AtSign,
   MessageSquare,
   ArrowRight,
+  Wallet,
+  CreditCard,
+  PiggyBank,
+  ArrowUpCircle,
+  ArrowDownCircle,
 } from "lucide-react";
 
 // Redirecionamento por tipo de usuário
@@ -156,6 +162,10 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const { usuario, loading: loadingUsuario } = useUsuarioLogado();
   const [loading, setLoading] = useState(true);
+
+  // Dados do financeiro pessoal do CEO
+  const { data: dadosPessoais, loading: loadingPessoal } = useDashboardPessoal();
+
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     receitaMes: 0,
     despesaMes: 0,
@@ -934,6 +944,173 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
+
+            {/* ====== MINHAS FINANÇAS PESSOAIS ====== */}
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500/20 to-amber-500/10 rounded-xl flex items-center justify-center">
+                    <Wallet className="w-5 h-5 text-orange-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">Minhas Finanças</h3>
+                    <p className="text-xs text-slate-400">Controle pessoal do CEO</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => navigate('/meu-financeiro')}
+                  className="text-sm text-orange-400 hover:text-orange-300 transition-colors flex items-center gap-1"
+                >
+                  Ver completo <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              {loadingPessoal ? (
+                <div className="grid grid-cols-4 gap-4">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="h-20 bg-slate-800/50 animate-pulse rounded-xl" />
+                  ))}
+                </div>
+              ) : dadosPessoais ? (
+                <>
+                  {/* KPIs Pessoais - 4 cards em degradê laranja WG */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                    {/* Saldo Total - Mais escuro */}
+                    <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #C2410C, #EA580C)' }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Wallet className="w-4 h-4 text-white/80" />
+                        <span className="text-xs text-white/80">Saldo Total</span>
+                      </div>
+                      <p className="text-xl font-bold text-white">
+                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact' }).format(dadosPessoais.saldo_total)}
+                      </p>
+                    </div>
+
+                    {/* Receitas do Mês */}
+                    <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #EA580C, #F25C26)' }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <ArrowUpCircle className="w-4 h-4 text-white/80" />
+                        <span className="text-xs text-white/80">Receitas</span>
+                      </div>
+                      <p className="text-xl font-bold text-white">
+                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact' }).format(dadosPessoais.receitas_mes)}
+                      </p>
+                    </div>
+
+                    {/* Despesas do Mês */}
+                    <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #F25C26, #FB923C)' }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <ArrowDownCircle className="w-4 h-4 text-white/80" />
+                        <span className="text-xs text-white/80">Despesas</span>
+                      </div>
+                      <p className="text-xl font-bold text-white">
+                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact' }).format(dadosPessoais.despesas_mes)}
+                      </p>
+                    </div>
+
+                    {/* Balanço do Mês - Mais claro */}
+                    <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #FB923C, #FDBA74)' }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        {dadosPessoais.balanco_mes >= 0 ? (
+                          <TrendingUp className="w-4 h-4 text-white/80" />
+                        ) : (
+                          <TrendingDown className="w-4 h-4 text-white/80" />
+                        )}
+                        <span className="text-xs text-white/80">Balanço</span>
+                      </div>
+                      <p className={`text-xl font-bold ${dadosPessoais.balanco_mes >= 0 ? 'text-white' : 'text-red-200'}`}>
+                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact' }).format(dadosPessoais.balanco_mes)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Alertas e Contas */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Alertas */}
+                    <div className="p-4 bg-slate-800/30 rounded-xl">
+                      <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-400" />
+                        Alertas Pessoais
+                      </h4>
+                      <div className="space-y-2">
+                        {dadosPessoais.lancamentos_vencidos > 0 && (
+                          <div className="flex items-center gap-2 p-2 bg-red-500/10 border border-red-500/20 rounded-lg">
+                            <Clock className="w-4 h-4 text-red-400" />
+                            <span className="text-xs text-red-300">
+                              <strong>{dadosPessoais.lancamentos_vencidos}</strong> vencido(s)
+                            </span>
+                          </div>
+                        )}
+                        {dadosPessoais.lancamentos_pendentes > 0 && (
+                          <div className="flex items-center gap-2 p-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                            <Clock className="w-4 h-4 text-amber-400" />
+                            <span className="text-xs text-amber-300">
+                              <strong>{dadosPessoais.lancamentos_pendentes}</strong> pendente(s)
+                            </span>
+                          </div>
+                        )}
+                        {dadosPessoais.lancamentos_vencidos === 0 && dadosPessoais.lancamentos_pendentes === 0 && (
+                          <div className="flex items-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="text-xs text-emerald-300">Tudo em dia!</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Minhas Contas */}
+                    <div className="p-4 bg-slate-800/30 rounded-xl">
+                      <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                        <CreditCard className="w-4 h-4 text-blue-400" />
+                        Minhas Contas
+                      </h4>
+                      {dadosPessoais.contas.length > 0 ? (
+                        <div className="space-y-2">
+                          {dadosPessoais.contas.slice(0, 3).map((conta) => (
+                            <div
+                              key={conta.id}
+                              className="flex items-center justify-between p-2 bg-slate-700/30 rounded-lg"
+                            >
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className="w-2 h-2 rounded-full"
+                                  style={{ backgroundColor: conta.cor }}
+                                />
+                                <span className="text-xs text-slate-300">{conta.nome}</span>
+                              </div>
+                              <span className="text-xs font-medium text-white">
+                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact' }).format(conta.saldo_atual)}
+                              </span>
+                            </div>
+                          ))}
+                          {dadosPessoais.contas.length > 3 && (
+                            <p className="text-xs text-slate-500 text-center">
+                              +{dadosPessoais.contas.length - 3} contas
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-slate-500 text-center py-4">
+                          Nenhuma conta cadastrada
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <Wallet className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+                  <p className="text-sm text-slate-500">Dados não disponíveis</p>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/meu-financeiro')}
+                    className="mt-2 text-xs text-orange-400 hover:text-orange-300"
+                  >
+                    Configurar finanças pessoais
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* COLUNA DIREITA - Calendário, Checklist, Alertas */}
@@ -1210,7 +1387,7 @@ export default function DashboardPage() {
             {/* Acesso Rápido */}
             <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
               <h3 className="font-semibold text-white mb-4">Acesso Rápido</h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => navigate('/propostas')}
@@ -1237,11 +1414,27 @@ export default function DashboardPage() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => navigate('/meu-financeiro')}
+                  className="flex flex-col items-center gap-2 p-4 bg-slate-800/50 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 rounded-xl transition-all"
+                >
+                  <Wallet className="w-5 h-5 text-amber-400" />
+                  <span className="text-xs text-slate-300">Meu Financeiro</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => navigate('/pessoas/clientes')}
                   className="flex flex-col items-center gap-2 p-4 bg-slate-800/50 hover:bg-violet-500/10 border border-transparent hover:border-violet-500/20 rounded-xl transition-all"
                 >
                   <Users className="w-5 h-5 text-violet-400" />
                   <span className="text-xs text-slate-300">Clientes</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate('/cronograma')}
+                  className="flex flex-col items-center gap-2 p-4 bg-slate-800/50 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/20 rounded-xl transition-all"
+                >
+                  <Calendar className="w-5 h-5 text-cyan-400" />
+                  <span className="text-xs text-slate-300">Cronograma</span>
                 </button>
               </div>
             </div>

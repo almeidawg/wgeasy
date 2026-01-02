@@ -150,24 +150,24 @@ export default function OrcamentosPage() {
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
               Orçamentos
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               Gestão de orçamentos e estimativas de projetos
             </p>
           </div>
           <button
             type="button"
             onClick={handleNovoOrcamento}
-            className="px-6 py-3 bg-[#F25C26] text-white rounded-lg hover:bg-[#e04a1a] font-medium flex items-center gap-2 shadow-md transition-colors"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#F25C26] text-white rounded-lg hover:bg-[#e04a1a] font-medium flex items-center justify-center gap-2 shadow-md transition-colors whitespace-nowrap shrink-0"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Novo Orçamento
+            <span>Novo Orçamento</span>
           </button>
         </div>
 

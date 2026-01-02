@@ -170,8 +170,9 @@ export async function importarExcelPricelist(arquivo: File): Promise<{
       mensagens,
     };
 
-  } catch (error: any) {
-    mensagens.push(`❌ Erro: ${error.message}`);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+    mensagens.push(`❌ Erro: ${errorMessage}`);
     throw error;
   }
 }

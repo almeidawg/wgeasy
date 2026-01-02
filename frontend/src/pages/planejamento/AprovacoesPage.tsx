@@ -81,67 +81,123 @@ export default function AprovacoesPage() {
         });
       }
 
-      // Buscar pedidos de compra pendentes
-      const { data: compras, error: errComp } = await supabase
-        .from("pedidos_compra")
-        .select(`
-          id,
-          numero,
-          descricao,
-          valor_total,
-          data_pedido,
-          status,
-          fornecedor:pessoas!fornecedor_id(nome)
-        `)
-        .eq("status", "pendente")
-        .order("data_pedido", { ascending: false })
-        .limit(50);
+      // Buscar pedidos de compra pendentes (query simples, sem join)
+      try {
+        const { data: compras } = await supabase
+          .from("pedidos_compra")
+          .select("id, numero, descricao, valor_total, data_pedido, status, fornecedor_id")
+          .eq("status", "pendente")
+          .order("data_pedido", { ascending: false })
+          .limit(50);
 
-      if (!errComp && compras) {
-        compras.forEach((comp: any) => {
-          itensPendentes.push({
-            id: comp.id,
-            tipo: "compra",
-            titulo: `Pedido #${comp.numero}`,
-            descricao: comp.descricao || `Fornecedor: ${comp.fornecedor?.nome || "Não informado"}`,
-            valor: comp.valor_total || 0,
-            data_criacao: comp.data_pedido,
-            solicitante: comp.fornecedor?.nome,
-            status: comp.status,
-            urgencia: "alta",
+        if (compras && compras.length > 0) {
+          compras.forEach((comp: any) => {
+            itensPendentes.push({
+              id: comp.id,
+              tipo: "compra",
+              titulo: `Pedido #${comp.numero || comp.id.slice(0, 8)}`,
+              descricao: comp.descricao || "Pedido de compra",
+              valor: comp.valor_total || 0,
+              data_criacao: comp.data_pedido,
+              status: comp.status,
+              urgencia: "alta",
+            });
           });
-        });
+        }
+      } catch (e) {
+        console.log("Tabela pedidos_compra não disponível");
       }
 
-      // Buscar solicitações de depósito pendentes
-      const { data: solicitacoes, error: errSol } = await supabase
-        .from("financeiro_solicitacoes")
-        .select(`
-          id,
-          descricao,
-          valor,
-          created_at,
-          status,
-          solicitante:usuarios!solicitante_id(nome)
-        `)
-        .eq("status", "pendente")
-        .order("created_at", { ascending: false })
-        .limit(50);
+      // Buscar solicitações de depósito pendentes (query simples)
+      try {
+        const { data: solicitacoes } = await supabase
+          .from("financeiro_solicitacoes")
+          .select("id, descricao, valor, created_at, status")
+          .eq("status", "pendente")
+          .order("created_at", { ascending: false })
+          .limit(50);
 
-      if (!errSol && solicitacoes) {
-        solicitacoes.forEach((sol: any) => {
-          itensPendentes.push({
-            id: sol.id,
-            tipo: "solicitacao",
-            titulo: sol.descricao || "Solicitação de Depósito",
-            descricao: `Solicitante: ${sol.solicitante?.nome || "Não informado"}`,
-            valor: sol.valor || 0,
-            data_criacao: sol.created_at,
-            solicitante: sol.solicitante?.nome,
-            status: sol.status,
-            urgencia: "baixa",
+        if (solicitacoes && solicitacoes.length > 0) {
+          solicitacoes.forEach((sol: any) => {
+            itensPendentes.push({
+              id: sol.id,
+              tipo: "solicitacao",
+              titulo: sol.descricao || "Solicitação de Depósito",
+              descricao: "Solicitação financeira pendente",
+              valor: sol.valor || 0,
+              data_criacao: sol.created_at,
+              status: sol.status,
+              urgencia: "baixa",
+            });
           });
-        });
+        }
+      } catch (e) {
+        console.log("Tabela financeiro_solicitacoes não disponível");
+      }
+
+      // Buscar projetos de compras pendentes (pedidos de materiais de obra)
+      try {
+        const { data: projetosCompras } = await supabase
+          .from("projetos_compras")
+          .select("id, codigo, nome, cliente_nome, endereco, status, created_at")
+          .eq("status", "PENDENTE")
+          .order("created_at", { ascending: false })
+          .limit(50);
+
+        if (projetosCompras && projetosCompras.length > 0) {
+          // Buscar valor total de cada projeto
+          for (const proj of projetosCompras) {
+            const { data: itensProj } = await supabase
+              .from("projeto_lista_compras")
+              .select("valor_total")
+              .eq("projeto_id", proj.id);
+
+            const valorTotal = itensProj?.reduce((acc, i) => acc + (i.valor_total || 0), 0) || 0;
+            const totalItens = itensProj?.length || 0;
+
+            itensPendentes.push({
+              id: proj.id,
+              tipo: "compra",
+              titulo: `${proj.codigo} - ${proj.nome}`,
+              descricao: `${proj.cliente_nome}${proj.endereco ? ` | ${proj.endereco}` : ""} (${totalItens} itens)`,
+              valor: valorTotal,
+              data_criacao: proj.created_at,
+              cliente: proj.cliente_nome,
+              status: "pendente",
+              urgencia: "alta",
+            });
+          }
+        }
+      } catch (e) {
+        console.log("Tabela projetos_compras não disponível");
+      }
+
+      // Buscar itens de lista de compras pendentes de aprovação (itens individuais)
+      try {
+        const { data: listaCompras } = await supabase
+          .from("projeto_lista_compras")
+          .select("id, codigo, descricao, valor_total, created_at, status, projeto_id")
+          .eq("status", "PENDENTE")
+          .is("projeto_id", null) // Apenas itens órfãos (sem projeto vinculado)
+          .order("created_at", { ascending: false })
+          .limit(50);
+
+        if (listaCompras && listaCompras.length > 0) {
+          listaCompras.forEach((item: any) => {
+            itensPendentes.push({
+              id: item.id,
+              tipo: "compra",
+              titulo: `Material #${item.codigo || item.id.slice(0, 8)}`,
+              descricao: item.descricao || "Item de material",
+              valor: item.valor_total || 0,
+              data_criacao: item.created_at,
+              status: item.status?.toLowerCase() || "pendente",
+              urgencia: "media",
+            });
+          });
+        }
+      } catch (e) {
+        console.log("Tabela projeto_lista_compras não disponível");
       }
 
       // Ordenar por data (mais recentes primeiro)
@@ -172,29 +228,51 @@ export default function AprovacoesPage() {
     if (!confirm(`Aprovar "${item.titulo}"?`)) return;
 
     try {
-      let tabela = "";
-      let novoStatus = "aprovado";
+      // Verificar se é um projeto de compras (pelo formato do título)
+      const isProjetoCompras = item.titulo.startsWith("PC-");
 
-      switch (item.tipo) {
-        case "compra":
-          tabela = "pedidos_compra";
-          break;
-        case "solicitacao":
-          tabela = "financeiro_solicitacoes";
-          break;
-        default:
-          alert("Tipo de item não suporta aprovação direta.");
-          return;
+      if (isProjetoCompras) {
+        // Aprovar projeto de compras
+        const { error } = await supabase
+          .from("projetos_compras")
+          .update({ status: "APROVADO", updated_at: new Date().toISOString() })
+          .eq("id", item.id);
+
+        if (error) throw error;
+
+        // Atualizar status dos itens também
+        await supabase
+          .from("projeto_lista_compras")
+          .update({ status: "APROVADO", data_aprovacao: new Date().toISOString() })
+          .eq("projeto_id", item.id);
+
+        alert("Projeto de compras aprovado com sucesso!");
+      } else {
+        let tabela = "";
+        let novoStatus = "aprovado";
+
+        switch (item.tipo) {
+          case "compra":
+            tabela = "pedidos_compra";
+            break;
+          case "solicitacao":
+            tabela = "financeiro_solicitacoes";
+            break;
+          default:
+            alert("Tipo de item não suporta aprovação direta.");
+            return;
+        }
+
+        const { error } = await supabase
+          .from(tabela)
+          .update({ status: novoStatus })
+          .eq("id", item.id);
+
+        if (error) throw error;
+
+        alert("Item aprovado com sucesso!");
       }
 
-      const { error } = await supabase
-        .from(tabela)
-        .update({ status: novoStatus })
-        .eq("id", item.id);
-
-      if (error) throw error;
-
-      alert("Item aprovado com sucesso!");
       carregarPendentes();
     } catch (error) {
       console.error("Erro ao aprovar:", error);
@@ -207,32 +285,52 @@ export default function AprovacoesPage() {
     if (motivo === null) return; // Cancelou
 
     try {
-      let tabela = "";
-      let novoStatus = "rejeitado";
+      // Verificar se é um projeto de compras (pelo formato do título)
+      const isProjetoCompras = item.titulo.startsWith("PC-");
 
-      switch (item.tipo) {
-        case "compra":
-          tabela = "pedidos_compra";
-          break;
-        case "solicitacao":
-          tabela = "financeiro_solicitacoes";
-          break;
-        default:
-          alert("Tipo de item não suporta rejeição direta.");
-          return;
+      if (isProjetoCompras) {
+        // Rejeitar projeto de compras
+        const { error } = await supabase
+          .from("projetos_compras")
+          .update({
+            status: "CANCELADO",
+            updated_at: new Date().toISOString(),
+            observacoes: motivo || undefined,
+          })
+          .eq("id", item.id);
+
+        if (error) throw error;
+
+        alert("Projeto de compras rejeitado.");
+      } else {
+        let tabela = "";
+        let novoStatus = "rejeitado";
+
+        switch (item.tipo) {
+          case "compra":
+            tabela = "pedidos_compra";
+            break;
+          case "solicitacao":
+            tabela = "financeiro_solicitacoes";
+            break;
+          default:
+            alert("Tipo de item não suporta rejeição direta.");
+            return;
+        }
+
+        const { error } = await supabase
+          .from(tabela)
+          .update({
+            status: novoStatus,
+            observacoes: motivo || undefined
+          })
+          .eq("id", item.id);
+
+        if (error) throw error;
+
+        alert("Item rejeitado.");
       }
 
-      const { error } = await supabase
-        .from(tabela)
-        .update({
-          status: novoStatus,
-          observacoes: motivo || undefined
-        })
-        .eq("id", item.id);
-
-      if (error) throw error;
-
-      alert("Item rejeitado.");
       carregarPendentes();
     } catch (error) {
       console.error("Erro ao rejeitar:", error);

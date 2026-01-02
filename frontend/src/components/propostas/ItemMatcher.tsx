@@ -6,24 +6,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabaseRaw as supabase } from "@/lib/supabaseClient";
-
-// Tipo local para itens do pricelist
-// Compatível com o tipo usado em PropostaEmissaoPage
-type NucleoItem = "arquitetura" | "engenharia" | "marcenaria" | "produtos";
-
-interface ItemPriceList {
-  id: string;
-  codigo: string;
-  nome: string;
-  descricao: string;
-  categoria: string;
-  tipo: "material" | "mao_obra" | "servico" | "produto" | "ambos";
-  unidade: "m2" | "ml" | "un" | "diaria" | "hora" | "empreita";
-  preco: number;
-  imagem_url?: string;
-  nucleo_id?: string;
-  nucleo?: { id: string; nome: string } | { id: string; nome: string }[] | null;
-}
+import type { ItemPriceList } from "@/types/pricelist";
 
 interface ItemImportado {
   ambiente: string;

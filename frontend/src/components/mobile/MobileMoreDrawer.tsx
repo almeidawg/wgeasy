@@ -3,13 +3,15 @@
 // Sistema WG Easy - Grupo WG Almeida
 // Abre de baixo para cima (bottom sheet)
 // CORRIGIDO: Usa wgMenus completo igual ao Sidebar
+// ATUALIZADO: Submenus recolhidos por padrão (collapsible)
 // ============================================================
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   X,
   ChevronRight,
+  ChevronDown,
   Sparkles,
   LayoutDashboard,
   Users,
@@ -32,6 +34,9 @@ import {
   ShoppingCart,
   Wrench,
   Circle,
+  Target,
+  Truck,
+  CreditCard,
 } from "lucide-react";
 import wgMenus, { MenuSection } from "@/config/wg-menus";
 import { useUsuarioLogado } from "@/hooks/useUsuarioLogado";
@@ -56,19 +61,24 @@ function getSectionIcon(section: string) {
   switch (sectionLower) {
     case "dashboard":
       return <LayoutDashboard size={size} />;
+    case "meu financeiro":
+      return <CreditCard size={size} />;
     case "pessoas":
       return <Users size={size} />;
     case "oportunidades":
-      return <BadgeDollarSign size={size} />;
+      return <Target size={size} />;
     case "comercial":
       return <FileText size={size} />;
     case "nucleos":
       return <FolderKanban size={size} />;
     case "planejamento":
       return <ClipboardList size={size} />;
+    case "servicos":
+      return <Truck size={size} />;
     case "cronograma":
       return <CalendarCheck size={size} />;
     case "wg experience":
+    case "area wgxperience":
       return <CheckSquare size={size} />;
     case "financeiro":
       return <Coins size={size} />;
@@ -109,6 +119,9 @@ function getItemIcon(label: string, section: string) {
 export default function MobileMoreDrawer({ open, onClose }: MobileMoreDrawerProps) {
   const { usuario } = useUsuarioLogado();
 
+  // Estado para controlar quais seções estão expandidas (todas recolhidas por padrão)
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+
   // Filtrar menus baseado no tipo de usuário (mesma lógica do Sidebar)
   const filteredMenus = useMemo(() => {
     const tipoUsuario = usuario?.tipo_usuario;
@@ -127,6 +140,26 @@ export default function MobileMoreDrawer({ open, onClose }: MobileMoreDrawerProp
       section.section !== "Dashboard"
     );
   }, [usuario?.tipo_usuario]);
+
+  // Toggle expansão de uma seção
+  const toggleSection = (sectionName: string) => {
+    setExpandedSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionName)) {
+        newSet.delete(sectionName);
+      } else {
+        newSet.add(sectionName);
+      }
+      return newSet;
+    });
+  };
+
+  // Reset quando fechar
+  useEffect(() => {
+    if (!open) {
+      setExpandedSections(new Set());
+    }
+  }, [open]);
 
   // Bloquear scroll quando aberto
   useEffect(() => {
@@ -189,35 +222,70 @@ export default function MobileMoreDrawer({ open, onClose }: MobileMoreDrawerProp
 
         {/* Content */}
         <div className="mobile-drawer-content">
-          {filteredMenus.map((section) => (
-            <div key={section.section} className="mobile-drawer-section">
-              <h3 className="mobile-drawer-section-title">
-                <span className="flex items-center gap-2">
-                  {getSectionIcon(section.section)}
-                  {section.section}
-                </span>
-              </h3>
-              <div className="mobile-drawer-items">
-                {section.items.map((item) => {
-                  const isLogout = item.path === "/logout";
-                  return (
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      onClick={onClose}
-                      className={({ isActive }) =>
-                        `mobile-drawer-item ${isActive ? "active" : ""} ${isLogout ? "text-red-500" : ""}`
-                      }
+          {filteredMenus.map((section) => {
+            // Seções com path direto e sem items (ex: Oportunidades, Serviços, Depósito)
+            const hasDirectPath = section.path && section.items.length === 0;
+            const isLogoutSection = section.path === "/logout";
+            const isExpanded = expandedSections.has(section.section);
+
+            return (
+              <div key={section.section} className="mobile-drawer-section">
+                {hasDirectPath ? (
+                  // Seção clicável direta (sem subitems)
+                  <NavLink
+                    to={section.path!}
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `mobile-drawer-item ${isActive ? "active" : ""} ${isLogoutSection ? "text-red-500" : ""}`
+                    }
+                  >
+                    {getSectionIcon(section.section)}
+                    <span className="flex-1 font-medium">{section.section}</span>
+                    <ChevronRight size={16} className="text-gray-400" />
+                  </NavLink>
+                ) : (
+                  // Seção com subitems (collapsible)
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => toggleSection(section.section)}
+                      className="mobile-drawer-section-title w-full flex items-center justify-between py-2 px-1 hover:bg-gray-50 rounded-lg transition-colors"
                     >
-                      {getItemIcon(item.label, section.section)}
-                      <span className="flex-1">{item.label}</span>
-                      <ChevronRight size={16} className="text-gray-400" />
-                    </NavLink>
-                  );
-                })}
+                      <span className="flex items-center gap-2 text-gray-700 font-medium">
+                        {getSectionIcon(section.section)}
+                        {section.section}
+                      </span>
+                      <ChevronDown
+                        size={18}
+                        className={`text-gray-400 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    {isExpanded && (
+                      <div className="mobile-drawer-items mt-1 ml-2 border-l-2 border-gray-100 pl-3 space-y-0.5">
+                        {section.items.map((item) => {
+                          const isLogout = item.path === "/logout";
+                          return (
+                            <NavLink
+                              key={item.path}
+                              to={item.path}
+                              onClick={onClose}
+                              className={({ isActive }) =>
+                                `mobile-drawer-item ${isActive ? "active" : ""} ${isLogout ? "text-red-500" : ""}`
+                              }
+                            >
+                              {getItemIcon(item.label, section.section)}
+                              <span className="flex-1">{item.label}</span>
+                              <ChevronRight size={16} className="text-gray-400" />
+                            </NavLink>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </>

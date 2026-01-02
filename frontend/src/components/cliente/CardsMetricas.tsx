@@ -54,11 +54,11 @@ export default function CardsMetricas({ clienteId, contratoId }: CardsMetricasPr
         .eq("cliente_id", clienteId)
         .eq("status", "pendente");
 
-      // Buscar compras pendentes
+      // Buscar compras pendentes (projetos_compras)
       const { data: comprasData } = await supabase
-        .from("compras")
+        .from("projetos_compras")
         .select("id")
-        .eq("status", "pendente");
+        .eq("status", "PENDENTE");
 
       // Buscar solicitações pendentes
       const { data: solicitacoesData } = await supabase

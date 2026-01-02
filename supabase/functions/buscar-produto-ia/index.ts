@@ -1,11 +1,13 @@
 // supabase/functions/buscar-produto-ia/index.ts
-// Edge Function para buscar produtos usando OpenAI (evita CORS)
+// Edge Function para buscar produtos (scraping direto + OpenAI fallback)
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
+
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -16,12 +18,89 @@ Deno.serve(async (req) => {
   try {
     const { termoBusca, tipo } = await req.json();
 
+    // ============================================================
+    // TIPO: extrair_direto - Extração direta sem IA (NOVO!)
+    // ============================================================
+    if (tipo === 'extrair_direto') {
+      const url = termoBusca;
+      console.log('[EdgeFunction] Extraindo direto:', url);
+
+      try {
+        const produto = await extrairProdutoDireto(url);
+        return new Response(
+          JSON.stringify({ produto, fonte: 'scraping_direto' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (e) {
+        console.error('[EdgeFunction] Erro extração direta:', e);
+        return new Response(
+          JSON.stringify({ error: e.message, produto: null }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // ============================================================
+    // TIPO: buscar_ml - Buscar no Mercado Livre (sem IA)
+    // ============================================================
+    if (tipo === 'buscar_ml') {
+      console.log('[EdgeFunction] Buscando no Mercado Livre:', termoBusca);
+
+      try {
+        const produtos = await buscarMercadoLivreAPI(termoBusca);
+        return new Response(
+          JSON.stringify({ produtos, fonte: 'mercadolivre_api' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (e) {
+        console.error('[EdgeFunction] Erro ML:', e);
+        return new Response(
+          JSON.stringify({ error: e.message, produtos: [] }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // ============================================================
+    // Tipos que requerem OpenAI
+    // ============================================================
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
-    if (!OPENAI_API_KEY) {
+    // Se não tem OpenAI e não é tipo que funciona sem, tentar alternativas
+    if (!OPENAI_API_KEY && (tipo === 'buscar' || tipo === 'extrair')) {
+      // Tentar Mercado Livre como fallback para busca
+      if (tipo === 'buscar') {
+        try {
+          const produtos = await buscarMercadoLivreAPI(termoBusca);
+          if (produtos.length > 0) {
+            return new Response(
+              JSON.stringify({ produtos, fonte: 'mercadolivre_fallback' }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+        } catch (e) {
+          console.log('[EdgeFunction] ML fallback falhou:', e);
+        }
+      }
+
+      // Tentar extração direta como fallback
+      if (tipo === 'extrair') {
+        try {
+          const produto = await extrairProdutoDireto(termoBusca);
+          if (produto && produto.titulo) {
+            return new Response(
+              JSON.stringify({ produto, fonte: 'scraping_fallback' }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+        } catch (e) {
+          console.log('[EdgeFunction] Scraping fallback falhou:', e);
+        }
+      }
+
       return new Response(
-        JSON.stringify({ error: 'Chave OpenAI não configurada no servidor' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'OpenAI não configurada e fallbacks falharam' }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -483,4 +562,169 @@ function extrairProdutosLeroyDaLista(html: string): Array<{
   }
 
   return produtos;
+}
+
+// ============================================================
+// NOVAS FUNÇÕES: Extração direta e Mercado Livre API
+// ============================================================
+
+// Extração direta de produto via scraping (sem IA)
+async function extrairProdutoDireto(url: string): Promise<{
+  titulo: string;
+  preco: number;
+  preco_original?: number;
+  desconto?: number;
+  marca?: string;
+  sku?: string;
+  ean?: string;
+  imagem_url?: string;
+  descricao?: string;
+  disponibilidade?: string;
+  url_origem: string;
+}> {
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': USER_AGENT,
+      'Accept': 'text/html,application/xhtml+xml',
+      'Accept-Language': 'pt-BR,pt;q=0.9',
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const html = await response.text();
+
+  // Verificar se é página de desafio Cloudflare
+  if (html.includes('Just a moment') || html.includes('cf-browser-verification')) {
+    throw new Error('Cloudflare bloqueou o acesso');
+  }
+
+  let produto = {
+    titulo: '',
+    preco: 0,
+    preco_original: undefined as number | undefined,
+    desconto: undefined as number | undefined,
+    marca: undefined as string | undefined,
+    sku: undefined as string | undefined,
+    ean: undefined as string | undefined,
+    imagem_url: undefined as string | undefined,
+    descricao: undefined as string | undefined,
+    disponibilidade: undefined as string | undefined,
+    url_origem: url,
+  };
+
+  // 1. JSON-LD (mais confiável)
+  const jsonLdMatches = html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi);
+  for (const match of jsonLdMatches) {
+    try {
+      const jsonData = JSON.parse(match[1]);
+      const items = Array.isArray(jsonData) ? jsonData : [jsonData];
+
+      for (const item of items) {
+        if (item['@type'] === 'Product') {
+          produto.titulo = item.name || produto.titulo;
+          produto.marca = item.brand?.name || item.brand || produto.marca;
+          produto.sku = item.sku || produto.sku;
+          produto.descricao = item.description || produto.descricao;
+
+          if (item.image) {
+            produto.imagem_url = Array.isArray(item.image) ? item.image[0] : item.image;
+          }
+
+          if (item.offers) {
+            const offer = Array.isArray(item.offers) ? item.offers[0] : item.offers;
+            produto.preco = parseFloat(offer.price) || produto.preco;
+            produto.disponibilidade = offer.availability?.includes('InStock') ? 'Em estoque' : 'Indisponível';
+          }
+
+          if (item.gtin13) produto.ean = item.gtin13;
+          if (item.gtin) produto.ean = item.gtin;
+        }
+      }
+    } catch {}
+  }
+
+  // 2. Meta tags Open Graph (fallback)
+  if (!produto.titulo) {
+    const ogTitle = html.match(/<meta[^>]*property="og:title"[^>]*content="([^"]*)"/i);
+    if (ogTitle) produto.titulo = ogTitle[1];
+  }
+
+  if (!produto.imagem_url) {
+    const ogImage = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"/i);
+    if (ogImage) produto.imagem_url = ogImage[1];
+  }
+
+  // 3. Preço do HTML
+  const precoMatch = html.match(/"price":\s*(\d+\.?\d*)/);
+  if (precoMatch) produto.preco = parseFloat(precoMatch[1]);
+
+  const precoOrigMatch = html.match(/"listPrice":\s*(\d+\.?\d*)/);
+  if (precoOrigMatch) produto.preco_original = parseFloat(precoOrigMatch[1]);
+
+  if (produto.preco && produto.preco_original && produto.preco_original > produto.preco) {
+    produto.desconto = Math.round((1 - produto.preco / produto.preco_original) * 100);
+  }
+
+  // 4. SKU da URL
+  if (!produto.sku) {
+    const skuMatch = url.match(/_(\d+)$/);
+    if (skuMatch) produto.sku = skuMatch[1];
+  }
+
+  // 5. Título fallback
+  if (!produto.titulo) {
+    const titleTag = html.match(/<title>([^<|]+)/i);
+    if (titleTag) produto.titulo = titleTag[1].trim().split('|')[0].trim();
+  }
+
+  // 6. Preço fallback
+  if (!produto.preco) {
+    const precoGenerico = html.match(/R\$\s*([0-9.,]+)/i);
+    if (precoGenerico) {
+      produto.preco = parseFloat(precoGenerico[1].replace(/\./g, '').replace(',', '.'));
+    }
+  }
+
+  return produto;
+}
+
+// Buscar no Mercado Livre via API pública
+async function buscarMercadoLivreAPI(termo: string): Promise<Array<{
+  titulo: string;
+  preco: number;
+  marca?: string;
+  sku?: string;
+  imagem_url?: string;
+  url_origem?: string;
+  avaliacao?: number;
+  total_avaliacoes?: number;
+}>> {
+  const url = `https://api.mercadolibre.com/sites/MLB/search?q=${encodeURIComponent(termo)}&limit=10`;
+
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': USER_AGENT,
+      'Accept': 'application/json',
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Mercado Livre API: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return (data.results || []).map((item: any) => ({
+    titulo: item.title,
+    preco: item.price,
+    marca: item.attributes?.find((a: any) => a.id === 'BRAND')?.value_name,
+    sku: item.id,
+    imagem_url: item.thumbnail?.replace('http:', 'https:'),
+    url_origem: item.permalink,
+    avaliacao: item.reviews?.rating_average,
+    total_avaliacoes: item.reviews?.total,
+  }));
 }

@@ -16,6 +16,19 @@ import type {
   StatusPedidoCompra,
 } from "@/types/pedidosCompra";
 
+// Re-export types for convenience (pages import types from this module)
+export type {
+  PedidoCompra,
+  PedidoCompraCompleto,
+  PedidoCompraFormData,
+  PedidoCompraItem,
+  PedidoCompraItemCompleto,
+  PedidoCompraItemFormData,
+  PedidosCompraFiltros,
+  PedidosCompraEstatisticas,
+  StatusPedidoCompra,
+};
+
 // ============================================================
 // PEDIDOS DE COMPRA
 // ============================================================

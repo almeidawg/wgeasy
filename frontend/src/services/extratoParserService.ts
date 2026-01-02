@@ -5,6 +5,11 @@
 
 import * as XLSX from 'xlsx';
 
+// Tipos minimais para representar células/linhas de uma planilha Excel
+type ExcelCell = string | number | boolean | null;
+type ExcelRow = ExcelCell[];
+type ExcelTable = ExcelRow[];
+
 export interface LinhaExtrato {
   data: string;
   descricao: string;
@@ -117,7 +122,7 @@ async function parseExcel(file: File): Promise<ResultadoParsing> {
   }
 
   // Converter para JSON - tentar diferentes métodos
-  let data: any[][] = [];
+  let data: ExcelTable = [];
 
   try {
     // Primeiro, tentar com raw: false para obter valores formatados
@@ -158,7 +163,7 @@ async function parseExcel(file: File): Promise<ResultadoParsing> {
   // Processar linhas de dados
   for (let i = dataStartRow; i < data.length; i++) {
     try {
-      const row = data[i] as any[];
+      const row = data[i] as ExcelRow;
       if (!row || row.every(cell => !cell || String(cell).trim() === '')) continue;
 
       const linha = parseLinhaExcelInteligente(row, columnMap);
@@ -175,7 +180,7 @@ async function parseExcel(file: File): Promise<ResultadoParsing> {
     console.log('Tentando método genérico de parsing...');
     for (let i = 0; i < data.length; i++) {
       try {
-        const row = data[i] as any[];
+        const row = data[i] as ExcelRow;
         if (!row || row.length < 2) continue;
 
         const linha = parseLinhaExcel(row);
@@ -206,7 +211,7 @@ async function parseExcel(file: File): Promise<ResultadoParsing> {
 }
 
 // Detectar estrutura da planilha Excel
-function detectExcelStructure(data: any[][]): { headerRow: number; dataStartRow: number; columnMap: ColumnMap } {
+function detectExcelStructure(data: ExcelTable): { headerRow: number; dataStartRow: number; columnMap: ColumnMap } {
   const columnMap: ColumnMap = { data: -1, descricao: -1, valor: -1, debito: -1, credito: -1, saldo: -1 };
   let headerRow = -1;
   let dataStartRow = 0;
@@ -307,7 +312,7 @@ interface ColumnMap {
 }
 
 // Parser inteligente usando mapeamento de colunas
-function parseLinhaExcelInteligente(row: any[], columnMap: ColumnMap): LinhaExtrato | null {
+function parseLinhaExcelInteligente(row: ExcelRow, columnMap: ColumnMap): LinhaExtrato | null {
   let data: string | null = null;
   let descricao = '';
   let valor: number | null = null;
@@ -481,10 +486,10 @@ async function parsePDF(file: File): Promise<ResultadoParsing> {
         canvas.height = viewport.height;
 
         // Renderizar página
-        await page.render({
+        await (page.render({
           canvasContext: context,
           viewport: viewport,
-        }).promise;
+        } as any)).promise;
 
         // Converter para base64 (JPEG para menor tamanho)
         const base64 = canvas.toDataURL('image/jpeg', 0.8);
@@ -721,7 +726,7 @@ function parseLinhaGenerica(cols: string[]): LinhaExtrato | null {
   return null;
 }
 
-function parseLinhaExcel(row: any[]): LinhaExtrato | null {
+function parseLinhaExcel(row: ExcelRow): LinhaExtrato | null {
   // Padrões comuns de extratos bancários
   // Coluna 0: Data | Coluna 1: Descrição | Coluna 2: Valor ou Débito | Coluna 3: Crédito
 

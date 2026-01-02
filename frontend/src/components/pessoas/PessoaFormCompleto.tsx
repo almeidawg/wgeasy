@@ -45,7 +45,7 @@ function normalizarEstadoCivil(valor?: string | null): string | null {
 
 export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: PessoaFormCompletoProps) {
   const [enderecoObraDiferente, setEnderecoObraDiferente] = useState(initialData?.obra_endereco_diferente ?? false);
-  const [form, setForm] = useState<any>({
+  const [form, setForm] = useState<Record<string, any>>({
     ...initialData,
     nome: initialData?.nome || "",
     email: initialData?.email || "",
@@ -133,7 +133,7 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
       const ehCnpj = !initialData?.cpf && initialData?.cnpj;
 
       setForm({
-        ...initialData,
+        ...(initialData as Partial<PessoaInput>),
         nome: initialData?.nome || "",
         email: initialData?.email || "",
         telefone: initialData?.telefone || "",
@@ -185,15 +185,15 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
 
   useEffect(() => {
     if (!enderecoObraDiferente && tipo === "CLIENTE") {
-      setForm((prev: any) => ({
-        ...prev,
-        obra_cep: prev.cep || "",
-        obra_logradouro: prev.logradouro || "",
-        obra_numero: prev.numero || "",
-        obra_complemento: prev.complemento || "",
-        obra_bairro: prev.bairro || "",
-        obra_cidade: prev.cidade || "",
-        obra_estado: prev.estado || "",
+      setForm((prev) => ({
+        ...prev as Partial<PessoaInput>,
+        obra_cep: (prev as any).cep || "",
+        obra_logradouro: (prev as any).logradouro || "",
+        obra_numero: (prev as any).numero || "",
+        obra_complemento: (prev as any).complemento || "",
+        obra_bairro: (prev as any).bairro || "",
+        obra_cidade: (prev as any).cidade || "",
+        obra_estado: (prev as any).estado || "",
       }));
     }
   }, [enderecoObraDiferente, tipo, form.cep, form.logradouro, form.numero, form.complemento, form.bairro, form.cidade, form.estado]);
@@ -216,7 +216,7 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
       else if (name === "rg") formattedValue = formatRG(value);
       else if (name === "cep" || name === "obra_cep") formattedValue = formatCEP(value);
     }
-    setForm((prev: any) => ({ ...prev, [name]: type === "checkbox" ? checked : formattedValue }));
+    setForm((prev) => ({ ...(prev as Partial<PessoaInput>), [name]: type === "checkbox" ? checked : formattedValue }));
   }
 
   async function buscarCep(cep: string, prefixo: string = "") {
@@ -241,7 +241,7 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
   }
 
   async function buscarDadosCNPJ() {
-    const cnpjLimpo = form.cnpj.replace(/\D/g, "");
+    const cnpjLimpo = (form.cnpj || "").replace(/\D/g, "");
     if (cnpjLimpo.length !== 14) {
       alert("CNPJ deve ter 14 dígitos");
       return;
@@ -249,23 +249,23 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
     setBuscandoCnpj(true);
     try {
       const dados = await buscarEmpresaPorCNPJ(cnpjLimpo);
-      setForm((prev: any) => ({
-        ...prev,
-        nome: dados.razao_social || dados.nome_fantasia || prev.nome,
-        empresa: dados.nome_fantasia || dados.razao_social || prev.empresa,
-        email: dados.email || prev.email,
-        telefone: dados.telefone || prev.telefone,
-        cep: dados.cep || prev.cep,
-        logradouro: dados.logradouro || prev.logradouro,
-        numero: dados.numero || prev.numero,
-        complemento: dados.complemento || prev.complemento,
-        bairro: dados.bairro || prev.bairro,
-        cidade: dados.municipio || prev.cidade,
-        estado: dados.uf || prev.estado,
+      setForm((prev) => ({
+        ...(prev as Partial<PessoaInput>),
+        nome: dados.razao_social || dados.nome_fantasia || (prev as any).nome,
+        empresa: dados.nome_fantasia || dados.razao_social || (prev as any).empresa,
+        email: dados.email || (prev as any).email,
+        telefone: dados.telefone || (prev as any).telefone,
+        cep: dados.cep || (prev as any).cep,
+        logradouro: dados.logradouro || (prev as any).logradouro,
+        numero: dados.numero || (prev as any).numero,
+        complemento: dados.complemento || (prev as any).complemento,
+        bairro: dados.bairro || (prev as any).bairro,
+        cidade: dados.municipio || (prev as any).cidade,
+        estado: dados.uf || (prev as any).estado,
       }));
       if (dados.cep) await buscarCep(dados.cep, "");
     } catch (error: any) {
-      alert(error.message || "Erro ao buscar dados do CNPJ");
+      alert(error?.message || "Erro ao buscar dados do CNPJ");
     } finally {
       setBuscandoCnpj(false);
     }
@@ -279,7 +279,7 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.nome.trim() || !form.email.trim()) {
+    if (!(form.nome ?? "").trim() || !(form.email ?? "").trim()) {
       alert("Nome e E-mail são obrigatórios.");
       return;
     }
@@ -303,8 +303,8 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
     // Construir objeto com todos os campos, convertendo strings vazias para null
     const data: PessoaInput = {
       // Campos obrigatórios
-      nome: form.nome.trim(),
-      email: form.email.trim(),
+      nome: (form.nome ?? "").trim(),
+      email: (form.email ?? "").trim(),
       tipo: form.tipo || tipo,
       ativo: form.ativo ?? true,
 
@@ -386,16 +386,16 @@ export function PessoaFormCompleto({ tipo, onSubmit, onCancel, initialData }: Pe
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
             <label className="block text-sm font-medium">Nome *</label>
-            <input name="nome" value={form.nome} onChange={handleChange} required className="w-full border px-3 py-2 rounded-md" />
+            <input name="nome" value={form.nome ?? ""} onChange={handleChange} required className="w-full border px-3 py-2 rounded-md" />
           </div>
           <div>
             <label className="block text-sm font-medium">E-mail *</label>
-            <input name="email" value={form.email} onChange={handleChange} required className="w-full border px-3 py-2 rounded-md" />
+            <input name="email" value={form.email ?? ""} onChange={handleChange} required className="w-full border px-3 py-2 rounded-md" />
           </div>
           <div>
             <label className="block text-sm font-medium">Telefone</label>
             <PhoneInputInternacional
-              value={form.telefone}
+              value={form.telefone ?? ""}
               onChange={(value) => setForm((prev: any) => ({ ...prev, telefone: value || "" }))}
               placeholder="Telefone com DDD"
               defaultCountry="BR"

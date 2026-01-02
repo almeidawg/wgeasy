@@ -316,23 +316,23 @@ export default function ComposicoesPage() {
     <div className="p-8 min-h-screen bg-[#FAFAFA]">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-[#F25C26] to-[#e04a1a] rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="w-14 h-14 bg-gradient-to-br from-[#F25C26] to-[#e04a1a] rounded-2xl flex items-center justify-center shadow-lg shrink-0">
               <Layers className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Composições</h1>
-              <p className="text-gray-600">Modelos de cálculo automático de materiais</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Composições</h1>
+              <p className="text-sm sm:text-base text-gray-600">Modelos de cálculo automático de materiais</p>
             </div>
           </div>
           <button
             type="button"
             onClick={abrirModalCriar}
-            className="px-6 py-3 bg-[#F25C26] text-white rounded-lg hover:bg-[#e04a1a] font-medium flex items-center gap-2 shadow-md transition-colors"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#F25C26] text-white rounded-lg hover:bg-[#e04a1a] font-medium flex items-center justify-center gap-2 shadow-md transition-colors whitespace-nowrap shrink-0"
           >
             <Plus className="w-5 h-5" />
-            Nova Composição
+            <span>Nova Composição</span>
           </button>
         </div>
 

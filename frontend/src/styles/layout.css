@@ -11,7 +11,7 @@
 
 /* Sidebar fixa à esquerda */
 .layout > .wg-sidebar {
-  width: 240px;
+  width: 190px;
   flex-shrink: 0;
   border-right: 1px solid #e5e5e5;
   background: #fff;
@@ -50,8 +50,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 32px; /* Reduzido 30% (era 42px) */
-  gap: 6px;
+  height: 28px; /* Reduzido 10% mais (era 32px) */
+  gap: 4px;
 }
 
 .wg-tabs-scroll {
@@ -72,23 +72,23 @@
 .wg-tab-item {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px; /* Reduzido 30% (era 8px 12px) */
-  border-radius: 6px; /* Reduzido (era 10px) */
+  gap: 3px;
+  padding: 3px 6px; /* Reduzido 10% mais */
+  border-radius: 5px;
   background: #f5f5f5;
   color: #444;
-  font-size: 11px; /* Reduzido 30% (era 13px) */
+  font-size: 10px; /* Reduzido 10% mais (era 11px) */
   cursor: pointer;
   white-space: nowrap;
   transition: all 120ms ease;
-  max-width: 140px; /* Limita largura máxima */
+  max-width: 120px; /* Limita largura máxima reduzida */
   flex-shrink: 0;
 }
 
 .wg-tab-item span:first-child {
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100px;
+  max-width: 85px;
 }
 
 .wg-tab-item:hover {
@@ -238,12 +238,121 @@
 
 @media (max-width: 768px) {
   .layout > .wg-sidebar {
-    width: 240px;
+    display: none !important;
   }
+
+  /* Topbar estilo app nativo */
+  .topbar {
+    height: 48px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+    padding: 0 12px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
   .topbar-title {
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1c1c1e;
   }
+
+  .btn-ghost {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+  }
+
+  .btn-ghost:active {
+    background: rgba(0, 0, 0, 0.08);
+    transform: scale(0.95);
+  }
+
+  .topbar-user {
+    font-size: 12px;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .avatar-text {
+    font-size: 11px;
+  }
+
+  .user-name {
+    display: none; /* Oculta nome no mobile para economizar espaço */
+  }
+
   .layout-content {
-    padding: 16px;
+    padding: 12px;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    background: #f2f2f7; /* Cor de fundo iOS */
+    min-height: calc(100vh - 48px);
+  }
+
+  /* Tabs estilo app */
+  .wg-tabs-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+    padding: 0 8px;
+  }
+
+  .wg-tabs-header {
+    height: 36px;
+  }
+
+  .wg-tab-item {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .wg-tab-item.wg-tab-active {
+    background: rgba(242, 92, 38, 0.15);
+  }
+
+  /* User menu estilo iOS */
+  .user-menu {
+    width: calc(100vw - 24px);
+    max-width: 280px;
+    right: 12px;
+    border-radius: 14px;
+    border: none;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    overflow: hidden;
+  }
+
+  .user-menu-item {
+    padding: 14px 16px;
+    font-size: 15px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .user-menu-item:last-child {
+    border-bottom: none;
+  }
+
+  .user-menu-item:active {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .user-email {
+    padding: 12px 16px;
+    font-size: 13px;
+    background: rgba(0, 0, 0, 0.03);
   }
 }

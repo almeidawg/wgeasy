@@ -15,6 +15,7 @@ import "@/index.css";
 import "@/styles/wg-system.css";
 import "@/styles/wg-sidebar.css";
 import "@/styles/layout.css";
+import "@/styles/touch-targets.css";
 
 const root = document.getElementById("root")!;
 

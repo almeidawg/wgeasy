@@ -46,6 +46,12 @@ type Oportunidade = {
 type ModoVisual = "moderno" | "classico";
 const VISUAL_STORAGE_KEY = "wg-kanban-modo-visual";
 
+// Detectar se é mobile (largura < 768px)
+function isMobileDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth < 768;
+}
+
 export default function NucleoKanbanPage() {
   const { nucleo } = useParams<{ nucleo: string }>();
   const navigate = useNavigate();
@@ -72,6 +78,9 @@ export default function NucleoKanbanPage() {
   const [novoTituloColuna, setNovoTituloColuna] = useState("");
   const [modoVisual, setModoVisual] = useState<ModoVisual>(() => {
     if (typeof window === "undefined") return "moderno";
+    // No mobile, sempre iniciar com modo clássico (lista)
+    if (isMobileDevice()) return "classico";
+    // No desktop, respeitar a preferência salva
     const stored = window.localStorage.getItem(VISUAL_STORAGE_KEY);
     return stored === "classico" ? "classico" : "moderno";
   });

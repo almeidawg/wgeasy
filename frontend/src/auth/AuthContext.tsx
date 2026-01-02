@@ -46,6 +46,7 @@ interface UsuarioCompleto {
   id: string;
   nome: string;
   email: string;
+  pessoa_id?: string | null;
   tipo: string;
   avatar_url?: string;
   cargo?: string;
@@ -85,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (pessoa) {
         setUsuarioCompleto({
           id: pessoa.id,
+          pessoa_id: pessoa.id,
           nome: pessoa.nome,
           email: pessoa.email,
           tipo: pessoa.tipo,

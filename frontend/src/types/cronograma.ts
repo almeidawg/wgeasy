@@ -13,7 +13,9 @@ export type StatusProjeto =
   | "em_andamento"
   | "concluido"
   | "cancelado"
-  | "pausado";
+  | "pausado"
+  | "atrasado"
+  | "ativo";
 
 export type StatusTarefa =
   | "pendente"
@@ -50,8 +52,13 @@ export interface Projeto {
 
   // Informações básicas
   nome: string;
+  // backward-compatible alias used in some UI pieces
+  name?: string;
   descricao: string | null;
   nucleo: Nucleo | string;
+
+  // Some timeline components expect `tasks` property
+  tasks?: any[];
 
   // Datas
   data_inicio: string | null; // DATE
@@ -121,7 +128,6 @@ export interface CronogramaTarefa {
   // Ordem e organização
   ordem: number;
 
-  // Progresso e status
   progresso: number; // 0-100
   status: StatusTarefa;
   prioridade: PrioridadeTarefa;
@@ -307,6 +313,39 @@ export interface EstatisticasCronograma {
   }[];
 }
 
+// Backwards-compatible aliases used by timeline pages
+// Many timeline UI pieces expect alternate property names (inicio/fim, titulo, status_tarefa, valor_tarefa, etc.).
+// Provide a permissive alias that includes those common variants plus an index signature to avoid cascading errors.
+export type TarefaComComentarios = CronogramaTarefaCompleta & {
+  comentarios?: any[];
+  // common alternate names used across UI
+  inicio?: string | null;
+  fim?: string | null;
+  titulo?: string;
+  quantidade?: number | null;
+  unidade?: string | null;
+  total_comentarios?: number;
+  status_tarefa?: StatusTarefa;
+  descricao_editavel?: string | null;
+  valor_tarefa?: number | null;
+  // allow other legacy fields without strict typing
+  [key: string]: any;
+};
+
+export type ProjetoCompletoTimeline = ProjetoCompleto & {
+  // aliases expected by timeline components
+  titulo?: string;
+  progresso_percentual?: number;
+  unidade_negocio?: string | null;
+  tipo_projeto?: string | null;
+  valor_total?: number | null;
+  // allow other legacy fields
+  [key: string]: any;
+};
+
+export type CategoriaTarefa = string;
+
+
 // ============================================================
 // Helpers e Labels
 // ============================================================
@@ -317,6 +356,8 @@ export const STATUS_PROJETO_LABELS: Record<StatusProjeto, string> = {
   concluido: "Concluído",
   pausado: "Pausado",
   cancelado: "Cancelado",
+  atrasado: "Atrasado",
+  ativo: "Ativo",
 };
 
 export const STATUS_PROJETO_COLORS: Record<StatusProjeto, string> = {
@@ -325,6 +366,8 @@ export const STATUS_PROJETO_COLORS: Record<StatusProjeto, string> = {
   concluido: "#10B981",
   pausado: "#F59E0B",
   cancelado: "#EF4444",
+  atrasado: "#DC2626",
+  ativo: "#059669",
 };
 
 export const STATUS_PROJETO_ICONS: Record<StatusProjeto, string> = {
@@ -333,6 +376,8 @@ export const STATUS_PROJETO_ICONS: Record<StatusProjeto, string> = {
   concluido: "✅",
   pausado: "⏸️",
   cancelado: "❌",
+  atrasado: "🚨",
+  ativo: "⭐",
 };
 
 export const STATUS_TAREFA_LABELS: Record<StatusTarefa, string> = {

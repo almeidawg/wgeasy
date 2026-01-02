@@ -58,6 +58,7 @@ import { buscarAnalise, vincularAnaliseAProposta } from "@/lib/analiseProjetoApi
 import { buscarQuantitativoProjetoCompleto } from "@/services/quantitativosApi";
 import { gerarPropostaPDF } from "@/lib/propostaPdfUtils";
 import type { PropostaCompleta, PropostaItem as PropostaItemType } from "@/types/propostas";
+import type { ItemPriceList } from "@/types/pricelist";
 
 // ============================================================
 // TIPOS
@@ -85,20 +86,7 @@ interface Ambiente {
   perimetro: number;
 }
 
-interface ItemPriceList {
-  id: string;
-  codigo: string;
-  nome: string;
-  descricao: string;
-  categoria: string;
-  // Tipo vindo do pricelist: agora suporta também serviço e produto
-  tipo: "material" | "mao_obra" | "servico" | "produto" | "ambos";
-  unidade: "m2" | "ml" | "un" | "diaria" | "hora" | "empreita";
-  preco: number;
-  imagem_url?: string;
-  // Núcleo do item (arquitetura, engenharia, marcenaria, materiais, produtos, etc.)
-  nucleo?: NucleoItem;
-}
+// ItemPriceList defined in src/types/pricelist.ts
 
 
 interface ItemProposta {

@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/sidebar/Sidebar";
-import TabNavigation from "@/layout/TabNavigation";
 import Topbar from "@/layout/Topbar";
 import MobileBottomNav from "@/components/mobile/MobileBottomNav";
 import MobileMoreDrawer from "@/components/mobile/MobileMoreDrawer";
@@ -23,11 +22,11 @@ export default function MainLayout() {
       {/* ÁREA PRINCIPAL */}
       <div className="layout-main">
         <Topbar />
-        {/* TAB NAVIGATION - Desktop only */}
-        <div className="hidden md:block">
-          <TabNavigation />
-        </div>
-        <main className="layout-content" style={{ paddingTop: '8px' }}>
+        {/* Tabs agora estão integradas no Topbar */}
+        <main
+          className="layout-content"
+          style={{ paddingTop: "8px", paddingBottom: "80px" }}
+        >
           <Outlet />
         </main>
       </div>

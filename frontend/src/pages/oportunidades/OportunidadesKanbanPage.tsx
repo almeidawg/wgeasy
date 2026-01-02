@@ -39,6 +39,12 @@ type Oportunidade = {
 
 type ViewMode = "kanban" | "cards";
 
+// Detectar se é mobile (largura < 768px)
+function isMobileDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth < 768;
+}
+
 export default function OportunidadesKanbanPage() {
   const navigate = useNavigate();
   const [oportunidades, setOportunidades] = useState<Oportunidade[]>([]);
@@ -46,7 +52,10 @@ export default function OportunidadesKanbanPage() {
   const [selecionada, setSelecionada] = useState<Oportunidade | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [oportunidadeToDelete, setOportunidadeToDelete] = useState<Oportunidade | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>("kanban");
+  // No mobile, iniciar com modo "cards" (lista) para melhor usabilidade
+  const [viewMode, setViewMode] = useState<ViewMode>(() =>
+    isMobileDevice() ? "cards" : "kanban"
+  );
 
   async function carregarOportunidades() {
     setLoading(true);

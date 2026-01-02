@@ -25,8 +25,8 @@ export interface LancamentoFinanceiro {
 
   // Datas
   data_competencia?: string;
-  vencimento?: string;  // ✅ Nome correto da coluna no banco
-  data_pagamento?: string;
+  vencimento?: string | null;  // aceitar null quando código passa null
+  data_pagamento?: string | null;
 
   // Relacionamentos
   projeto_id?: string | null;

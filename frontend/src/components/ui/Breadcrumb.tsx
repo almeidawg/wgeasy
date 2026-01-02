@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 interface BreadcrumbItem {
   label: string;
-  href: string;
+  href?: string;
 }
 
 export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
@@ -12,9 +12,13 @@ export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
       {items.map((item, i) => (
         <div key={i} className="flex items-center">
           {i < items.length - 1 ? (
-            <Link to={item.href} className="breadcrumb-item hover:text-[#F25C26] transition-colors">
-              {item.label}
-            </Link>
+            item.href ? (
+              <Link to={item.href} className="breadcrumb-item hover:text-[#F25C26] transition-colors">
+                {item.label}
+              </Link>
+            ) : (
+              <span className="breadcrumb-item text-gray-700">{item.label}</span>
+            )
           ) : (
             <span className="breadcrumb-item text-gray-900 font-medium">{item.label}</span>
           )}

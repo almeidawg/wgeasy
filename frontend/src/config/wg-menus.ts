@@ -8,6 +8,7 @@ export interface MenuItem {
   path: string;
   icon?: string;
   hoverColor?: string; // Cor personalizada para hover (núcleos)
+  restrictTo?: string; // Restringir item a tipo de usuário específico (ex: "MASTER")
 }
 
 export interface MenuSection {
@@ -23,13 +24,9 @@ const wgMenus: MenuSection[] = [
     section: "Dashboard",
     icon: "📊",
     path: "/", // Clique no título navega direto para o Dashboard
-    items: []
-  },
-  {
-    section: "Meu Financeiro",
-    icon: "💳",
-    path: "/meu-financeiro", // Financeiro Pessoal do usuário logado
-    items: []
+    items: [
+      { label: "Meu Financeiro", path: "/meu-financeiro", icon: "💳", restrictTo: "MASTER" } // Apenas para Founder & CEO
+    ]
   },
   {
     section: "Pessoas",
@@ -72,8 +69,10 @@ const wgMenus: MenuSection[] = [
   {
     section: "Planejamento",
     icon: "📋",
-    maxVisible: 6,
+    maxVisible: 8,
     items: [
+      { label: "Pedido de Materiais", path: "/planejamento/pedido-materiais", icon: "🛒" },
+      { label: "Consolidação por Obra", path: "/planejamento/consolidacao", icon: "📦" },
       { label: "Orçamento de Materiais", path: "/planejamento/orcamentos/materiais" },
       { label: "Composições", path: "/planejamento/orcamentos/composicoes" },
       { label: "Modelos de Orçamento", path: "/planejamento/orcamentos/modelos" },

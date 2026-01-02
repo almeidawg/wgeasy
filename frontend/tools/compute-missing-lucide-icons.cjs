@@ -1,0 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+const dts = fs.readFileSync(path.join(__dirname, '..', 'src', 'types', 'lucide-react.d.ts'), 'utf8');
+const uses = fs.readFileSync(path.join(__dirname, '..', 'lucide-uses.txt'), 'utf8').split(/\r?\n/).filter(Boolean);
+const declared = new Set();
+const re = /export const ([A-Za-z0-9_]+):/g;
+let m;
+while ((m = re.exec(dts)) !== null) declared.add(m[1]);
+const missing = uses.filter(u => !declared.has(u));
+console.log('Missing icons count:', missing.length);
+console.log(missing.join('\n'));
+fs.writeFileSync(path.join(__dirname, '..', 'lucide-missing.txt'), missing.join('\n'));

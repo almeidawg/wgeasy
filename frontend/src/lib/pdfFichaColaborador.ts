@@ -37,7 +37,7 @@ export async function gerarFichaPDF(
 
   // AVALIAÇÕES
   autoTable(doc, {
-    startY: (doc as any).lastAutoTable.finalY + 10,
+    startY: ((doc as any).lastAutoTable?.finalY ?? 0) + 10,
     head: [["Nota", "Comentário", "Data"]],
     body: avaliacoes.map((a) => [
       a.nota.toString(),
@@ -48,7 +48,7 @@ export async function gerarFichaPDF(
 
   // OBRAS
   autoTable(doc, {
-    startY: (doc as any).lastAutoTable.finalY + 10,
+    startY: ((doc as any).lastAutoTable?.finalY ?? 0) + 10,
     head: [["Obra", "Função"]],
     body: obras.map((o) => [o.obras ?? o.obra_nome ?? "", o.funcao_na_obra ?? ""]),
   });

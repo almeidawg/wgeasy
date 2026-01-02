@@ -18,6 +18,14 @@ import type {
   StatusOS,
 } from "@/types/assistenciaTecnica";
 
+// Re-export tipos para disponibilizar aos componentes
+export type {
+  OrdemServicoCompleta,
+  OrdemServicoFormData,
+  ItemOSFormData,
+  OSEstatisticas,
+};
+
 // ============================================================
 // ORDENS DE SERVIÇO
 // ============================================================

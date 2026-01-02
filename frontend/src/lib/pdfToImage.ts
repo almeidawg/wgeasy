@@ -86,13 +86,13 @@ export async function convertPDFToImages(
       pages,
       totalPages,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erro ao converter PDF:", error);
     return {
       success: false,
       pages: [],
       totalPages: 0,
-      error: error.message || "Erro ao processar PDF",
+      error: error instanceof Error ? error.message : "Erro ao processar PDF",
     };
   }
 }

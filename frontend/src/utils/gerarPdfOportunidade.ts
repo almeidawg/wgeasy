@@ -7,9 +7,32 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { obterAvatarUrl, gerarCorPorNome } from "@/utils/avatarUtils";
 
+interface ClientePDF {
+  nome?: string;
+  email?: string;
+  telefone?: string;
+  cargo?: string;
+  unidade?: string;
+  avatar_url?: string | null;
+  foto_url?: string | null;
+  avatar?: string | null;
+}
+
+interface OportunidadePDFData {
+  titulo?: string;
+  id?: string;
+  estagio?: string;
+  origem?: string;
+  valor_estimado?: number;
+  previsao_fechamento?: string;
+  descricao?: string;
+  observacoes?: string;
+  nucleos?: Array<{ nucleo?: string; valor?: number }>;
+}
+
 interface OportunidadePDF {
-  oportunidade: any;
-  cliente: any;
+  oportunidade: OportunidadePDFData;
+  cliente: ClientePDF;
 }
 
 export async function gerarPdfOportunidade({ oportunidade, cliente }: OportunidadePDF) {
@@ -51,10 +74,10 @@ export async function gerarPdfOportunidade({ oportunidade, cliente }: Oportunida
     doc.rect(0, 0, pageWidth, 35, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
-    doc.setFont(undefined, "bold");
+    doc.setFont("helvetica", "bold");
     doc.text("WG EASY", margin, 15);
     doc.setFontSize(10);
-    doc.setFont(undefined, "normal");
+    doc.setFont("helvetica", "normal");
     doc.text("Sistema de Gestão Empresarial", margin, 22);
   }
 
@@ -65,10 +88,10 @@ export async function gerarPdfOportunidade({ oportunidade, cliente }: Oportunida
   // TÍTULO DO DOCUMENTO
   // ======================
   doc.setFontSize(18);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.text("Ficha da Oportunidade", margin, 45);
   doc.setFontSize(12);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
   doc.text(`Título: ${oportunidade.titulo}`, margin, 53);
 
   // Avatar (imagem do cliente)
@@ -87,11 +110,11 @@ export async function gerarPdfOportunidade({ oportunidade, cliente }: Oportunida
   // DADOS DO CLIENTE
   // ======================
   doc.setFontSize(14);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.setTextColor(43, 69, 128);
   doc.text("Cliente", margin, 68);
   doc.setTextColor(0, 0, 0);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
 
   autoTable(doc, {
     startY: 72,
@@ -111,13 +134,13 @@ export async function gerarPdfOportunidade({ oportunidade, cliente }: Oportunida
   // ======================
   // DADOS DA OPORTUNIDADE
   // ======================
-  let y = (doc as any).lastAutoTable.finalY + 10;
+  let y = ((doc as any).lastAutoTable?.finalY ?? 0) + 10;
   doc.setFontSize(14);
-  doc.setFont(undefined, "bold");
+  doc.setFont("helvetica", "bold");
   doc.setTextColor(43, 69, 128);
   doc.text("Oportunidade", margin, y);
   doc.setTextColor(0, 0, 0);
-  doc.setFont(undefined, "normal");
+  doc.setFont("helvetica", "normal");
 
   autoTable(doc, {
     startY: y + 4,
@@ -144,13 +167,13 @@ export async function gerarPdfOportunidade({ oportunidade, cliente }: Oportunida
   // NÚCLEOS
   // ======================
   if (oportunidade.nucleos?.length) {
-    y = (doc as any).lastAutoTable.finalY + 10;
+    y = ((doc as any).lastAutoTable?.finalY ?? 0) + 10;
     doc.setFontSize(14);
-    doc.setFont(undefined, "bold");
+    doc.setFont("helvetica", "bold");
     doc.setTextColor(43, 69, 128);
     doc.text("Núcleos", margin, y);
     doc.setTextColor(0, 0, 0);
-    doc.setFont(undefined, "normal");
+    doc.setFont("helvetica", "normal");
 
     const nucleoRows = oportunidade.nucleos.map((n: any) => [
       n.nucleo,

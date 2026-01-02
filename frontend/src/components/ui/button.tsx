@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef, isValidElement, cloneElement } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import clsx from "clsx";
 
@@ -19,10 +19,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   children: ReactNode;
+  asChild?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "primary", size = "md", className, children, ...props }, ref) => {
+  ({ variant = "primary", size = "md", className, children, asChild = false, ...props }, ref) => {
     const base =
       "inline-flex items-center justify-center gap-2 font-medium rounded-full transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-black/10 disabled:opacity-50 disabled:cursor-not-allowed";
 
@@ -49,10 +50,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       default: "text-sm px-4 py-2",
     };
 
+    const classNames = clsx(base, variants[variant], sizes[size], className);
+
+    if (asChild) {
+      if (isValidElement(children)) {
+        return cloneElement(children as React.ReactElement, {
+          className: clsx((children as any).props?.className, classNames),
+          ref,
+        });
+      }
+      return <>{children}</>;
+    }
+
     return (
       <button
         ref={ref}
-        className={clsx(base, variants[variant], sizes[size], className)}
+        className={classNames}
         {...props}
       >
         {children}

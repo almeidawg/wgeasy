@@ -36,6 +36,12 @@ import {
   ArrowRight,
   Plus,
   Minus,
+  DollarSign,
+  ClipboardCheck,
+  Send,
+  Search,
+  Tag,
+  Trash2,
 } from "lucide-react";
 import {
   listarAnalisesAprovadas,
@@ -52,6 +58,7 @@ import {
   type MaterialCalculado,
   type ClassificacaoMaterial,
 } from "@/lib/composicoesApi";
+import { atualizarItem as atualizarItemPricelist } from "@/lib/pricelistApi";
 import * as XLSX from "xlsx";
 import { useToast } from "@/hooks/use-toast";
 
@@ -76,6 +83,13 @@ interface ResumoClassificacao {
   valorTotal: number;
 }
 
+interface ResumoTotais {
+  totalItens: number;
+  totalQuantidade: number;
+  valorTotalMateriais: number;
+  valorTotalComAjustes: number;
+}
+
 // ============================================================
 // CONFIGURAÇÕES
 // ============================================================
@@ -94,6 +108,65 @@ const CLASSIFICACAO_CONFIG: Record<ClassificacaoMaterial, { cor: string; corLigh
   CONSUMIVEL: { cor: "#F59E0B", corLight: "#FEF3C7", label: "Consumível", descricao: "Uso na obra" },
   FERRAMENTA: { cor: "#6B7280", corLight: "#F3F4F6", label: "Ferramenta", descricao: "Equipamentos" },
 };
+
+// Opções de unidades para o dropdown (nome completo para seleção)
+const UNIDADES_OPCOES = [
+  { value: "un", label: "Unidade" },
+  { value: "pç", label: "Peça" },
+  { value: "kg", label: "Quilograma" },
+  { value: "g", label: "Grama" },
+  { value: "m", label: "Metro" },
+  { value: "m²", label: "Metro Quadrado" },
+  { value: "m³", label: "Metro Cúbico" },
+  { value: "ml", label: "Metro Linear" },
+  { value: "L", label: "Litro" },
+  { value: "cx", label: "Caixa" },
+  { value: "sc", label: "Saco" },
+  { value: "pct", label: "Pacote" },
+  { value: "rl", label: "Rolo" },
+  { value: "tb", label: "Tubo" },
+  { value: "gl", label: "Galão" },
+  { value: "lt", label: "Lata" },
+  { value: "bj", label: "Balde" },
+  { value: "vb", label: "Verba" },
+  { value: "conj", label: "Conjunto" },
+  { value: "par", label: "Par" },
+  { value: "jg", label: "Jogo" },
+];
+
+// Etapas de obra em ordem cronológica
+const ETAPAS_OBRA = [
+  { codigo: "PRE_OBRA", label: "Pré Obra", cor: "#6B7280", corLight: "#F3F4F6", ordem: 1 },
+  { codigo: "DEMOLICAO", label: "Demolição", cor: "#EF4444", corLight: "#FEE2E2", ordem: 2 },
+  { codigo: "ALVENARIA", label: "Alvenaria", cor: "#78716C", corLight: "#F5F5F4", ordem: 3 },
+  { codigo: "ELETRICA", label: "Elétrica", cor: "#F59E0B", corLight: "#FEF3C7", ordem: 4 },
+  { codigo: "HIDRAULICA", label: "Hidráulica", cor: "#3B82F6", corLight: "#DBEAFE", ordem: 5 },
+  { codigo: "FORRO", label: "Forro/Gesso", cor: "#A1A1AA", corLight: "#F4F4F5", ordem: 6 },
+  { codigo: "PAREDE", label: "Parede", cor: "#8B5CF6", corLight: "#EDE9FE", ordem: 7 },
+  { codigo: "PISO", label: "Piso", cor: "#14B8A6", corLight: "#CCFBF1", ordem: 8 },
+  { codigo: "TETO", label: "Teto", cor: "#64748B", corLight: "#F1F5F9", ordem: 9 },
+  { codigo: "PINTURA", label: "Pintura", cor: "#EC4899", corLight: "#FCE7F3", ordem: 10 },
+  { codigo: "ACABAMENTO", label: "Acabamento", cor: "#10B981", corLight: "#D1FAE5", ordem: 11 },
+];
+
+// Mapeamento de código de composição para etapa de obra
+function identificarEtapaObra(codigoComposicao: string, descricao: string): string {
+  const codigo = codigoComposicao.toUpperCase();
+  const desc = descricao.toLowerCase();
+
+  if (codigo.includes("ELE-") || desc.includes("elétric") || desc.includes("tomada") || desc.includes("interruptor")) return "ELETRICA";
+  if (codigo.includes("HID-") || desc.includes("hidráulic") || desc.includes("água") || desc.includes("esgoto")) return "HIDRAULICA";
+  if (codigo.includes("PISO") || desc.includes("piso") || desc.includes("porcelanato piso")) return "PISO";
+  if (codigo.includes("PAREDE") || codigo.includes("REV-") || desc.includes("revestimento") || desc.includes("parede")) return "PAREDE";
+  if (codigo.includes("TETO") || desc.includes("teto") && !desc.includes("forro")) return "TETO";
+  if (codigo.includes("GESSO") || codigo.includes("FORRO") || desc.includes("gesso") || desc.includes("forro") || desc.includes("sanca")) return "FORRO";
+  if (codigo.includes("PINT-") || desc.includes("pintura") || desc.includes("tinta") || desc.includes("primer")) return "PINTURA";
+  if (codigo.includes("ALV-") || desc.includes("alvenaria") || desc.includes("tijolo") || desc.includes("bloco")) return "ALVENARIA";
+  if (codigo.includes("DEM-") || desc.includes("demolição") || desc.includes("remoção")) return "DEMOLICAO";
+  if (desc.includes("acabamento") || desc.includes("louça") || desc.includes("metais")) return "ACABAMENTO";
+
+  return "PRE_OBRA";
+}
 
 // Mapeamento de tipo de ambiente para composições sugeridas
 const MAPEAMENTO_AMBIENTE_COMPOSICOES: Record<string, string[]> = {
@@ -142,9 +215,68 @@ export default function OrcamentoMateriaisPage() {
 
   const [filtroClassificacao, setFiltroClassificacao] = useState<string>("todos");
   const [filtroDisciplina, setFiltroDisciplina] = useState<string>("todos");
+  const [filtroEtapa, setFiltroEtapa] = useState<string>("todos");
+  const [buscaMaterial, setBuscaMaterial] = useState<string>("");
   const [expandidos, setExpandidos] = useState<Set<string>>(new Set());
   const [gerandoLista, setGerandoLista] = useState(false);
   const [ajustesManuais, setAjustesManuais] = useState<Record<string, number>>({});
+  const [itensRemovidos, setItensRemovidos] = useState<Set<string>>(new Set());
+
+  // Estados para edição inline de preço
+  const [editandoPreco, setEditandoPreco] = useState<string | null>(null);
+  const [salvandoEdicao, setSalvandoEdicao] = useState<string | null>(null);
+
+  // Função para salvar unidade/preço no pricelist
+  async function handleSalvarEdicaoPricelist(
+    chave: string,
+    pricelistId: string | null | undefined,
+    campo: 'unidade' | 'preco',
+    valor: string | number
+  ) {
+    if (!pricelistId) {
+      toast({
+        title: "Erro",
+        description: "Este item não está vinculado ao Pricelist.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSalvandoEdicao(chave);
+    try {
+      const payload = campo === 'unidade' ? { unidade: valor as string } : { preco: valor as number };
+      await atualizarItemPricelist(pricelistId, payload);
+
+      // Atualizar localmente os itens do orçamento
+      setItensOrcamento(prev => prev.map(item => ({
+        ...item,
+        materiais: item.materiais.map(mat => {
+          if (mat.pricelist_item_id === pricelistId) {
+            return {
+              ...mat,
+              [campo === 'unidade' ? 'unidade' : 'preco_unitario']: valor,
+            };
+          }
+          return mat;
+        }),
+      })));
+
+      toast({
+        title: "Salvo!",
+        description: `${campo === 'unidade' ? 'Unidade' : 'Preço'} atualizado no Pricelist.`,
+      });
+    } catch (error) {
+      console.error("Erro ao salvar no pricelist:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível salvar a alteração.",
+        variant: "destructive",
+      });
+    } finally {
+      setSalvandoEdicao(null);
+      setEditandoPreco(null);
+    }
+  }
 
   // Carregar dados iniciais
   useEffect(() => {
@@ -403,13 +535,46 @@ export default function OrcamentoMateriaisPage() {
     return resumo;
   }, [itensOrcamento]);
 
-  // Agrupar materiais consolidados
-  const materiaisConsolidados = useMemo(() => {
-    const mapa: Record<string, MaterialCalculado & { ambientes: string[] }> = {};
+  // Calcular totais gerais (com e sem ajustes)
+  const resumoTotais = useMemo((): ResumoTotais => {
+    let totalItens = 0;
+    let totalQuantidade = 0;
+    let valorTotalMateriais = 0;
+    let valorTotalComAjustes = 0;
+
+    const materiaisAgrupados: Record<string, { quantidade: number; preco: number; chave: string }> = {};
 
     for (const item of itensOrcamento) {
       for (const material of item.materiais) {
         const chave = `${material.item_descricao}|${material.classificacao}|${material.unidade}`;
+
+        if (!materiaisAgrupados[chave]) {
+          materiaisAgrupados[chave] = { quantidade: 0, preco: material.preco_unitario || 0, chave };
+        }
+        materiaisAgrupados[chave].quantidade += material.quantidade_final;
+      }
+    }
+
+    for (const [chave, dados] of Object.entries(materiaisAgrupados)) {
+      totalItens += 1;
+      const qtdOriginal = dados.quantidade;
+      const qtdAjustada = ajustesManuais[chave] ?? qtdOriginal;
+      totalQuantidade += qtdAjustada;
+      valorTotalMateriais += qtdOriginal * dados.preco;
+      valorTotalComAjustes += qtdAjustada * dados.preco;
+    }
+
+    return { totalItens, totalQuantidade, valorTotalMateriais, valorTotalComAjustes };
+  }, [itensOrcamento, ajustesManuais]);
+
+  // Agrupar materiais consolidados
+  const materiaisConsolidados = useMemo(() => {
+    const mapa: Record<string, MaterialCalculado & { ambientes: string[]; etapa: string; composicaoCodigo: string }> = {};
+
+    for (const item of itensOrcamento) {
+      for (const material of item.materiais) {
+        const chave = `${material.item_descricao}|${material.classificacao}|${material.unidade}`;
+        const etapa = identificarEtapaObra(item.composicao_codigo, material.item_descricao);
 
         if (mapa[chave]) {
           mapa[chave].quantidade_calculada += material.quantidade_calculada;
@@ -422,29 +587,79 @@ export default function OrcamentoMateriaisPage() {
           mapa[chave] = {
             ...material,
             ambientes: [item.ambiente_nome],
+            etapa,
+            composicaoCodigo: item.composicao_codigo,
           };
         }
       }
     }
 
     // Filtrar
-    let resultado = Object.values(mapa);
+    let resultado = Object.entries(mapa)
+      .filter(([chave]) => !itensRemovidos.has(chave))
+      .map(([, m]) => m);
 
+    // Filtro por classificação
     if (filtroClassificacao !== "todos") {
       resultado = resultado.filter((m) => m.classificacao === filtroClassificacao);
     }
 
-    // Ordenar por classificação e descrição
+    // Filtro por etapa de obra
+    if (filtroEtapa !== "todos") {
+      resultado = resultado.filter((m) => (m as any).etapa === filtroEtapa);
+    }
+
+    // Filtro por busca textual
+    if (buscaMaterial.trim()) {
+      const termo = buscaMaterial.toLowerCase().trim();
+      resultado = resultado.filter((m) =>
+        m.item_descricao.toLowerCase().includes(termo) ||
+        (m as any).ambientes.some((a: string) => a.toLowerCase().includes(termo))
+      );
+    }
+
+    // Ordenar por etapa de obra (cronológica) e depois por descrição
     resultado.sort((a, b) => {
-      if (a.classificacao !== b.classificacao) {
-        const ordem = ["ACABAMENTO", "INSUMO", "CONSUMIVEL", "FERRAMENTA"];
-        return ordem.indexOf(a.classificacao) - ordem.indexOf(b.classificacao);
+      const etapaA = ETAPAS_OBRA.find(e => e.codigo === (a as any).etapa)?.ordem || 99;
+      const etapaB = ETAPAS_OBRA.find(e => e.codigo === (b as any).etapa)?.ordem || 99;
+
+      if (etapaA !== etapaB) {
+        return etapaA - etapaB;
       }
+
+      // Dentro da mesma etapa, ordenar por classificação
+      if (a.classificacao !== b.classificacao) {
+        const ordemClass = ["ACABAMENTO", "INSUMO", "CONSUMIVEL", "FERRAMENTA"];
+        return ordemClass.indexOf(a.classificacao) - ordemClass.indexOf(b.classificacao);
+      }
+
       return a.item_descricao.localeCompare(b.item_descricao);
     });
 
     return resultado;
-  }, [itensOrcamento, filtroClassificacao]);
+  }, [itensOrcamento, filtroClassificacao, filtroEtapa, buscaMaterial, itensRemovidos]);
+
+  // Remover item da lista
+  function handleRemoverItem(chave: string) {
+    setItensRemovidos((prev) => {
+      const novo = new Set(prev);
+      novo.add(chave);
+      return novo;
+    });
+    toast({
+      title: "Item removido",
+      description: "O item foi removido da lista de materiais.",
+    });
+  }
+
+  // Restaurar item removido
+  function handleRestaurarItem(chave: string) {
+    setItensRemovidos((prev) => {
+      const novo = new Set(prev);
+      novo.delete(chave);
+      return novo;
+    });
+  }
 
   // Toggle expandir ambiente
   function toggleExpandir(id: string) {
@@ -508,12 +723,12 @@ export default function OrcamentoMateriaisPage() {
       );
 
       toast({
-        title: "Lista de Compras Gerada!",
-        description: `${resultado.totalItens} itens adicionados ao projeto de compras.`,
+        title: "Enviado para Aprovação!",
+        description: `${resultado.totalItens} itens aguardando aprovação do cliente.`,
       });
 
-      // Navegar para o módulo de compras
-      navigate(`/compras?projeto=${resultado.projetoId}`);
+      // Navegar para o módulo de aprovações (fluxo: Orçamento → Aprovações → Compras)
+      navigate(`/planejamento/aprovacoes?projeto=${resultado.projetoId}&origem=orcamento-materiais`);
     } catch (error) {
       console.error("Erro ao gerar lista de compras:", error);
       toast({
@@ -734,12 +949,12 @@ export default function OrcamentoMateriaisPage() {
 
               {/* Step 3 */}
               <div className={`flex items-center gap-3 ${itensOrcamento.length > 0 ? "" : "opacity-30"}`}>
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${itensOrcamento.length > 0 ? "bg-purple-100 text-purple-600" : "bg-gray-100 text-gray-400"}`}>
-                  <ShoppingCart className="w-5 h-5" />
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${itensOrcamento.length > 0 ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-400"}`}>
+                  <ClipboardCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">3. Lista de Compras</p>
-                  <p className="text-sm text-gray-500">Gerar pedido de materiais</p>
+                  <p className="font-medium text-gray-900">3. Aprovação do Cliente</p>
+                  <p className="text-sm text-gray-500">Enviar para aprovação</p>
                 </div>
               </div>
             </div>
@@ -768,14 +983,14 @@ export default function OrcamentoMateriaisPage() {
                   type="button"
                   onClick={handleGerarListaCompras}
                   disabled={gerandoLista}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
                 >
                   {gerandoLista ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <ShoppingCart className="w-4 h-4" />
+                    <Send className="w-4 h-4" />
                   )}
-                  {gerandoLista ? "Gerando..." : "Gerar Lista de Compras"}
+                  {gerandoLista ? "Enviando..." : "Enviar para Aprovação"}
                 </button>
               </div>
             )}
@@ -940,6 +1155,75 @@ export default function OrcamentoMateriaisPage() {
             {/* Resultados */}
             {itensOrcamento.length > 0 && (
               <>
+                {/* Cards de Totais */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-5 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-100 text-sm font-medium">Total de Itens</p>
+                        <p className="text-3xl font-bold mt-1">{resumoTotais.totalItens}</p>
+                        <p className="text-blue-100 text-xs mt-1">materiais diferentes</p>
+                      </div>
+                      <div className="p-3 bg-white/20 rounded-lg">
+                        <Package className="w-7 h-7" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-5 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-purple-100 text-sm font-medium">Quantidade Total</p>
+                        <p className="text-3xl font-bold mt-1">{resumoTotais.totalQuantidade.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}</p>
+                        <p className="text-purple-100 text-xs mt-1">unidades/peças</p>
+                      </div>
+                      <div className="p-3 bg-white/20 rounded-lg">
+                        <Layers className="w-7 h-7" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-5 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-green-100 text-sm font-medium">Valor Calculado</p>
+                        <p className="text-2xl font-bold mt-1">
+                          {resumoTotais.valorTotalMateriais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </p>
+                        <p className="text-green-100 text-xs mt-1">estimativa inicial</p>
+                      </div>
+                      <div className="p-3 bg-white/20 rounded-lg">
+                        <Calculator className="w-7 h-7" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={`rounded-xl shadow-lg p-5 text-white ${
+                    Object.keys(ajustesManuais).length > 0
+                      ? 'bg-gradient-to-br from-orange-500 to-orange-600'
+                      : 'bg-gradient-to-br from-teal-500 to-teal-600'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-white/80 text-sm font-medium">
+                          {Object.keys(ajustesManuais).length > 0 ? 'Valor com Ajustes' : 'Valor Total'}
+                        </p>
+                        <p className="text-2xl font-bold mt-1">
+                          {resumoTotais.valorTotalComAjustes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </p>
+                        <p className="text-white/80 text-xs mt-1">
+                          {Object.keys(ajustesManuais).length > 0
+                            ? `${Object.keys(ajustesManuais).length} ajustes aplicados`
+                            : 'valor final'}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-white/20 rounded-lg">
+                        <DollarSign className="w-7 h-7" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Resumo por Classificação */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   {Object.entries(CLASSIFICACAO_CONFIG).map(([key, config]) => {
@@ -968,18 +1252,81 @@ export default function OrcamentoMateriaisPage() {
 
                 {/* Lista Consolidada de Materiais */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                  <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-900">
-                      Lista Consolidada de Materiais
-                      <span className="text-gray-500 font-normal ml-2">
-                        ({materiaisConsolidados.length} itens)
-                      </span>
-                    </h3>
+                  {/* Header com busca */}
+                  <div className="p-4 border-b border-gray-200">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-gray-900">
+                        Lista Consolidada de Materiais
+                        <span className="text-gray-500 font-normal ml-2">
+                          ({materiaisConsolidados.length} itens)
+                        </span>
+                      </h3>
+
+                      {/* Campo de busca */}
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                          type="text"
+                          placeholder="Buscar material ou ambiente..."
+                          value={buscaMaterial}
+                          onChange={(e) => setBuscaMaterial(e.target.value)}
+                          className="pl-10 pr-4 py-2 w-72 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                        />
+                        {buscaMaterial && (
+                          <button
+                            type="button"
+                            onClick={() => setBuscaMaterial("")}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Filtros de Etapa de Obra */}
+                    <div className="mb-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Tag className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm font-medium text-gray-700">Etapa da Obra:</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setFiltroEtapa("todos")}
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                            filtroEtapa === "todos"
+                              ? "bg-gray-900 text-white"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          Todas
+                        </button>
+                        {ETAPAS_OBRA.map((etapa) => (
+                          <button
+                            key={etapa.codigo}
+                            type="button"
+                            onClick={() => setFiltroEtapa(etapa.codigo)}
+                            style={{
+                              backgroundColor: filtroEtapa === etapa.codigo ? etapa.cor : etapa.corLight,
+                              color: filtroEtapa === etapa.codigo ? "white" : etapa.cor,
+                            }}
+                            className="px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
+                          >
+                            {etapa.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Filtros de Classificação */}
                     <div className="flex items-center gap-2">
+                      <Filter className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-medium text-gray-700">Classificação:</span>
                       <button
                         type="button"
                         onClick={() => setFiltroClassificacao("todos")}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filtroClassificacao === "todos" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${filtroClassificacao === "todos" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                       >
                         Todos
                       </button>
@@ -992,7 +1339,7 @@ export default function OrcamentoMateriaisPage() {
                             backgroundColor: filtroClassificacao === key ? config.cor : config.corLight,
                             color: filtroClassificacao === key ? "white" : config.cor,
                           }}
-                          className="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                          className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
                         >
                           {config.label}
                         </button>
@@ -1007,11 +1354,23 @@ export default function OrcamentoMateriaisPage() {
                       const qtdFinal = ajustesManuais[chave] ?? material.quantidade_final;
                       const foiAjustado = ajustesManuais[chave] !== undefined;
                       const valorTotalAjustado = qtdFinal * (material.preco_unitario || 0);
+                      const etapaMaterial = (material as any).etapa;
+                      const etapaConfig = ETAPAS_OBRA.find(e => e.codigo === etapaMaterial);
 
                       return (
                         <div key={index} className={`p-4 hover:bg-gray-50 ${foiAjustado ? "bg-orange-50/50" : ""}`}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
+                              {/* Tag de Etapa de Obra */}
+                              {etapaConfig && (
+                                <span
+                                  className="px-2 py-1 text-xs font-medium rounded-full"
+                                  style={{ backgroundColor: etapaConfig.corLight, color: etapaConfig.cor }}
+                                >
+                                  {etapaConfig.label}
+                                </span>
+                              )}
+                              {/* Tag de Classificação */}
                               <span
                                 className="px-2 py-1 text-xs font-medium rounded"
                                 style={{ backgroundColor: config.corLight, color: config.cor }}
@@ -1025,11 +1384,12 @@ export default function OrcamentoMateriaisPage() {
                                 </p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
                               {/* Controles de ajuste */}
                               <div className="flex items-center gap-1">
                                 <button
                                   type="button"
+                                  title="Diminuir quantidade"
                                   onClick={() => handleAjusteQuantidade(chave, -1)}
                                   className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600"
                                 >
@@ -1037,37 +1397,114 @@ export default function OrcamentoMateriaisPage() {
                                 </button>
                                 <input
                                   type="number"
+                                  title="Quantidade do material"
                                   value={qtdFinal.toFixed(2)}
                                   onChange={(e) => handleDefinirQuantidade(chave, parseFloat(e.target.value) || 0)}
                                   className={`w-20 text-center text-sm font-medium border rounded-md px-2 py-1 ${foiAjustado ? "border-orange-300 bg-orange-50 text-orange-700" : "border-gray-200"}`}
                                 />
                                 <button
                                   type="button"
+                                  title="Aumentar quantidade"
                                   onClick={() => handleAjusteQuantidade(chave, 1)}
                                   className="w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600"
                                 >
                                   <Plus className="w-3 h-3" />
                                 </button>
-                                <span className="text-sm text-gray-500 ml-1">{material.unidade}</span>
+                                {/* Unidade - Dropdown */}
+                                <select
+                                  title="Selecionar unidade do material"
+                                  value={material.unidade}
+                                  onChange={(e) => {
+                                    const novaUnidade = e.target.value;
+                                    if (novaUnidade !== material.unidade) {
+                                      handleSalvarEdicaoPricelist(chave, material.pricelist_item_id, 'unidade', novaUnidade);
+                                    }
+                                  }}
+                                  disabled={salvandoEdicao === chave}
+                                  className="text-sm text-gray-600 ml-1 px-2 py-1 rounded border border-gray-200 bg-white hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  {/* Se a unidade atual não está na lista, adicionar como opção */}
+                                  {!UNIDADES_OPCOES.find(u => u.value === material.unidade) && (
+                                    <option value={material.unidade}>{material.unidade}</option>
+                                  )}
+                                  {UNIDADES_OPCOES.map((unidade) => (
+                                    <option key={unidade.value} value={unidade.value}>
+                                      {unidade.label}
+                                    </option>
+                                  ))}
+                                </select>
+                                {salvandoEdicao === chave && (
+                                  <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
+                                )}
                               </div>
 
-                              <div className="text-right min-w-[100px]">
+                              {/* Preço unitário e Total - NA MESMA LINHA */}
+                              <div className="flex items-center gap-2">
                                 {foiAjustado && (
-                                  <p className="text-xs text-gray-400 line-through">
+                                  <span className="text-xs text-gray-400 line-through">
                                     {material.quantidade_final.toFixed(2)}
-                                  </p>
+                                  </span>
                                 )}
-                                {material.preco_unitario && (
-                                  <p className="text-sm text-gray-500">
-                                    R$ {material.preco_unitario.toFixed(2)}/{material.unidade}
-                                  </p>
+                                {/* Preço Unitário - Editável */}
+                                {editandoPreco === chave ? (
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    autoFocus
+                                    title="Editar preço unitário"
+                                    placeholder="0.00"
+                                    defaultValue={material.preco_unitario || 0}
+                                    onBlur={(e) => {
+                                      const novoPreco = parseFloat(e.target.value) || 0;
+                                      if (novoPreco !== (material.preco_unitario || 0)) {
+                                        handleSalvarEdicaoPricelist(chave, material.pricelist_item_id, 'preco', novoPreco);
+                                      } else {
+                                        setEditandoPreco(null);
+                                      }
+                                    }}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') {
+                                        const novoPreco = parseFloat((e.target as HTMLInputElement).value) || 0;
+                                        if (novoPreco !== (material.preco_unitario || 0)) {
+                                          handleSalvarEdicaoPricelist(chave, material.pricelist_item_id, 'preco', novoPreco);
+                                        } else {
+                                          setEditandoPreco(null);
+                                        }
+                                      } else if (e.key === 'Escape') {
+                                        setEditandoPreco(null);
+                                      }
+                                    }}
+                                    className="w-20 text-center text-sm border border-green-300 rounded px-1 py-0.5 bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                  />
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditandoPreco(chave)}
+                                    className="text-xs text-gray-500 hover:bg-green-50 hover:text-green-600 px-1.5 py-0.5 rounded transition-colors whitespace-nowrap"
+                                    title="Clique para editar o preço"
+                                  >
+                                    {salvandoEdicao === chave ? (
+                                      <Loader2 className="w-3 h-3 animate-spin inline" />
+                                    ) : (
+                                      <>R$ {(material.preco_unitario || 0).toFixed(2)}/{material.unidade}</>
+                                    )}
+                                  </button>
                                 )}
-                                {(material.preco_unitario || valorTotalAjustado > 0) && (
-                                  <p className={`text-sm font-medium ${foiAjustado ? "text-orange-600" : "text-green-600"}`}>
-                                    R$ {valorTotalAjustado.toFixed(2)}
-                                  </p>
-                                )}
+                                {/* Separador e Total */}
+                                <span className={`text-sm font-bold whitespace-nowrap ${foiAjustado ? "text-orange-600" : "text-green-600"}`}>
+                                  = R$ {valorTotalAjustado.toFixed(2)}
+                                </span>
                               </div>
+
+                              {/* Botão Excluir */}
+                              <button
+                                type="button"
+                                title="Remover item da lista"
+                                onClick={() => handleRemoverItem(chave)}
+                                className="w-7 h-7 rounded-md bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 hover:text-red-600 transition-colors"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
                             </div>
                           </div>
                         </div>

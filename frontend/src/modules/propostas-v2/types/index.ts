@@ -4,6 +4,7 @@
 // ============================================================
 
 import type { NucleoItem } from "@/types/propostas";
+import type { ItemPriceList } from "@/types/pricelist";
 
 // ============================================================
 // TIPOS PRINCIPAIS
@@ -73,18 +74,7 @@ export interface AmbienteInput {
 export type TipoItem = "material" | "mao_obra" | "servico" | "produto" | "ambos";
 export type UnidadeItem = "m2" | "ml" | "un" | "diaria" | "hora" | "empreita" | "kg" | "l" | "pct";
 
-export interface ItemPricelist {
-  id: string;
-  codigo?: string;
-  nome: string;
-  descricao?: string;
-  categoria?: string;
-  tipo: TipoItem;
-  unidade: UnidadeItem;
-  preco: number;
-  imagem_url?: string;
-  nucleo?: NucleoItem;
-  nucleo_id?: string;
+export interface ItemPricelist extends ItemPriceList {
   fabricante?: string;
   modelo?: string;
   fornecedor_id?: string;

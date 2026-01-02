@@ -102,10 +102,10 @@ export default function ServicosPage() {
 
               <button
                 onClick={() => setShowNovoModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#F25C26] text-white rounded-lg hover:bg-[#D94E1F] transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[#F25C26] text-white rounded-lg hover:bg-[#D94E1F] transition-colors whitespace-nowrap shrink-0"
               >
                 <Plus className="w-4 h-4" />
-                Nova Solicitação
+                <span>Nova Solicitação</span>
               </button>
             </div>
           </div>

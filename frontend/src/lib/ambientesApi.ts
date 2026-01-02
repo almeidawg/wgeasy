@@ -56,6 +56,17 @@ export interface AmbienteResumo extends Ambiente {
   proposta_status?: string;
 }
 
+export interface AmbienteQuantitativo {
+  id: string;
+  ambiente_id: string;
+  tipo: string;
+  quantidade: number;
+  unidade?: string;
+  descricao?: string;
+  criado_em?: string;
+  atualizado_em?: string;
+}
+
 // ============================================================
 // FUNÇÕES
 // ============================================================
@@ -253,4 +264,89 @@ export function calcularTotaisAmbientes(ambientes: Ambiente[]) {
       perimetro_total: 0,
     }
   );
+}
+
+/**
+ * Listar quantitativos de um ambiente
+ */
+export async function listarQuantitativosAmbiente(
+  ambienteId: string
+): Promise<AmbienteQuantitativo[]> {
+  const { data, error } = await supabase
+    .from("ambientes_quantitativos")
+    .select("*")
+    .eq("ambiente_id", ambienteId);
+
+  if (error) {
+    console.error("[listarQuantitativosAmbiente] erro:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Gerar quantitativos básicos para um ambiente
+ */
+export async function gerarQuantitativosBasicos(
+  ambienteId: string
+): Promise<AmbienteQuantitativo[]> {
+  const ambiente = await buscarAmbiente(ambienteId);
+  if (!ambiente) return [];
+
+  const quantitativos: Partial<AmbienteQuantitativo>[] = [
+    {
+      ambiente_id: ambienteId,
+      tipo: "piso",
+      quantidade: ambiente.area_piso,
+      unidade: "m2",
+      descricao: "Área de piso",
+    },
+    {
+      ambiente_id: ambienteId,
+      tipo: "parede",
+      quantidade: ambiente.area_parede,
+      unidade: "m2",
+      descricao: "Área de parede",
+    },
+    {
+      ambiente_id: ambienteId,
+      tipo: "teto",
+      quantidade: ambiente.area_teto,
+      unidade: "m2",
+      descricao: "Área de teto",
+    },
+  ];
+
+  const { data, error } = await supabase
+    .from("ambientes_quantitativos")
+    .insert(quantitativos as any)
+    .select();
+
+  if (error) {
+    console.error("[gerarQuantitativosBasicos] erro:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Recalcular quantitativos de um ambiente
+ */
+export async function recalcularQuantitativosAmbiente(
+  ambienteId: string
+): Promise<AmbienteQuantitativo[]> {
+  // Deletar quantitativos existentes
+  const { error: deleteError } = await supabase
+    .from("ambientes_quantitativos")
+    .delete()
+    .eq("ambiente_id", ambienteId);
+
+  if (deleteError) {
+    console.error("[recalcularQuantitativosAmbiente] erro ao deletar:", deleteError);
+  }
+
+  // Gerar novos quantitativos
+  return gerarQuantitativosBasicos(ambienteId);
 }

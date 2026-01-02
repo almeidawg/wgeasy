@@ -640,28 +640,30 @@ export default function ContratoFormPage() {
         try {
           setCarregando(true);
           const contratoData = await buscarContrato(id);
+          const sv = setValue as unknown as (name: string, value: any) => void;
+          const cd = contratoData as any;
 
-          // Preencher dados básicos do contrato
-          setValue("descricao", contratoData.descricao || "");
-          setValue("objeto", contratoData.objeto || "");
-          setValue("data_inicio", contratoData.data_inicio ? new Date(contratoData.data_inicio).toISOString().split('T')[0] : "");
-          setValue("prazo_execucao_dias", contratoData.prazo_execucao_dias || 60);
+          // Preencher dados básicos do contrato (uso de `sv` para evitar checagens de chave estritas)
+          sv("descricao", cd.descricao || "");
+          sv("objeto", cd.objeto || "");
+          sv("data_inicio", cd.data_inicio ? new Date(cd.data_inicio).toISOString().split('T')[0] : "");
+          sv("prazo_execucao_dias", cd.prazo_execucao_dias || 60);
 
           // Preencher dados do cliente
-          setValue("cliente_id", contratoData.cliente_id || "");
-          setValue("cliente_nome", contratoData.cliente_nome || "");
-          setValue("cliente_cpf", contratoData.cliente_cpf || "");
-          setValue("cliente_rg", contratoData.cliente_rg || "");
-          setValue("cliente_telefone", contratoData.cliente_telefone || "");
-          setValue("cliente_email", contratoData.cliente_email || "");
-          setValue("cliente_endereco", contratoData.cliente_endereco || "");
-          setValue("cliente_bairro", contratoData.cliente_bairro || "");
-          setValue("cliente_cidade", contratoData.cliente_cidade || "");
-          setValue("cliente_estado", contratoData.cliente_estado || "");
-          setValue("cliente_cep", contratoData.cliente_cep || "");
-          setValue("cliente_nacionalidade", contratoData.cliente_nacionalidade || "");
-          setValue("cliente_estado_civil", contratoData.cliente_estado_civil || "");
-          setValue("cliente_profissao", contratoData.cliente_profissao || "");
+          sv("cliente_id", cd.cliente_id || "");
+          sv("cliente_nome", cd.cliente_nome || "");
+          sv("cliente_cpf", cd.cliente_cpf || "");
+          sv("cliente_rg", cd.cliente_rg || "");
+          sv("cliente_telefone", cd.cliente_telefone || "");
+          sv("cliente_email", cd.cliente_email || "");
+          sv("cliente_endereco", cd.cliente_endereco || "");
+          sv("cliente_bairro", cd.cliente_bairro || "");
+          sv("cliente_cidade", cd.cliente_cidade || "");
+          sv("cliente_estado", cd.cliente_estado || "");
+          sv("cliente_cep", cd.cliente_cep || "");
+          sv("cliente_nacionalidade", cd.cliente_nacionalidade || "");
+          sv("cliente_estado_civil", cd.cliente_estado_civil || "");
+          sv("cliente_profissao", cd.cliente_profissao || "");
 
           const dadosImovelContrato =
             ((contratoData as any)?.dados_imovel_json as Record<string, any> | null) ||
@@ -886,8 +888,9 @@ export default function ContratoFormPage() {
         // Prazos por núcleo
         prazos_por_nucleo: data.nucleos_selecionados.reduce(
           (acc, nucleo) => {
-            acc[nucleo] = {
-              duracao_dias_uteis: duracoesPorNucleo[nucleo],
+            const n = nucleo as UnidadeNegocio;
+            acc[n] = {
+              duracao_dias_uteis: duracoesPorNucleo[n],
             };
             return acc;
           },
@@ -897,7 +900,8 @@ export default function ContratoFormPage() {
         // Valores por núcleo
         valores_por_nucleo: data.nucleos_selecionados.reduce(
           (acc, nucleo) => {
-            acc[nucleo] = valoresPorNucleo[nucleo];
+            const n = nucleo as UnidadeNegocio;
+            acc[n] = valoresPorNucleo[n];
             return acc;
           },
           {} as Record<UnidadeNegocio, any>
@@ -911,7 +915,8 @@ export default function ContratoFormPage() {
         // NOVO: Configuração de pagamento POR NÚCLEO
         pagamento_por_nucleo: data.nucleos_selecionados.reduce(
           (acc, nucleo) => {
-            acc[nucleo] = pagamentoPorNucleo[nucleo];
+            const n = nucleo as UnidadeNegocio;
+            acc[n] = pagamentoPorNucleo[n];
             return acc;
           },
           {} as Record<UnidadeNegocio, any>
@@ -961,7 +966,7 @@ export default function ContratoFormPage() {
         // Itens por núcleo (do memorial da proposta)
         itens_por_nucleo: data.nucleos_selecionados.reduce(
           (acc, nucleo) => {
-            acc[nucleo] = itensPorNucleo[nucleo].map((item) => ({
+            acc[nucleo as UnidadeNegocio] = itensPorNucleo[nucleo as UnidadeNegocio].map((item) => ({
               ...item,
               tipo: item.tipo || "material",
             }));
@@ -1491,7 +1496,7 @@ export default function ContratoFormPage() {
                 marcenaria: { label: "Marcenaria", color: "#F59E0B" },
               }[nucleo];
 
-              const itens = itensPorNucleo[nucleo];
+              const itens = itensPorNucleo[nucleo as UnidadeNegocio];
 
               return (
                 <div key={nucleo} className="mb-6 last:mb-0 border-b border-gray-200 pb-6 last:border-0 last:pb-0">
@@ -1545,7 +1550,7 @@ export default function ContratoFormPage() {
           </div>
 
           {/* Inputs de edição */}
-          <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
             {/* Tipo */}
             <div>
               <label className="text-xs text-gray-600 font-medium">Tipo</label>
@@ -1554,12 +1559,12 @@ export default function ContratoFormPage() {
                 onChange={(e) => {
                   const novoTipo = e.target.value;
 
-                  const updated = [...itensPorNucleo[nucleo]];
+                  const updated = [...itensPorNucleo[nucleo as UnidadeNegocio]];
                   updated[idx].tipo = novoTipo;
 
                   setItensPorNucleo({
                     ...itensPorNucleo,
-                    [nucleo]: updated,
+                    [nucleo as UnidadeNegocio]: updated,
                   });
                 }}
                 className="w-full text-sm px-2 py-1 border rounded"
@@ -1579,12 +1584,12 @@ export default function ContratoFormPage() {
               <select
                 value={item.categoria_id || ""}
                 onChange={(e) => {
-                  const updated = [...itensPorNucleo[nucleo]];
+                  const updated = [...itensPorNucleo[nucleo as UnidadeNegocio]];
                   updated[idx].categoria_id = e.target.value || null;  // ✅ Converte "" para null
 
                   setItensPorNucleo({
                     ...itensPorNucleo,
-                    [nucleo]: updated,
+                    [nucleo as UnidadeNegocio]: updated,
                   });
                 }}
                 className="w-full text-sm px-2 py-1 border rounded"
@@ -1609,26 +1614,21 @@ export default function ContratoFormPage() {
                 onChange={(e) => {
                   const novoValor = arredondar2Casas(Number(e.target.value) || 0);
 
-                  const updated = [...itensPorNucleo[nucleo]];
+                  const updated = [...itensPorNucleo[nucleo as UnidadeNegocio]];
                   updated[idx].valor_subtotal = novoValor;
 
                   setItensPorNucleo({
                     ...itensPorNucleo,
-                    [nucleo]: updated,
+                    [nucleo as UnidadeNegocio]: updated,
                   });
 
                   // Recalcular os totais do núcleo (com arredondamento)
-                  const novoTotal = arredondar2Casas(
-                    updated.reduce(
-                      (acc, it) => acc + (it.valor_subtotal || 0),
-                      0
-                    )
-                  );
+                  const novoTotal = arredondar2Casas(updated.reduce((acc, it) => acc + (it.valor_subtotal || 0), 0));
 
                   setValoresPorNucleo({
                     ...valoresPorNucleo,
-                    [nucleo]: {
-                      ...valoresPorNucleo[nucleo],
+                    [nucleo as UnidadeNegocio]: {
+                      ...valoresPorNucleo[nucleo as UnidadeNegocio],
                       valor_total: novoTotal,
                     },
                   });
@@ -1649,12 +1649,12 @@ export default function ContratoFormPage() {
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Valor Total</label>
                       <input
                         type="number"
-                        value={arredondar2Casas(valoresPorNucleo[nucleo].valor_total)}
+                        value={arredondar2Casas(valoresPorNucleo[nucleo as UnidadeNegocio].valor_total)}
                         onChange={(e) => {
                           setValoresPorNucleo({
                             ...valoresPorNucleo,
-                            [nucleo]: {
-                              ...valoresPorNucleo[nucleo],
+                            [nucleo as UnidadeNegocio]: {
+                              ...valoresPorNucleo[nucleo as UnidadeNegocio],
                               valor_total: arredondar2Casas(parseFloat(e.target.value) || 0),
                             },
                           });
@@ -1669,12 +1669,12 @@ export default function ContratoFormPage() {
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Mão de Obra</label>
                       <input
                         type="number"
-                        value={arredondar2Casas(valoresPorNucleo[nucleo].valor_mao_obra)}
+                        value={arredondar2Casas(valoresPorNucleo[nucleo as UnidadeNegocio].valor_mao_obra)}
                         onChange={(e) => {
                           setValoresPorNucleo({
                             ...valoresPorNucleo,
-                            [nucleo]: {
-                              ...valoresPorNucleo[nucleo],
+                            [nucleo as UnidadeNegocio]: {
+                              ...valoresPorNucleo[nucleo as UnidadeNegocio],
                               valor_mao_obra: arredondar2Casas(parseFloat(e.target.value) || 0),
                             },
                           });
@@ -1689,12 +1689,12 @@ export default function ContratoFormPage() {
                       <label className="block text-xs font-semibold text-gray-600 mb-1">Materiais</label>
                       <input
                         type="number"
-                        value={arredondar2Casas(valoresPorNucleo[nucleo].valor_materiais)}
+                        value={arredondar2Casas(valoresPorNucleo[nucleo as UnidadeNegocio].valor_materiais)}
                         onChange={(e) => {
                           setValoresPorNucleo({
                             ...valoresPorNucleo,
-                            [nucleo]: {
-                              ...valoresPorNucleo[nucleo],
+                            [nucleo as UnidadeNegocio]: {
+                              ...valoresPorNucleo[nucleo as UnidadeNegocio],
                               valor_materiais: arredondar2Casas(parseFloat(e.target.value) || 0),
                             },
                           });
@@ -1751,8 +1751,8 @@ export default function ContratoFormPage() {
                 marcenaria: { label: "Marcenaria", color: "#F59E0B", bgColor: "#FEF3C7" },
               }[nucleo];
 
-              const valorTotal = arredondar2Casas(valoresPorNucleo[nucleo].valor_total);
-              const config = pagamentoPorNucleo[nucleo];
+              const valorTotal = arredondar2Casas(valoresPorNucleo[nucleo as UnidadeNegocio].valor_total);
+              const config = pagamentoPorNucleo[nucleo as UnidadeNegocio];
               const valorEntrada = arredondar2Casas(valorTotal * (config.percentual_entrada / 100));
               const valorRestante = arredondar2Casas(valorTotal - valorEntrada);
               const valorParcela = arredondar2Casas(config.numero_parcelas > 0 ? valorRestante / config.numero_parcelas : 0);
@@ -1891,7 +1891,7 @@ export default function ContratoFormPage() {
                         onChange={(e) => {
                           setPagamentoPorNucleo({
                             ...pagamentoPorNucleo,
-                            [nucleo]: {
+                            [nucleo as UnidadeNegocio]: {
                               ...config,
                               forma_pagamento: e.target.value,
                             },
@@ -1908,7 +1908,7 @@ export default function ContratoFormPage() {
                   </div>
 
                   {/* ENGENHARIA: Modalidade de Materiais */}
-                  {nucleo === "engenharia" && valoresPorNucleo[nucleo].valor_materiais > 0 && (
+                  {nucleo === "engenharia" && valoresPorNucleo[nucleo as UnidadeNegocio].valor_materiais > 0 && (
                     <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <p className="text-xs font-bold text-blue-800 mb-3">
                         MATERIAIS: Quem compra?
@@ -1919,7 +1919,7 @@ export default function ContratoFormPage() {
                           onClick={() => {
                             setPagamentoPorNucleo({
                               ...pagamentoPorNucleo,
-                              [nucleo]: {
+                              [nucleo as UnidadeNegocio]: {
                                 ...config,
                                 modalidade_materiais: "revenda",
                                 conta_tipo: "real",
@@ -1946,7 +1946,7 @@ export default function ContratoFormPage() {
                           onClick={() => {
                             setPagamentoPorNucleo({
                               ...pagamentoPorNucleo,
-                              [nucleo]: {
+                              [nucleo as UnidadeNegocio]: {
                                 ...config,
                                 modalidade_materiais: "gestao",
                                 conta_tipo: "virtual",
@@ -1981,7 +1981,7 @@ export default function ContratoFormPage() {
                                 {new Intl.NumberFormat("pt-BR", {
                                   style: "currency",
                                   currency: "BRL",
-                                }).format(valoresPorNucleo[nucleo].valor_materiais)}
+                                }).format(valoresPorNucleo[nucleo as UnidadeNegocio].valor_materiais)}
                               </p>
                             </div>
                             <div className="text-right">
@@ -1993,7 +1993,7 @@ export default function ContratoFormPage() {
                                   style: "currency",
                                   currency: "BRL",
                                 }).format(
-                                  valoresPorNucleo[nucleo].valor_materiais *
+                                  valoresPorNucleo[nucleo as UnidadeNegocio].valor_materiais *
                                     (config.fee_gestao_percentual / 100)
                                 )}
                               </p>
@@ -2076,7 +2076,7 @@ export default function ContratoFormPage() {
                     }).format(
                       arredondar2Casas(
                         nucleosSelecionados.reduce(
-                          (acc, n) => acc + valoresPorNucleo[n].valor_total,
+                          (acc, n) => acc + valoresPorNucleo[n as UnidadeNegocio].valor_total,
                           0
                         )
                       )
@@ -2092,8 +2092,8 @@ export default function ContratoFormPage() {
                     }).format(
                       arredondar2Casas(
                         nucleosSelecionados.reduce((acc, n) => {
-                          const valorTotal = valoresPorNucleo[n].valor_total;
-                          const entrada = arredondar2Casas(valorTotal * (pagamentoPorNucleo[n].percentual_entrada / 100));
+                          const valorTotal = valoresPorNucleo[n as UnidadeNegocio].valor_total;
+                          const entrada = arredondar2Casas(valorTotal * (pagamentoPorNucleo[n as UnidadeNegocio].percentual_entrada / 100));
                           return acc + entrada;
                         }, 0)
                       )
@@ -2109,8 +2109,8 @@ export default function ContratoFormPage() {
                     }).format(
                       arredondar2Casas(
                         nucleosSelecionados.reduce((acc, n) => {
-                          const valorTotal = valoresPorNucleo[n].valor_total;
-                          const entrada = arredondar2Casas(valorTotal * (pagamentoPorNucleo[n].percentual_entrada / 100));
+                          const valorTotal = valoresPorNucleo[n as UnidadeNegocio].valor_total;
+                          const entrada = arredondar2Casas(valorTotal * (pagamentoPorNucleo[n as UnidadeNegocio].percentual_entrada / 100));
                           return acc + (valorTotal - entrada);
                         }, 0)
                       )

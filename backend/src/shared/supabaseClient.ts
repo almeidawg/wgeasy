@@ -1,11 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Configuração DIRETA (sem arquivos externos)
-// Use SEMPRE as chaves reais que você já tem
-const SUPABASE_URL = "https://ahlqzzkxuutwoepirpzr.supabase.co";
+// Use variáveis de ambiente para evitar chaves hardcoded.
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const SERVICE_ROLE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobHF6emt4dXV0d29lcGlycHpyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDU3MTI0MywiZXhwIjoyMDc2MTQ3MjQzfQ.xWNEmZumCtyRdrIiotUIL41jlI168HyBgM4yHVDXPZo";
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  throw new Error(
+    "Supabase client requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables to be set."
+  );
+}
 
 export const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: {
