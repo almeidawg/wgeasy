@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.flake8",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "GitHub.vscode-pull-request-github",
+    "eamodio.gitlens"
+  ]
+}
