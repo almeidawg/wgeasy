@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 /**
  * Componente responsivo para tabelas
@@ -17,6 +18,8 @@ export interface Column {
   sortable?: boolean;
 }
 
+type SortOrder = "asc" | "desc" | null;
+
 interface ResponsiveTableProps {
   data: any[];
   columns: Column[];
@@ -28,6 +31,8 @@ interface ResponsiveTableProps {
   emptyMessage?: string;
   pageSize?: number;
   showPagination?: boolean;
+  enableSorting?: boolean;
+  enableFiltering?: boolean;
 }
 
 /**
@@ -35,13 +40,15 @@ interface ResponsiveTableProps {
  * <ResponsiveTable
  *   data={compras}
  *   columns={[
- *     { key: 'numero', label: 'Número' },
- *     { key: 'valor', label: 'Valor', render: (v) => formatarValor(v) },
+ *     { key: 'numero', label: 'Número', sortable: true },
+ *     { key: 'valor', label: 'Valor', render: (v) => formatarValor(v), sortable: true },
  *     { key: 'status', label: 'Status' }
  *   ]}
  *   onRowClick={(row) => navigate(`/compras/${row.id}`)}
  *   pageSize={10}
  *   showPagination={true}
+ *   enableSorting={true}
+ *   enableFiltering={true}
  * />
  */
 export function ResponsiveTable({
@@ -55,23 +62,111 @@ export function ResponsiveTable({
   emptyMessage = "Nenhum registro encontrado",
   pageSize = 10,
   showPagination = true,
+  enableSorting = true,
+  enableFiltering = false,
 }: ResponsiveTableProps) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(null);
+  const [filters, setFilters] = useState<Record<string, string>>({});
+
+  // Aplicar filtros
+  const filteredData = useMemo(() => {
+    if (!enableFiltering || Object.keys(filters).length === 0) {
+      return data;
+    }
+
+    return data.filter((row) => {
+      return Object.entries(filters).every(([key, value]) => {
+        if (!value) return true;
+        const cellValue = String(row[key] || "").toLowerCase();
+        return cellValue.includes(value.toLowerCase());
+      });
+    });
+  }, [data, filters, enableFiltering]);
+
+  // Aplicar sorting
+  const sortedData = useMemo(() => {
+    if (!enableSorting || !sortColumn || !sortOrder) {
+      return filteredData;
+    }
+
+    const sorted = [...filteredData].sort((a, b) => {
+      const aVal = a[sortColumn];
+      const bVal = b[sortColumn];
+
+      // Handle null/undefined
+      if (aVal == null && bVal == null) return 0;
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
+
+      // Numeric comparison
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
+      }
+
+      // String comparison
+      const aStr = String(aVal).toLowerCase();
+      const bStr = String(bVal).toLowerCase();
+      return sortOrder === "asc"
+        ? aStr.localeCompare(bStr)
+        : bStr.localeCompare(aStr);
+    });
+
+    return sorted;
+  }, [filteredData, sortColumn, sortOrder, enableSorting]);
+
+  // Resetar página ao filtrar ou ordenar
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [sortedData]);
 
   // Calcular paginação
   const { paginatedData, totalPages } = useMemo(() => {
     if (!showPagination || pageSize <= 0) {
-      return { paginatedData: data, totalPages: 1 };
+      return { paginatedData: sortedData, totalPages: 1 };
     }
 
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
     return {
-      paginatedData: data.slice(start, end),
-      totalPages: Math.ceil(data.length / pageSize),
+      paginatedData: sortedData.slice(start, end),
+      totalPages: Math.ceil(sortedData.length / pageSize),
     };
-  }, [data, currentPage, pageSize, showPagination]);
+  }, [sortedData, currentPage, pageSize, showPagination]);
+
+  // Handle column sort
+  const handleSort = (column: Column) => {
+    if (!column.sortable || !enableSorting) return;
+
+    if (sortColumn === column.key) {
+      // Cycle: asc -> desc -> null
+      if (sortOrder === "asc") {
+        setSortOrder("desc");
+      } else if (sortOrder === "desc") {
+        setSortOrder(null);
+        setSortColumn(null);
+      }
+    } else {
+      setSortColumn(column.key);
+      setSortOrder("asc");
+    }
+  };
+
+  // Calcular paginação baseada em dados ordenados e filtrados
+  const { paginatedData, totalPages } = useMemo(() => {
+    if (!showPagination || pageSize <= 0) {
+      return { paginatedData: sortedData, totalPages: 1 };
+    }
+
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return {
+      paginatedData: sortedData.slice(start, end),
+      totalPages: Math.ceil(sortedData.length / pageSize),
+    };
+  }, [sortedData, currentPage, pageSize, showPagination]);
 
   if (loading) {
     return (
@@ -99,9 +194,9 @@ export function ResponsiveTable({
         </span>{" "}
         a{" "}
         <span className="font-semibold">
-          {Math.min(currentPage * pageSize, data.length)}
+          {Math.min(currentPage * pageSize, sortedData.length)}
         </span>{" "}
-        de <span className="font-semibold">{data.length}</span> registros
+        de <span className="font-semibold">{sortedData.length}</span> registros
       </div>
       {showPagination && totalPages > 1 && (
         <div className="flex gap-2">
@@ -197,14 +292,32 @@ export function ResponsiveTable({
               {columns.map((column) => (
                 <th
                   key={column.key}
+                  onClick={() => handleSort(column)}
                   className={`
                   px-4 py-3 text-left font-semibold text-gray-700
                   whitespace-nowrap
-                  ${column.className}
+                  ${column.className || ""}
+                  ${
+                    column.sortable && enableSorting
+                      ? "cursor-pointer hover:bg-gray-100"
+                      : ""
+                  }
                 `}
                   style={{ width: column.width }}
                 >
-                  {column.label}
+                  <div className="flex items-center gap-2">
+                    {column.label}
+                    {column.sortable && enableSorting && (
+                      <div className="w-4 h-4 flex items-center justify-center">
+                        {sortColumn === column.key && sortOrder === "asc" && (
+                          <ChevronUp className="w-4 h-4 text-orange-600" />
+                        )}
+                        {sortColumn === column.key && sortOrder === "desc" && (
+                          <ChevronDown className="w-4 h-4 text-orange-600" />
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </th>
               ))}
             </tr>
