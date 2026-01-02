@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
@@ -122,38 +122,6 @@ export function ResponsiveTable({
     setCurrentPage(1);
   }, [sortedData]);
 
-  // Calcular paginação
-  const { paginatedData, totalPages } = useMemo(() => {
-    if (!showPagination || pageSize <= 0) {
-      return { paginatedData: sortedData, totalPages: 1 };
-    }
-
-    const start = (currentPage - 1) * pageSize;
-    const end = start + pageSize;
-    return {
-      paginatedData: sortedData.slice(start, end),
-      totalPages: Math.ceil(sortedData.length / pageSize),
-    };
-  }, [sortedData, currentPage, pageSize, showPagination]);
-
-  // Handle column sort
-  const handleSort = (column: Column) => {
-    if (!column.sortable || !enableSorting) return;
-
-    if (sortColumn === column.key) {
-      // Cycle: asc -> desc -> null
-      if (sortOrder === "asc") {
-        setSortOrder("desc");
-      } else if (sortOrder === "desc") {
-        setSortOrder(null);
-        setSortColumn(null);
-      }
-    } else {
-      setSortColumn(column.key);
-      setSortOrder("asc");
-    }
-  };
-
   // Calcular paginação baseada em dados ordenados e filtrados
   const { paginatedData, totalPages } = useMemo(() => {
     if (!showPagination || pageSize <= 0) {
@@ -183,6 +151,24 @@ export function ResponsiveTable({
       </div>
     );
   }
+
+  // Handle column sort (memoized to prevent unnecessary re-renders)
+  const handleSort = useCallback((column: Column) => {
+    if (!column.sortable || !enableSorting) return;
+
+    if (sortColumn === column.key) {
+      // Cycle: asc -> desc -> null
+      if (sortOrder === "asc") {
+        setSortOrder("desc");
+      } else if (sortOrder === "desc") {
+        setSortOrder(null);
+        setSortColumn(null);
+      }
+    } else {
+      setSortColumn(column.key);
+      setSortOrder("asc");
+    }
+  }, [enableSorting, sortColumn, sortOrder]);
 
   // Componente de Paginação
   const PaginationControls = () => (
@@ -236,6 +222,46 @@ export function ResponsiveTable({
     </div>
   );
 
+  // Componente memoizado para header da tabela
+  const TableHeader = memo(() => (
+    <thead>
+      <tr className="border-b border-gray-200 bg-gray-50">
+        {columns.map((column) => (
+          <th
+            key={column.key}
+            onClick={() => handleSort(column)}
+            className={`
+              px-4 py-3 text-left font-semibold text-gray-700
+              whitespace-nowrap
+              ${column.className || ""}
+              ${
+                column.sortable && enableSorting
+                  ? "cursor-pointer hover:bg-gray-100"
+                  : ""
+              }
+            `}
+            style={{ width: column.width }}
+          >
+            <div className="flex items-center gap-2">
+              {column.label}
+              {column.sortable && enableSorting && (
+                <div className="w-4 h-4 flex items-center justify-center">
+                  {sortColumn === column.key && sortOrder === "asc" && (
+                    <ChevronUp className="w-4 h-4 text-orange-600" />
+                  )}
+                  {sortColumn === column.key && sortOrder === "desc" && (
+                    <ChevronDown className="w-4 h-4 text-orange-600" />
+                  )}
+                </div>
+              )}
+            </div>
+          </th>
+        ))}
+      </tr>
+    </thead>
+  ));
+  TableHeader.displayName = "TableHeader";
+
   // MOBILE: Cards
   if (isMobile) {
     return (
@@ -287,55 +313,21 @@ export function ResponsiveTable({
     <div>
       <div className={`overflow-x-auto ${className}`}>
         <table className="w-full text-sm bg-white">
-          <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
-              {columns.map((column) => (
-                <th
-                  key={column.key}
-                  onClick={() => handleSort(column)}
-                  className={`
-                  px-4 py-3 text-left font-semibold text-gray-700
-                  whitespace-nowrap
-                  ${column.className || ""}
-                  ${
-                    column.sortable && enableSorting
-                      ? "cursor-pointer hover:bg-gray-100"
-                      : ""
-                  }
-                `}
-                  style={{ width: column.width }}
-                >
-                  <div className="flex items-center gap-2">
-                    {column.label}
-                    {column.sortable && enableSorting && (
-                      <div className="w-4 h-4 flex items-center justify-center">
-                        {sortColumn === column.key && sortOrder === "asc" && (
-                          <ChevronUp className="w-4 h-4 text-orange-600" />
-                        )}
-                        {sortColumn === column.key && sortOrder === "desc" && (
-                          <ChevronDown className="w-4 h-4 text-orange-600" />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
+          <TableHeader />
           <tbody className="divide-y divide-gray-200">
             {paginatedData.map((row) => (
               <tr
                 key={row[rowKey]}
                 onClick={() => onRowClick?.(row)}
                 className={`
-                hover:bg-gray-50 transition-colors
-                ${onRowClick ? "cursor-pointer" : ""}
-              `}
+                  hover:bg-gray-50 transition-colors
+                  ${onRowClick ? "cursor-pointer" : ""}
+                `}
               >
                 {columns.map((column) => (
                   <td
                     key={column.key}
-                    className={`px-4 py-3 ${column.className}`}
+                    className={`px-4 py-3 ${column.className || ""}`}
                   >
                     {column.render
                       ? column.render(row[column.key], row)
