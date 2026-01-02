@@ -13,33 +13,65 @@ export default function ProjectsPage() {
   const projectsColumns = [
     { label: "Projeto", key: "nome" },
     { label: "Obra", key: "obras", render: (val: any) => val?.nome ?? "-" },
-    { label: "Período", key: "periodo", render: (val: any, row: any) => `${row.inicio} → ${row.fim}` },
+    {
+      label: "Período",
+      key: "periodo",
+      render: (val: any, row: any) => `${row.inicio} → ${row.fim}`,
+    },
     {
       label: "Status",
       key: "status",
       render: (val: any) => {
         const statusConfig: any = {
-          'ativo': { bg: 'bg-green-100', text: 'text-green-700', label: 'Ativo' },
-          'inativo': { bg: 'bg-gray-100', text: 'text-gray-600', label: 'Inativo' },
-          'concluido': { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Concluído' },
-          'cancelado': { bg: 'bg-red-100', text: 'text-red-700', label: 'Cancelado' },
+          ativo: { bg: "bg-green-100", text: "text-green-700", label: "Ativo" },
+          inativo: {
+            bg: "bg-gray-100",
+            text: "text-gray-600",
+            label: "Inativo",
+          },
+          concluido: {
+            bg: "bg-blue-100",
+            text: "text-blue-700",
+            label: "Concluído",
+          },
+          cancelado: {
+            bg: "bg-red-100",
+            text: "text-red-700",
+            label: "Cancelado",
+          },
         };
-        const config = statusConfig[val?.toLowerCase()] || statusConfig['inativo'];
-        return <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.bg} ${config.text}`}>{config.label}</span>;
-      }
+        const config =
+          statusConfig[val?.toLowerCase()] || statusConfig["inativo"];
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium ${config.bg} ${config.text}`}
+          >
+            {config.label}
+          </span>
+        );
+      },
     },
     {
       label: "Ações",
       key: "id",
       render: (val: any, row: any) => (
         <div className="flex gap-2 flex-wrap">
-          <Link to={`/projects/tarefas/${val}`} className="text-blue-600 hover:underline text-xs">
+          <Link
+            to={`/projects/tarefas/${val}`}
+            className="text-blue-600 hover:underline text-xs"
+          >
             Tarefas
           </Link>
-          <Link to={`/projects/editar/${val}`} className="text-blue-600 hover:underline text-xs">
+          <Link
+            to={`/projects/editar/${val}`}
+            className="text-blue-600 hover:underline text-xs"
+          >
             Editar
           </Link>
-          <Link to={`/projects/timeline/${val}`} className="text-blue-600 hover:underline text-xs">
+          <Link
+            to={`/projects/timeline/${val}`}
+            className="text-blue-600 hover:underline text-xs"
+          >
             Timeline
           </Link>
           <button
@@ -53,7 +85,7 @@ export default function ProjectsPage() {
             Excluir
           </button>
         </div>
-      )
+      ),
     },
   ];
 
@@ -67,15 +99,23 @@ export default function ProjectsPage() {
   }, []);
 
   if (loading) {
-    return <div className="flex items-center justify-center h-[50vh]">Carregando projetos...</div>;
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        Carregando projetos...
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-[#2E2E2E]">Cronograma (Projects)</h1>
-        <Link to="/projects/novo" className="px-4 py-2 bg-[#F25C26] text-white rounded">
+        <h1 className="text-2xl font-semibold text-[#2E2E2E]">
+          Cronograma (Projects)
+        </h1>
+        <Link
+          to="/projects/novo"
+          className="px-4 py-2 bg-[#F25C26] text-white rounded"
+        >
           Novo Projeto
         </Link>
       </div>
@@ -86,7 +126,7 @@ export default function ProjectsPage() {
           data={dados}
           emptyMessage="Nenhum projeto encontrado."
         />
-
+      </div>
     </div>
   );
 }
