@@ -1,6 +1,7 @@
 // src/pages/usuarios/UsuariosPage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSwipe } from "@/hooks/useSwipe";
 import {
   listarUsuarios,
   alterarStatusUsuario,
@@ -75,6 +76,14 @@ export default function UsuariosPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  
+  // Swipe gestures para navegação
+  const { onTouchStart, onTouchEnd } = useSwipe({
+    onSwipeLeft: () => navigate("/dashboard"),
+    onSwipeRight: () => navigate(-1),
+    threshold: 50,
+  });
+
   const [usuarios, setUsuarios] = useState<UsuarioCompleto[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -458,7 +467,7 @@ Equipe WG Easy
   });
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
+    <div className="max-w-7xl mx-auto p-6 space-y-6" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

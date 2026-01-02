@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSwipe } from "@/hooks/useSwipe";
 import {
   listarPedidosCompra,
   deletarPedidoCompra,
@@ -20,11 +21,19 @@ import { ResponsiveTable } from "@/components/ResponsiveTable";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function ComprasPage() {
+  const navigate = useNavigate();
   const [pedidos, setPedidos] = useState<PedidoCompraCompleto[]>([]);
   const [stats, setStats] = useState<PedidosCompraEstatisticas | null>(null);
   const [loading, setLoading] = useState(true);
   const [filtroStatus, setFiltroStatus] = useState<string>("");
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  // Swipe gestures para navegação
+  const { onTouchStart, onTouchEnd } = useSwipe({
+    onSwipeLeft: () => navigate("/compras/lista"),
+    onSwipeRight: () => navigate(-1),
+    threshold: 50,
+  });
 
   async function carregar() {
     setLoading(true);
@@ -79,7 +88,7 @@ export default function ComprasPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
