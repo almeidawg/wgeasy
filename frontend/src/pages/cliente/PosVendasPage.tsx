@@ -356,7 +356,7 @@ export default function PosVendasPage() {
             <div className="flex justify-end">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black text-white text-sm font-medium hover:bg-gray-800 transition"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#F25C26] text-white text-sm font-medium hover:bg-[#d94d1a] transition"
               >
                 <MessageSquare className="w-4 h-4" />
                 Nova Solicitação

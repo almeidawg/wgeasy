@@ -352,7 +352,7 @@ export default function AreaClienteConfigPage() {
                 className="w-full rounded-2xl border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25C26]"
               />
             </div>
-            <button className="mt-3 inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-semibold text-white">
+            <button className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#F25C26] hover:bg-[#d94d1a] px-4 py-2 text-sm font-semibold text-white transition">
               Atualizar link
               <ArrowRight className="w-4 h-4" />
             </button>

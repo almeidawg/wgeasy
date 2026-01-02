@@ -109,7 +109,7 @@ export default function PessoasList({
           <button
             type="button"
             onClick={() => navigate(novoPath)}
-            className="px-4 py-2 rounded-lg bg-black text-white text-sm font-medium hover:opacity-90"
+            className="px-4 py-2 rounded-lg bg-[#F25C26] hover:bg-[#d94d1a] text-white text-sm font-medium"
           >
             + Novo cadastro
           </button>

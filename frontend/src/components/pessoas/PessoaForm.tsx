@@ -147,7 +147,7 @@ export function PessoaForm({ tipo, onSubmit, onCancel }: PessoaFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="px-5 py-2 rounded-md text-sm font-semibold bg-black text-white hover:bg-gray-900 disabled:opacity-60"
+          className="px-5 py-2 rounded-md text-sm font-semibold bg-[#F25C26] text-white hover:bg-[#d94d1a] disabled:opacity-60"
         >
           {loading ? "Salvando..." : "Salvar"}
         </button>

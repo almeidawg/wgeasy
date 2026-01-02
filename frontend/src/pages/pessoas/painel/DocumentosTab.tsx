@@ -13,7 +13,7 @@ export const DocumentosTab: React.FC<DocumentosTabProps> = ({ pessoaId }) => {
         <h2 className="text-sm font-semibold text-gray-900">
           Documentos vinculados
         </h2>
-        <button className="px-3 py-1.5 rounded-xl bg-gray-900 text-white text-xs hover:bg-black">
+        <button className="px-3 py-1.5 rounded-xl bg-[#F25C26] text-white text-xs hover:bg-[#d94d1a]">
           Upload documento
         </button>
       </div>

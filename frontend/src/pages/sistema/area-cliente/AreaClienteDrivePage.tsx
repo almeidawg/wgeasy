@@ -71,7 +71,7 @@ export default function AreaClienteDrivePage() {
             <button
               type="button"
               onClick={handleCopy}
-              className="inline-flex items-center gap-2 rounded-2xl bg-black px-4 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white"
+              className="inline-flex items-center gap-2 rounded-2xl bg-[#F25C26] hover:bg-[#d94d1a] px-4 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white transition"
             >
               {copied ? "Copiado!" : "Copiar link"}
             </button>

@@ -156,3 +156,5 @@ export function ResponsiveTable({
     </div>
   );
 }
+
+export default ResponsiveTable;
