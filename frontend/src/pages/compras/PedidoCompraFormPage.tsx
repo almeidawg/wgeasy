@@ -94,7 +94,8 @@ export default function PedidoCompraFormPage() {
       const { data: fornData } = await supabase
         .from("pessoas")
         .select("id, nome, email, telefone")
-        .eq("tipo", "fornecedor")
+        .eq("tipo", "FORNECEDOR")
+        .eq("ativo", true)
         .order("nome");
       if (fornData) setFornecedores(fornData);
 

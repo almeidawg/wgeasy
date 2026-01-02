@@ -21,7 +21,8 @@ export default function CriarOportunidadePage() {
     const { data } = await supabase
       .from("pessoas")
       .select("id, nome")
-      .eq("tipo", "cliente")
+      .eq("tipo", "CLIENTE")
+      .eq("ativo", true)
       .order("nome");
     setClientes(data || []);
   }

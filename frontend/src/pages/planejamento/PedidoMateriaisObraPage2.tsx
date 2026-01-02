@@ -119,7 +119,8 @@ export default function PedidoMateriaisObraPage2() {
       const { data, error } = await supabase
         .from("pessoas")
         .select("id, nome")
-        .eq("tipo", "cliente")
+        .eq("tipo", "CLIENTE")
+        .eq("ativo", true)
         .order("nome");
 
       if (error) throw error;

@@ -793,3 +793,305 @@ export function obterTarefasDependentes(
     t.dependencias?.includes(tarefaId)
   );
 }
+
+// ============================================================
+// MEDIÇÃO FINANCEIRA - Tipos e Interfaces
+// ============================================================
+
+/**
+ * Status da medição
+ */
+export type StatusMedicao = "rascunho" | "finalizada" | "aprovada";
+
+/**
+ * Item de medição por tarefa
+ */
+export interface MedicaoTarefa {
+  tarefa_id: string;
+  tarefa_nome: string;
+  categoria: string | null;
+
+  // Datas
+  data_inicio: string | null;
+  data_fim: string | null;
+  dias_totais: number;
+  dias_executados: number;
+
+  // Progresso
+  progresso: number;
+  progresso_anterior: number;
+  progresso_periodo: number; // Evolução no período
+
+  // Valores do contrato (cliente)
+  valor_total_item: number;
+  valor_por_dia: number;
+  valor_realizado: number;
+  valor_pendente: number;
+  valor_periodo: number; // Valor ganho no período
+
+  // Valores do profissional (custos)
+  custo_profissional_total: number;
+  custo_profissional_realizado: number;
+
+  // Margem
+  margem_bruta: number; // valor_realizado - custo_profissional_realizado
+}
+
+/**
+ * Resumo geral da medição
+ */
+export interface ResumoMedicao {
+  total_valor_contrato: number;
+  total_valor_realizado: number;
+  total_valor_pendente: number;
+  total_valor_periodo: number;
+  total_custo_profissional: number;
+  total_custo_profissional_realizado: number;
+  total_margem_bruta: number;
+  percentual_geral: number;
+}
+
+/**
+ * Medição completa do projeto
+ */
+export interface MedicaoProjeto {
+  projeto_id: string;
+  projeto_titulo: string;
+  cliente_nome: string;
+  cliente_telefone?: string;
+  cliente_email?: string;
+  contrato_numero?: string;
+  nucleo: string;
+  data_corte: string;
+  numero_medicao?: number;
+
+  // Itens
+  itens: MedicaoTarefa[];
+  itens_por_categoria: MedicaoCategoria[];
+
+  // Resumo
+  resumo: ResumoMedicao;
+}
+
+/**
+ * Medição agrupada por categoria
+ */
+export interface MedicaoCategoria {
+  categoria: string;
+  total_tarefas: number;
+  progresso_medio: number;
+  valor_total: number;
+  valor_realizado: number;
+  valor_pendente: number;
+  custo_profissional: number;
+  margem_bruta: number;
+}
+
+/**
+ * Medição salva (histórico)
+ */
+export interface ProjetoMedicao {
+  id: string;
+  projeto_id: string;
+  data_corte: string;
+  numero_medicao: number;
+
+  // Totais
+  valor_total_contrato: number;
+  valor_realizado: number;
+  valor_pendente: number;
+  percentual_geral: number;
+
+  // Custos
+  custo_profissional_total: number;
+  custo_profissional_realizado: number;
+
+  // Margem
+  margem_bruta: number;
+
+  // Status e metadados
+  status: StatusMedicao;
+  observacoes: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+
+  // Dados relacionados (via JOIN)
+  projeto_titulo?: string;
+  contrato_numero?: string;
+  nucleo?: string;
+  cliente_nome?: string;
+  total_itens?: number;
+}
+
+/**
+ * Item de medição salvo (histórico)
+ */
+export interface ProjetoMedicaoItem {
+  id: string;
+  medicao_id: string;
+  tarefa_id: string | null;
+
+  // Dados da tarefa
+  tarefa_nome: string;
+  categoria: string | null;
+
+  // Progresso
+  progresso_anterior: number;
+  progresso_atual: number;
+  progresso_periodo: number;
+
+  // Datas
+  data_inicio: string | null;
+  data_fim: string | null;
+  dias_totais: number;
+  dias_executados: number;
+
+  // Valores
+  valor_total: number;
+  valor_por_dia: number;
+  valor_realizado: number;
+  valor_periodo: number;
+  valor_pendente: number;
+
+  // Custos
+  custo_profissional_total: number;
+  custo_profissional_realizado: number;
+
+  // Margem
+  margem_bruta: number;
+
+  created_at: string;
+}
+
+/**
+ * Formulário para criar medição
+ */
+export interface MedicaoFormData {
+  projeto_id: string;
+  data_corte: string;
+  observacoes?: string;
+}
+
+// ============================================================
+// Labels e Cores para Medição
+// ============================================================
+
+export const STATUS_MEDICAO_LABELS: Record<StatusMedicao, string> = {
+  rascunho: "Rascunho",
+  finalizada: "Finalizada",
+  aprovada: "Aprovada",
+};
+
+export const STATUS_MEDICAO_COLORS: Record<StatusMedicao, string> = {
+  rascunho: "#9CA3AF",
+  finalizada: "#3B82F6",
+  aprovada: "#10B981",
+};
+
+export const STATUS_MEDICAO_ICONS: Record<StatusMedicao, string> = {
+  rascunho: "📝",
+  finalizada: "📋",
+  aprovada: "✅",
+};
+
+// ============================================================
+// Funções Utilitárias para Medição
+// ============================================================
+
+/**
+ * Calcular valor por dia de uma tarefa
+ */
+export function calcularValorPorDia(valorTotal: number, diasTotais: number): number {
+  if (!diasTotais || diasTotais <= 0) return 0;
+  return valorTotal / diasTotais;
+}
+
+/**
+ * Calcular valor realizado baseado no progresso
+ */
+export function calcularValorRealizado(valorTotal: number, progresso: number): number {
+  return (progresso / 100) * valorTotal;
+}
+
+/**
+ * Calcular margem bruta
+ */
+export function calcularMargemBruta(valorRealizado: number, custoProfissional: number): number {
+  return valorRealizado - custoProfissional;
+}
+
+/**
+ * Calcular percentual de margem
+ */
+export function calcularPercentualMargem(margemBruta: number, valorRealizado: number): number {
+  if (!valorRealizado || valorRealizado <= 0) return 0;
+  return (margemBruta / valorRealizado) * 100;
+}
+
+/**
+ * Agrupar itens de medição por categoria
+ */
+export function agruparPorCategoria(itens: MedicaoTarefa[]): MedicaoCategoria[] {
+  const grupos = new Map<string, MedicaoTarefa[]>();
+
+  itens.forEach(item => {
+    const categoria = item.categoria || "Sem Categoria";
+    if (!grupos.has(categoria)) {
+      grupos.set(categoria, []);
+    }
+    grupos.get(categoria)!.push(item);
+  });
+
+  return Array.from(grupos.entries()).map(([categoria, items]) => ({
+    categoria,
+    total_tarefas: items.length,
+    progresso_medio: items.reduce((acc, i) => acc + i.progresso, 0) / items.length,
+    valor_total: items.reduce((acc, i) => acc + i.valor_total_item, 0),
+    valor_realizado: items.reduce((acc, i) => acc + i.valor_realizado, 0),
+    valor_pendente: items.reduce((acc, i) => acc + i.valor_pendente, 0),
+    custo_profissional: items.reduce((acc, i) => acc + i.custo_profissional_realizado, 0),
+    margem_bruta: items.reduce((acc, i) => acc + i.margem_bruta, 0),
+  }));
+}
+
+/**
+ * Calcular resumo da medição
+ */
+export function calcularResumoMedicao(itens: MedicaoTarefa[]): ResumoMedicao {
+  const totalContrato = itens.reduce((acc, i) => acc + i.valor_total_item, 0);
+  const totalRealizado = itens.reduce((acc, i) => acc + i.valor_realizado, 0);
+  const totalPendente = itens.reduce((acc, i) => acc + i.valor_pendente, 0);
+  const totalPeriodo = itens.reduce((acc, i) => acc + i.valor_periodo, 0);
+  const custoProfissional = itens.reduce((acc, i) => acc + i.custo_profissional_total, 0);
+  const custoRealizado = itens.reduce((acc, i) => acc + i.custo_profissional_realizado, 0);
+  const margemBruta = totalRealizado - custoRealizado;
+
+  return {
+    total_valor_contrato: totalContrato,
+    total_valor_realizado: totalRealizado,
+    total_valor_pendente: totalPendente,
+    total_valor_periodo: totalPeriodo,
+    total_custo_profissional: custoProfissional,
+    total_custo_profissional_realizado: custoRealizado,
+    total_margem_bruta: margemBruta,
+    percentual_geral: totalContrato > 0 ? (totalRealizado / totalContrato) * 100 : 0,
+  };
+}
+
+/**
+ * Formatar valor como moeda
+ */
+export function formatarMoeda(valor: number): string {
+  return valor.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+}
+
+/**
+ * Formatar percentual
+ */
+export function formatarPercentual(valor: number): string {
+  return `${valor.toFixed(1)}%`;
+}

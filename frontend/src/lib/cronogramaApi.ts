@@ -547,3 +547,310 @@ export async function buscarEstatisticasCronograma(): Promise<EstatisticasCronog
     por_nucleo: porNucleo,
   };
 }
+
+// ============================================================
+// MEDIÇÃO FINANCEIRA
+// ============================================================
+
+import type {
+  MedicaoTarefa,
+  MedicaoProjeto,
+  MedicaoCategoria,
+  ResumoMedicao,
+  ProjetoMedicao,
+  ProjetoMedicaoItem,
+  MedicaoFormData,
+  StatusMedicao,
+} from "@/types/cronograma";
+
+import {
+  agruparPorCategoria,
+  calcularResumoMedicao,
+} from "@/types/cronograma";
+
+/**
+ * Calcular medição de um projeto (sem salvar)
+ */
+export async function calcularMedicaoProjeto(
+  projetoId: string,
+  dataCorte?: string
+): Promise<MedicaoProjeto | null> {
+  try {
+    // Buscar dados do projeto
+    const projeto = await buscarProjetoCronograma(projetoId);
+    if (!projeto) {
+      throw new Error("Projeto não encontrado");
+    }
+
+    // Buscar tarefas com dados do contrato
+    const { data: tarefas, error: tarefasError } = await supabaseRaw
+      .from("cronograma_tarefas")
+      .select(`
+        id,
+        descricao,
+        categoria,
+        data_inicio,
+        data_termino,
+        progresso,
+        status,
+        item_contrato_id,
+        contratos_itens (
+          valor_total,
+          dias_estimados,
+          producao_diaria
+        )
+      `)
+      .eq("projeto_id", projetoId)
+      .neq("status", "cancelado")
+      .order("ordem", { ascending: true });
+
+    if (tarefasError) {
+      console.error("Erro ao buscar tarefas:", tarefasError);
+      throw tarefasError;
+    }
+
+    // Buscar custos da equipe por função/categoria
+    const { data: equipe } = await supabaseRaw
+      .from("projeto_equipes")
+      .select("funcao, horas_alocadas, custo_hora")
+      .eq("projeto_id", projetoId);
+
+    // Mapear custos por função
+    const custosPorFuncao = new Map<string, { horas: number; custoHora: number }>();
+    equipe?.forEach((e: any) => {
+      if (e.funcao) {
+        custosPorFuncao.set(e.funcao.toLowerCase(), {
+          horas: e.horas_alocadas || 0,
+          custoHora: e.custo_hora || 0,
+        });
+      }
+    });
+
+    const hoje = dataCorte ? new Date(dataCorte) : new Date();
+
+    // Calcular medição para cada tarefa
+    const itens: MedicaoTarefa[] = (tarefas || []).map((t: any) => {
+      const contrato = t.contratos_itens;
+      const valorTotal = contrato?.valor_total || 0;
+      const diasEstimados = contrato?.dias_estimados || 1;
+      const progresso = t.progresso || 0;
+
+      // Calcular dias
+      const dataInicio = t.data_inicio ? new Date(t.data_inicio) : null;
+      const dataFim = t.data_termino ? new Date(t.data_termino) : null;
+      const diasTotais = dataInicio && dataFim
+        ? Math.max(1, Math.ceil((dataFim.getTime() - dataInicio.getTime()) / (1000 * 60 * 60 * 24)) + 1)
+        : diasEstimados;
+      const diasExecutados = dataInicio
+        ? Math.max(0, Math.ceil((hoje.getTime() - dataInicio.getTime()) / (1000 * 60 * 60 * 24)) + 1)
+        : 0;
+
+      // Calcular valores
+      const valorPorDia = diasTotais > 0 ? valorTotal / diasTotais : 0;
+      const valorRealizado = (progresso / 100) * valorTotal;
+      const valorPendente = valorTotal - valorRealizado;
+
+      // Calcular custo profissional
+      const categoria = t.categoria?.toLowerCase() || "";
+      const custoEquipe = custosPorFuncao.get(categoria);
+      const custoProfissionalTotal = custoEquipe
+        ? custoEquipe.horas * custoEquipe.custoHora
+        : 0;
+      const custoProfissionalRealizado = (progresso / 100) * custoProfissionalTotal;
+
+      // Margem
+      const margemBruta = valorRealizado - custoProfissionalRealizado;
+
+      return {
+        tarefa_id: t.id,
+        tarefa_nome: t.descricao || "Sem descrição",
+        categoria: t.categoria,
+        data_inicio: t.data_inicio,
+        data_fim: t.data_termino,
+        dias_totais: diasTotais,
+        dias_executados: diasExecutados,
+        progresso,
+        progresso_anterior: 0, // Será preenchido se houver medição anterior
+        progresso_periodo: progresso, // Será calculado se houver medição anterior
+        valor_total_item: valorTotal,
+        valor_por_dia: valorPorDia,
+        valor_realizado: valorRealizado,
+        valor_pendente: valorPendente,
+        valor_periodo: valorRealizado, // Será calculado se houver medição anterior
+        custo_profissional_total: custoProfissionalTotal,
+        custo_profissional_realizado: custoProfissionalRealizado,
+        margem_bruta: margemBruta,
+      };
+    });
+
+    // Agrupar por categoria
+    const itensPorCategoria = agruparPorCategoria(itens);
+
+    // Calcular resumo
+    const resumo = calcularResumoMedicao(itens);
+
+    return {
+      projeto_id: projetoId,
+      projeto_titulo: projeto.titulo || projeto.nome,
+      cliente_nome: projeto.cliente_nome || "Cliente não informado",
+      cliente_telefone: projeto.cliente_telefone,
+      cliente_email: projeto.cliente_email,
+      contrato_numero: projeto.contrato_numero,
+      nucleo: projeto.nucleo,
+      data_corte: dataCorte || hoje.toISOString().split("T")[0],
+      itens,
+      itens_por_categoria: itensPorCategoria,
+      resumo,
+    };
+  } catch (error) {
+    console.error("Erro ao calcular medição:", error);
+    return null;
+  }
+}
+
+/**
+ * Listar histórico de medições de um projeto
+ */
+export async function listarMedicoesProjeto(
+  projetoId: string
+): Promise<ProjetoMedicao[]> {
+  const { data, error } = await supabaseRaw
+    .from("vw_projeto_medicoes")
+    .select("*")
+    .eq("projeto_id", projetoId)
+    .order("numero_medicao", { ascending: false });
+
+  if (error) {
+    console.error("Erro ao listar medições:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Buscar uma medição específica
+ */
+export async function buscarMedicao(
+  medicaoId: string
+): Promise<ProjetoMedicao | null> {
+  const { data, error } = await supabaseRaw
+    .from("vw_projeto_medicoes")
+    .select("*")
+    .eq("id", medicaoId)
+    .single();
+
+  if (error) {
+    console.error("Erro ao buscar medição:", error);
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * Buscar itens de uma medição
+ */
+export async function buscarItensMedicao(
+  medicaoId: string
+): Promise<ProjetoMedicaoItem[]> {
+  const { data, error } = await supabaseRaw
+    .from("projeto_medicao_itens")
+    .select("*")
+    .eq("medicao_id", medicaoId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao buscar itens da medição:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Salvar medição (criar histórico)
+ */
+export async function salvarMedicao(
+  dados: MedicaoFormData,
+  userId?: string
+): Promise<string | null> {
+  try {
+    // Usar função RPC do banco
+    const { data, error } = await supabaseRaw.rpc("gerar_medicao_projeto", {
+      p_projeto_id: dados.projeto_id,
+      p_data_corte: dados.data_corte,
+      p_observacoes: dados.observacoes || null,
+      p_created_by: userId || null,
+    });
+
+    if (error) {
+      console.error("Erro ao salvar medição:", error);
+      throw error;
+    }
+
+    return data; // Retorna o ID da medição criada
+  } catch (error) {
+    console.error("Erro ao salvar medição:", error);
+    return null;
+  }
+}
+
+/**
+ * Atualizar status da medição
+ */
+export async function atualizarStatusMedicao(
+  medicaoId: string,
+  status: StatusMedicao
+): Promise<boolean> {
+  const { error } = await supabaseRaw
+    .from("projeto_medicoes")
+    .update({ status })
+    .eq("id", medicaoId);
+
+  if (error) {
+    console.error("Erro ao atualizar status da medição:", error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Deletar medição
+ */
+export async function deletarMedicao(medicaoId: string): Promise<boolean> {
+  const { error } = await supabaseRaw
+    .from("projeto_medicoes")
+    .delete()
+    .eq("id", medicaoId);
+
+  if (error) {
+    console.error("Erro ao deletar medição:", error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Buscar última medição de um projeto
+ */
+export async function buscarUltimaMedicao(
+  projetoId: string
+): Promise<ProjetoMedicao | null> {
+  const { data, error } = await supabaseRaw
+    .from("projeto_medicoes")
+    .select("*")
+    .eq("projeto_id", projetoId)
+    .order("numero_medicao", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) {
+    // Pode não existir medição anterior
+    return null;
+  }
+
+  return data;
+}

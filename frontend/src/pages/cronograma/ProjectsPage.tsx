@@ -2,10 +2,60 @@
 import { useEffect, useState } from "react";
 import { listarProjects, deletarProject } from "@/lib/projectsApi";
 import { Link } from "react-router-dom";
+import ResponsiveTable from "@/components/ResponsiveTable";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function ProjectsPage() {
   const [dados, setDados] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const projectsColumns = [
+    { label: "Projeto", key: "nome" },
+    { label: "Obra", key: "obras", render: (val: any) => val?.nome ?? "-" },
+    { label: "Período", key: "periodo", render: (val: any, row: any) => `${row.inicio} → ${row.fim}` },
+    {
+      label: "Status",
+      key: "status",
+      render: (val: any) => {
+        const statusConfig: any = {
+          'ativo': { bg: 'bg-green-100', text: 'text-green-700', label: 'Ativo' },
+          'inativo': { bg: 'bg-gray-100', text: 'text-gray-600', label: 'Inativo' },
+          'concluido': { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Concluído' },
+          'cancelado': { bg: 'bg-red-100', text: 'text-red-700', label: 'Cancelado' },
+        };
+        const config = statusConfig[val?.toLowerCase()] || statusConfig['inativo'];
+        return <span className={`px-3 py-1 rounded-full text-xs font-medium ${config.bg} ${config.text}`}>{config.label}</span>;
+      }
+    },
+    {
+      label: "Ações",
+      key: "id",
+      render: (val: any, row: any) => (
+        <div className="flex gap-2 flex-wrap">
+          <Link to={`/projects/tarefas/${val}`} className="text-blue-600 hover:underline text-xs">
+            Tarefas
+          </Link>
+          <Link to={`/projects/editar/${val}`} className="text-blue-600 hover:underline text-xs">
+            Editar
+          </Link>
+          <Link to={`/projects/timeline/${val}`} className="text-blue-600 hover:underline text-xs">
+            Timeline
+          </Link>
+          <button
+            onClick={() => {
+              if (confirm("Excluir projeto?")) {
+                deletarProject(val).then(carregar);
+              }
+            }}
+            className="text-red-600 hover:underline text-xs"
+          >
+            Excluir
+          </button>
+        </div>
+      )
+    },
+  ];
 
   async function carregar() {
     setDados(await listarProjects());
@@ -31,56 +81,11 @@ export default function ProjectsPage() {
       </div>
 
       <div className="bg-white border border-[#E5E5E5] rounded-xl shadow">
-        <table className="w-full text-sm">
-          <thead className="bg-[#F3F3F3]">
-            <tr>
-              <th className="p-3 text-left">Projeto</th>
-              <th className="p-3">Obra</th>
-              <th className="p-3">Período</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dados.map((p) => (
-              <tr key={p.id} className="border-b hover:bg-[#fafafa]">
-                <td className="p-3">{p.nome}</td>
-                <td className="p-3">{p.obras?.nome ?? "-"}</td>
-                <td className="p-3">{p.inicio} → {p.fim}</td>
-                <td className="p-3 capitalize">{p.status}</td>
-                <td className="p-3 space-x-3">
-                  <Link to={`/projects/tarefas/${p.id}`} className="text-blue-600 hover:underline">
-                    Tarefas
-                  </Link>
-                  <Link to={`/projects/editar/${p.id}`} className="text-blue-600 hover:underline">
-                    Editar
-                  </Link>
-                  <Link to={`/projects/timeline/${p.id}`} className="text-blue-600 hover:underline">
-                    Timeline
-                  </Link>
-
-                  <button
-                    onClick={() => {
-                      if (confirm("Excluir projeto?")) {
-                        deletarProject(p.id).then(carregar);
-                      }
-                    }}
-                    className="text-red-600 hover:underline"
-                  >
-                    Excluir
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {dados.length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-3 text-center">Nenhum projeto encontrado.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+        <ResponsiveTable
+          columns={projectsColumns}
+          data={dados}
+          emptyMessage="Nenhum projeto encontrado."
+        />
 
     </div>
   );

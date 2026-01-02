@@ -198,19 +198,19 @@ export default function SaudeDoSistemaPage() {
       const { count: totalClientes } = await supabase
         .from("pessoas")
         .select("*", { count: "exact", head: true })
-        .eq("tipo", "cliente");
+        .eq("tipo", "CLIENTE");
       stats.totalClientes = totalClientes || 0;
 
       const { count: totalColaboradores } = await supabase
         .from("pessoas")
         .select("*", { count: "exact", head: true })
-        .eq("tipo", "colaborador");
+        .eq("tipo", "COLABORADOR");
       stats.totalColaboradores = totalColaboradores || 0;
 
       const { count: totalFornecedores } = await supabase
         .from("pessoas")
         .select("*", { count: "exact", head: true })
-        .eq("tipo", "fornecedor");
+        .eq("tipo", "FORNECEDOR");
       stats.totalFornecedores = totalFornecedores || 0;
 
       addLog("info", `Total de pessoas: ${stats.totalPessoas}`);
@@ -512,7 +512,7 @@ HAVING COUNT(*) > 1;`,
       const { count: clientesSemDrive } = await supabase
         .from("pessoas")
         .select("*", { count: "exact", head: true })
-        .eq("tipo", "cliente")
+        .eq("tipo", "CLIENTE")
         .or("drive_link.is.null,drive_link.eq.");
 
       stats.clientesSemDrive = clientesSemDrive || 0;

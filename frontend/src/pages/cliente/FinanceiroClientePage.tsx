@@ -2,14 +2,16 @@
 // Dashboard financeiro para área do cliente
 // Mostra resumo financeiro, parcelas, pagamentos e extratos
 
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '@/lib/supabaseClient';
-import { usePermissoesCliente } from '@/hooks/usePermissoesUsuario';
-import { useImpersonation } from '@/hooks/useImpersonation';
-import ImpersonationBar from '@/components/ui/ImpersonationBar';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { supabase } from "@/lib/supabaseClient";
+import { usePermissoesCliente } from "@/hooks/usePermissoesUsuario";
+import { useImpersonation } from "@/hooks/useImpersonation";
+import ImpersonationBar from "@/components/ui/ImpersonationBar";
+import ResponsiveTable from "@/components/ResponsiveTable";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   ArrowLeft,
   DollarSign,
@@ -25,7 +27,7 @@ import {
   Receipt,
   Wallet,
   PiggyBank,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface ResumoFinanceiro {
   valorTotal: number;
@@ -43,7 +45,7 @@ interface Parcela {
   numero: number;
   valor: number;
   vencimento: string;
-  status: 'pago' | 'pendente' | 'atrasado' | 'cancelado';
+  status: "pago" | "pendente" | "atrasado" | "cancelado";
   dataPagamento?: string;
   formaPagamento?: string;
 }
@@ -52,7 +54,7 @@ interface Lancamento {
   id: string;
   descricao: string;
   valor: number;
-  tipo: 'receita' | 'despesa';
+  tipo: "receita" | "despesa";
   data: string;
   categoria?: string;
   comprovante_url?: string;
@@ -62,6 +64,7 @@ export default function FinanceiroClientePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const permissoes = usePermissoesCliente();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const {
     isImpersonating,
     impersonatedUser,
@@ -73,14 +76,71 @@ export default function FinanceiroClientePage() {
   const [resumo, setResumo] = useState<ResumoFinanceiro | null>(null);
   const [parcelas, setParcelas] = useState<Parcela[]>([]);
   const [lancamentos, setLancamentos] = useState<Lancamento[]>([]);
-  const [activeTab, setActiveTab] = useState<'parcelas' | 'extrato'>('parcelas');
+  const [activeTab, setActiveTab] = useState<"parcelas" | "extrato">(
+    "parcelas"
+  );
   const [clienteInfo, setClienteInfo] = useState<{
     pessoaId: string;
     contratoId: string | null;
     nomeCompleto: string;
   } | null>(null);
 
-  const clienteIdParam = searchParams.get('cliente_id');
+  const clienteIdParam = searchParams.get("cliente_id");
+
+  const parcelasColumns = [
+    { label: "Número", key: "numero", render: (val: any) => `Parcela ${val}` },
+    {
+      label: "Vencimento",
+      key: "vencimento",
+      render: (val: any) => format(new Date(val), "dd/MM/yyyy"),
+    },
+    {
+      label: "Valor",
+      key: "valor",
+      render: (val: any) =>
+        new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        }).format(val),
+    },
+    {
+      label: "Status",
+      key: "status",
+      render: (val: any) => {
+        const config = {
+          pago: { bg: "bg-green-100", text: "text-green-700", label: "Pago" },
+          pendente: {
+            bg: "bg-yellow-100",
+            text: "text-yellow-700",
+            label: "Pendente",
+          },
+          atrasado: {
+            bg: "bg-red-100",
+            text: "text-red-700",
+            label: "Atrasado",
+          },
+          cancelado: {
+            bg: "bg-gray-100",
+            text: "text-gray-500",
+            label: "Cancelado",
+          },
+        };
+        const c = config[val as keyof typeof config] || config["pendente"];
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium ${c.bg} ${c.text}`}
+          >
+            {c.label}
+          </span>
+        );
+      },
+    },
+    {
+      label: "Data Pagamento",
+      key: "dataPagamento",
+      render: (val: any) => (val ? format(new Date(val), "dd/MM/yyyy") : "—"),
+    },
+  ];
 
   useEffect(() => {
     carregarDados();
@@ -98,12 +158,14 @@ export default function FinanceiroClientePage() {
       } else if (clienteIdParam) {
         pessoaId = clienteIdParam;
       } else {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) {
           const { data: usuario } = await supabase
-            .from('usuarios')
-            .select('pessoa_id')
-            .eq('auth_user_id', user.id)
+            .from("usuarios")
+            .select("pessoa_id")
+            .eq("auth_user_id", user.id)
             .maybeSingle();
           pessoaId = usuario?.pessoa_id || null;
         }
@@ -116,18 +178,18 @@ export default function FinanceiroClientePage() {
 
       // Buscar pessoa
       const { data: pessoa } = await supabase
-        .from('pessoas')
-        .select('id, nome')
-        .eq('id', pessoaId)
+        .from("pessoas")
+        .select("id, nome")
+        .eq("id", pessoaId)
         .maybeSingle();
 
       // Buscar contrato ativo
       const { data: contrato } = await supabase
-        .from('contratos')
-        .select('id, valor_total, status')
-        .eq('cliente_id', pessoaId)
-        .in('status', ['ativo', 'em_execucao', 'concluido'])
-        .order('created_at', { ascending: false })
+        .from("contratos")
+        .select("id, valor_total, status")
+        .eq("cliente_id", pessoaId)
+        .in("status", ["ativo", "em_execucao", "concluido"])
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
 
@@ -148,9 +210,8 @@ export default function FinanceiroClientePage() {
         // Calcular resumo
         calcularResumo(contrato.valor_total || 0);
       }
-
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error("Erro ao carregar dados:", error);
     } finally {
       setLoading(false);
     }
@@ -159,16 +220,16 @@ export default function FinanceiroClientePage() {
   async function carregarParcelas(contratoId: string) {
     try {
       const { data } = await supabase
-        .from('contrato_parcelas')
-        .select('*')
-        .eq('contrato_id', contratoId)
-        .order('numero', { ascending: true });
+        .from("contrato_parcelas")
+        .select("*")
+        .eq("contrato_id", contratoId)
+        .order("numero", { ascending: true });
 
       const parcelasFormatadas: Parcela[] = (data || []).map((p: any) => {
-        let status: Parcela['status'] = 'pendente';
-        if (p.pago) status = 'pago';
-        else if (p.cancelado) status = 'cancelado';
-        else if (new Date(p.vencimento) < new Date()) status = 'atrasado';
+        let status: Parcela["status"] = "pendente";
+        if (p.pago) status = "pago";
+        else if (p.cancelado) status = "cancelado";
+        else if (new Date(p.vencimento) < new Date()) status = "atrasado";
 
         return {
           id: p.id,
@@ -183,46 +244,48 @@ export default function FinanceiroClientePage() {
 
       setParcelas(parcelasFormatadas);
     } catch (error) {
-      console.error('Erro ao carregar parcelas:', error);
+      console.error("Erro ao carregar parcelas:", error);
     }
   }
 
   async function carregarLancamentos(pessoaId: string) {
     try {
       const { data } = await supabase
-        .from('financeiro_lancamentos')
-        .select('*')
-        .eq('pessoa_id', pessoaId)
-        .order('data_lancamento', { ascending: false })
+        .from("financeiro_lancamentos")
+        .select("*")
+        .eq("pessoa_id", pessoaId)
+        .order("data_lancamento", { ascending: false })
         .limit(50);
 
-      const lancamentosFormatados: Lancamento[] = (data || []).map((l: any) => ({
-        id: l.id,
-        descricao: l.descricao,
-        valor: l.valor,
-        tipo: l.tipo === 'entrada' ? 'receita' : 'despesa',
-        data: l.data_lancamento,
-        categoria: l.categoria,
-        comprovante_url: l.comprovante_url,
-      }));
+      const lancamentosFormatados: Lancamento[] = (data || []).map(
+        (l: any) => ({
+          id: l.id,
+          descricao: l.descricao,
+          valor: l.valor,
+          tipo: l.tipo === "entrada" ? "receita" : "despesa",
+          data: l.data_lancamento,
+          categoria: l.categoria,
+          comprovante_url: l.comprovante_url,
+        })
+      );
 
       setLancamentos(lancamentosFormatados);
     } catch (error) {
-      console.error('Erro ao carregar lançamentos:', error);
+      console.error("Erro ao carregar lançamentos:", error);
     }
   }
 
   function calcularResumo(valorContrato: number) {
     const valorPago = parcelas
-      .filter((p) => p.status === 'pago')
+      .filter((p) => p.status === "pago")
       .reduce((sum, p) => sum + p.valor, 0);
 
     const valorPendente = parcelas
-      .filter((p) => p.status === 'pendente' || p.status === 'atrasado')
+      .filter((p) => p.status === "pendente" || p.status === "atrasado")
       .reduce((sum, p) => sum + p.valor, 0);
 
     const proximaParcela = parcelas.find(
-      (p) => p.status === 'pendente' || p.status === 'atrasado'
+      (p) => p.status === "pendente" || p.status === "atrasado"
     );
 
     setResumo({
@@ -247,9 +310,9 @@ export default function FinanceiroClientePage() {
   }, [parcelas]);
 
   const formatarMoeda = (valor: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
     }).format(valor);
   };
 
@@ -264,33 +327,33 @@ export default function FinanceiroClientePage() {
 
   const handleExitImpersonation = () => {
     stopImpersonation();
-    navigate('/');
+    navigate("/");
   };
 
-  const getStatusConfig = (status: Parcela['status']) => {
+  const getStatusConfig = (status: Parcela["status"]) => {
     switch (status) {
-      case 'pago':
+      case "pago":
         return {
-          label: 'Pago',
-          color: 'bg-green-100 text-green-700',
+          label: "Pago",
+          color: "bg-green-100 text-green-700",
           icon: CheckCircle2,
         };
-      case 'atrasado':
+      case "atrasado":
         return {
-          label: 'Atrasado',
-          color: 'bg-red-100 text-red-700',
+          label: "Atrasado",
+          color: "bg-red-100 text-red-700",
           icon: AlertTriangle,
         };
-      case 'cancelado':
+      case "cancelado":
         return {
-          label: 'Cancelado',
-          color: 'bg-gray-100 text-gray-500',
+          label: "Cancelado",
+          color: "bg-gray-100 text-gray-500",
           icon: Clock,
         };
       default:
         return {
-          label: 'Pendente',
-          color: 'bg-yellow-100 text-yellow-700',
+          label: "Pendente",
+          color: "bg-yellow-100 text-yellow-700",
           icon: Clock,
         };
     }
@@ -319,7 +382,7 @@ export default function FinanceiroClientePage() {
             Você não tem permissão para visualizar informações financeiras.
           </p>
           <button
-            onClick={() => navigate('/wgx')}
+            onClick={() => navigate("/wgx")}
             className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
           >
             Voltar ao Dashboard
@@ -339,12 +402,14 @@ export default function FinanceiroClientePage() {
         />
       )}
 
-      <div className={`min-h-screen bg-gray-50 ${isImpersonating ? 'pt-16' : ''}`}>
+      <div
+        className={`min-h-screen bg-gray-50 ${isImpersonating ? "pt-16" : ""}`}
+      >
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
           {/* Header */}
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate('/wgx')}
+              onClick={() => navigate("/wgx")}
               className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
@@ -401,7 +466,8 @@ export default function FinanceiroClientePage() {
                 {formatarMoeda(resumo?.valorPendente || 0)}
               </p>
               <p className="text-sm text-white/80 mt-1">
-                {parcelas.filter((p) => p.status === 'pendente').length} parcelas
+                {parcelas.filter((p) => p.status === "pendente").length}{" "}
+                parcelas
               </p>
             </div>
 
@@ -419,10 +485,10 @@ export default function FinanceiroClientePage() {
                     {formatarMoeda(resumo.proximaParcela.valor)}
                   </p>
                   <p className="text-sm text-white/80 mt-1">
-                    Vence em{' '}
+                    Vence em{" "}
                     {format(
                       new Date(resumo.proximaParcela.vencimento),
-                      'dd/MM'
+                      "dd/MM"
                     )}
                   </p>
                 </>
@@ -460,22 +526,22 @@ export default function FinanceiroClientePage() {
           {/* Tabs */}
           <div className="flex gap-2 bg-white p-1 rounded-xl shadow-sm border border-gray-200">
             <button
-              onClick={() => setActiveTab('parcelas')}
+              onClick={() => setActiveTab("parcelas")}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
-                activeTab === 'parcelas'
-                  ? 'bg-orange-500 text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
+                activeTab === "parcelas"
+                  ? "bg-orange-500 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
               }`}
             >
               <Receipt className="w-4 h-4" />
               Parcelas
             </button>
             <button
-              onClick={() => setActiveTab('extrato')}
+              onClick={() => setActiveTab("extrato")}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all ${
-                activeTab === 'extrato'
-                  ? 'bg-orange-500 text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
+                activeTab === "extrato"
+                  ? "bg-orange-500 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
               }`}
             >
               <FileText className="w-4 h-4" />
@@ -484,7 +550,7 @@ export default function FinanceiroClientePage() {
           </div>
 
           {/* Conteúdo das Tabs */}
-          {activeTab === 'parcelas' ? (
+          {activeTab === "parcelas" ? (
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-4 border-b border-gray-200">
                 <h3 className="font-semibold text-gray-900">
@@ -501,70 +567,11 @@ export default function FinanceiroClientePage() {
                   <p className="text-gray-600">Nenhuma parcela encontrada</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100">
-                  {parcelas.map((parcela) => {
-                    const statusConfig = getStatusConfig(parcela.status);
-                    const StatusIcon = statusConfig.icon;
-
-                    return (
-                      <div
-                        key={parcela.id}
-                        className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div
-                            className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                              parcela.status === 'pago'
-                                ? 'bg-green-100'
-                                : parcela.status === 'atrasado'
-                                ? 'bg-red-100'
-                                : 'bg-gray-100'
-                            }`}
-                          >
-                            <span className="text-sm font-bold text-gray-700">
-                              {parcela.numero}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              Parcela {parcela.numero}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              Vencimento:{' '}
-                              {format(
-                                new Date(parcela.vencimento),
-                                'dd/MM/yyyy'
-                              )}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="font-semibold text-gray-900">
-                              {formatarMoeda(parcela.valor)}
-                            </p>
-                            {parcela.dataPagamento && (
-                              <p className="text-xs text-gray-500">
-                                Pago em{' '}
-                                {format(
-                                  new Date(parcela.dataPagamento),
-                                  'dd/MM/yyyy'
-                                )}
-                              </p>
-                            )}
-                          </div>
-                          <span
-                            className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${statusConfig.color}`}
-                          >
-                            <StatusIcon className="w-3 h-3" />
-                            {statusConfig.label}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <ResponsiveTable
+                  columns={parcelasColumns}
+                  data={parcelas}
+                  emptyMessage="Nenhuma parcela encontrada"
+                />
               )}
             </div>
           ) : (
@@ -593,12 +600,12 @@ export default function FinanceiroClientePage() {
                       <div className="flex items-center gap-4">
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                            lancamento.tipo === 'receita'
-                              ? 'bg-green-100'
-                              : 'bg-red-100'
+                            lancamento.tipo === "receita"
+                              ? "bg-green-100"
+                              : "bg-red-100"
                           }`}
                         >
-                          {lancamento.tipo === 'receita' ? (
+                          {lancamento.tipo === "receita" ? (
                             <TrendingUp className="w-5 h-5 text-green-600" />
                           ) : (
                             <TrendingDown className="w-5 h-5 text-red-600" />
@@ -622,12 +629,12 @@ export default function FinanceiroClientePage() {
                       <div className="flex items-center gap-3">
                         <p
                           className={`font-semibold ${
-                            lancamento.tipo === 'receita'
-                              ? 'text-green-600'
-                              : 'text-red-600'
+                            lancamento.tipo === "receita"
+                              ? "text-green-600"
+                              : "text-red-600"
                           }`}
                         >
-                          {lancamento.tipo === 'receita' ? '+' : '-'}
+                          {lancamento.tipo === "receita" ? "+" : "-"}
                           {formatarMoeda(lancamento.valor)}
                         </p>
                         {lancamento.comprovante_url && (

@@ -114,7 +114,8 @@ export default function OrcamentoDetalhePage() {
       const { data } = await supabase
         .from("pessoas")
         .select("id, nome")
-        .eq("tipo", "fornecedor")
+        .eq("tipo", "FORNECEDOR")
+        .eq("ativo", true)
         .order("nome");
       setFornecedores(data || []);
     } catch (error) {

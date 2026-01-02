@@ -5,6 +5,8 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ResponsiveTable from "@/components/ResponsiveTable";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import {
   listarQuantitativosProjetos,
   obterEstatisticasQuantitativos,
@@ -28,12 +30,71 @@ import {
 
 export default function QuantitativosListPage() {
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Estados
   const [quantitativos, setQuantitativos] = useState<QuantitativoProjetoCompleto[]>([]);
   const [estatisticas, setEstatisticas] = useState<QuantitativosEstatisticas | null>(null);
   const [loading, setLoading] = useState(true);
   const [filtros, setFiltros] = useState<QuantitativosFiltros>({});
+
+  const quantitativosColumns = [
+    { label: "Número", key: "numero", render: (val: any) => `#${val || '-'}` },
+    { label: "Nome", key: "nome" },
+    { label: "Cliente", key: "cliente_nome" },
+    {
+      label: "Núcleo",
+      key: "nucleo",
+      render: (val: any) => {
+        const config = { bg: 'bg-blue-100', text: 'text-blue-700' };
+        return <span className={`px-2 py-1 rounded text-xs font-medium ${config.bg} ${config.text}`}>{getNucleoLabel(val)}</span>;
+      }
+    },
+    {
+      label: "Status",
+      key: "status",
+      render: (val: any) => {
+        const statusColors: any = {
+          'em_elaboracao': { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Em Elaboração' },
+          'aprovado': { bg: 'bg-green-100', text: 'text-green-700', label: 'Aprovado' },
+          'revisao': { bg: 'bg-orange-100', text: 'text-orange-700', label: 'Em Revisão' },
+          'arquivado': { bg: 'bg-gray-100', text: 'text-gray-600', label: 'Arquivado' },
+        };
+        const config = statusColors[val] || { bg: 'bg-gray-100', text: 'text-gray-600', label: getStatusLabel(val) };
+        return <span className={`px-2 py-1 rounded text-xs font-medium ${config.bg} ${config.text}`}>{config.label}</span>;
+      }
+    },
+    { label: "Área", key: "area_total", render: (val: any) => formatarAreaComUnidade(val || 0) },
+    { label: "Ambientes", key: "total_ambientes" },
+    { label: "Itens", key: "total_itens" },
+    { label: "Valor", key: "valor_total", render: (val: any) => formatarPreco(val || 0) },
+    {
+      label: "Ações",
+      key: "id",
+      render: (val: any, row: any) => (
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => navigate(`/quantitativos/${val}`)}
+            className="text-blue-600 hover:underline text-xs"
+          >
+            Ver
+          </button>
+          <button
+            onClick={() => navigate(`/quantitativos/editar/${val}`)}
+            className="text-blue-600 hover:underline text-xs"
+          >
+            Editar
+          </button>
+          <button
+            onClick={() => handleDeletar(val, row.nome)}
+            className="text-red-600 hover:underline text-xs"
+          >
+            Deletar
+          </button>
+        </div>
+      )
+    },
+  ];
 
   // Carregar dados
   useEffect(() => {
@@ -288,193 +349,13 @@ export default function QuantitativosListPage() {
         <div style={{ textAlign: "center", padding: "40px", color: "#999" }}>
           Carregando...
         </div>
-      ) : quantitativos.length === 0 ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "60px 20px",
-            background: "#F8F9FA",
-            borderRadius: "12px",
-          }}
-        >
-          <div style={{ fontSize: "48px", marginBottom: "16px" }}>📐</div>
-          <h3 style={{ fontSize: "18px", color: "#666", marginBottom: "8px" }}>
-            Nenhum quantitativo encontrado
-          </h3>
-          <p style={{ color: "#999", fontSize: "14px" }}>
-            Crie seu primeiro quantitativo clicando no botão acima
-          </p>
-        </div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              background: "white",
-              borderRadius: "12px",
-              overflow: "hidden",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-            }}
-          >
-            <thead>
-              <tr style={{ background: "#F8F9FA" }}>
-                <th style={tableHeaderStyle}>Número</th>
-                <th style={tableHeaderStyle}>Nome</th>
-                <th style={tableHeaderStyle}>Cliente</th>
-                <th style={tableHeaderStyle}>Núcleo</th>
-                <th style={tableHeaderStyle}>Status</th>
-                <th style={tableHeaderStyle}>Área</th>
-                <th style={tableHeaderStyle}>Ambientes</th>
-                <th style={tableHeaderStyle}>Itens</th>
-                <th style={tableHeaderStyle}>Valor Total</th>
-                <th style={tableHeaderStyle}>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {quantitativos.map((projeto) => (
-                <tr
-                  key={projeto.id}
-                  style={{
-                    borderBottom: "1px solid #E5E7EB",
-                    transition: "background 0.2s",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "#F9FAFB")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "white")
-                  }
-                >
-                  <td style={tableCellStyle}>
-                    <span
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "13px",
-                        color: "#666",
-                      }}
-                    >
-                      {projeto.numero}
-                    </span>
-                  </td>
-                  <td style={tableCellStyle}>
-                    <strong>{projeto.nome}</strong>
-                  </td>
-                  <td style={tableCellStyle}>{projeto.cliente_nome}</td>
-                  <td style={tableCellStyle}>
-                    <span
-                      style={{
-                        background: getNucleoColor(projeto.nucleo),
-                        color: "white",
-                        padding: "4px 12px",
-                        borderRadius: "12px",
-                        fontSize: "12px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {getNucleoLabel(projeto.nucleo)}
-                    </span>
-                  </td>
-                  <td style={tableCellStyle}>
-                    <span
-                      style={{
-                        background: getStatusColor(projeto.status),
-                        color: "white",
-                        padding: "4px 12px",
-                        borderRadius: "12px",
-                        fontSize: "12px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {getStatusLabel(projeto.status)}
-                    </span>
-                  </td>
-                  <td style={tableCellStyle}>
-                    {formatarAreaComUnidade(projeto.area_construida)}
-                  </td>
-                  <td style={tableCellStyle}>
-                    <span
-                      style={{
-                        background: "#E3F2FD",
-                        color: "#1976D2",
-                        padding: "4px 8px",
-                        borderRadius: "6px",
-                        fontSize: "13px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {projeto.total_ambientes || 0}
-                    </span>
-                  </td>
-                  <td style={tableCellStyle}>
-                    <span
-                      style={{
-                        background: "#F3E5F5",
-                        color: "#7B1FA2",
-                        padding: "4px 8px",
-                        borderRadius: "6px",
-                        fontSize: "13px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {projeto.total_itens || 0}
-                    </span>
-                  </td>
-                  <td style={tableCellStyle}>
-                    <strong style={{ color: "#2B4580" }}>
-                      {formatarPreco(projeto.valor_total || 0)}
-                    </strong>
-                  </td>
-                  <td style={tableCellStyle}>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <button
-                        onClick={() => navigate(`/quantitativos/${projeto.id}/editor`)}
-                        style={{
-                          padding: "6px 12px",
-                          background: "#312E81",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "6px",
-                          fontSize: "13px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        Editor & IA
-                      </button>
-                      <button
-                        onClick={() => navigate(`/quantitativos/${projeto.id}/editar`)}
-                        style={{
-                          padding: "6px 12px",
-                          background: "#5E9B94",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "6px",
-                          fontSize: "13px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => handleDeletar(projeto.id, projeto.nome)}
-                        style={{
-                          padding: "6px 12px",
-                          background: "#EF4444",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "6px",
-                          fontSize: "13px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        Deletar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="bg-white border border-[#E5E5E5] rounded-xl shadow">
+          <ResponsiveTable
+            columns={quantitativosColumns}
+            data={quantitativos}
+            emptyMessage="Nenhum quantitativo encontrado. Crie seu primeiro quantitativo clicando no botão acima."
+          />
         </div>
       )}
     </div>

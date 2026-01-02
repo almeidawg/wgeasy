@@ -37,6 +37,8 @@ import { supabaseRaw } from "@/lib/supabaseClient";
 import type { ProjetoCompleto, Nucleo } from "@/types/cronograma";
 import { getNucleoColor, getNucleoIcon, getNucleoLabel, formatarData } from "@/types/cronograma";
 import GanttChart from "@/components/cronograma/GanttChart";
+import MedicaoFinanceira from "@/components/cronograma/MedicaoFinanceira";
+import { DollarSign } from 'lucide-react';
 
 // ============================================================
 // Funções Utilitárias
@@ -357,7 +359,7 @@ export default function ProjectDetailPage() {
   // Estados
   const [loading, setLoading] = useState(true);
   const [projeto, setProjeto] = useState<ProjetoComEndereco | null>(null);
-  const [activeTab, setActiveTab] = useState<'equipe' | 'cronograma'>('equipe');
+  const [activeTab, setActiveTab] = useState<'equipe' | 'cronograma' | 'medicao'>('equipe');
 
   // Estados da Equipe
   const [pessoasDisponiveis, setPessoasDisponiveis] = useState<Pessoa[]>([]);
@@ -1186,6 +1188,17 @@ export default function ProjectDetailPage() {
           <Calendar className="w-4 h-4 inline mr-2" />
           Cronograma
         </button>
+        <button
+          onClick={() => setActiveTab('medicao')}
+          className={`px-4 py-3 font-medium transition-all border-b-2 ${
+            activeTab === 'medicao'
+              ? 'border-[#F25C26] text-[#F25C26]'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          <DollarSign className="w-4 h-4 inline mr-2" />
+          Medição Financeira
+        </button>
       </div>
 
       {/* Conteúdo da Tab */}
@@ -1333,6 +1346,20 @@ export default function ProjectDetailPage() {
                 onDependencyCreate={(tarefaId, dependeDe) => criarDependencia(tarefaId, dependeDe)}
               />
             )}
+          </motion.div>
+        )}
+
+        {activeTab === 'medicao' && (
+          <motion.div
+            key="medicao"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <MedicaoFinanceira
+              projetoId={projetoId || ''}
+              projetoTitulo={projeto.nome}
+            />
           </motion.div>
         )}
       </AnimatePresence>

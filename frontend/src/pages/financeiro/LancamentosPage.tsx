@@ -18,6 +18,11 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  FileText,
+  Mail,
+  MessageCircle,
+  Download,
+  Check,
 } from "lucide-react";
 import { DateInputBR, getTodayISO } from "@/components/ui/DateInputBR";
 import {
@@ -100,6 +105,10 @@ export default function LancamentosPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [actionMenuId, setActionMenuId] = useState<string | null>(null);
   const [editingStatusId, setEditingStatusId] = useState<string | null>(null);
+
+  // Estados para edição inline de campos
+  const [editingField, setEditingField] = useState<{id: string; field: string} | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
 
   // Estados debounced para campos de texto (evita busca a cada letra)
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -393,10 +402,7 @@ export default function LancamentosPage() {
       alert("Selecione o núcleo para despesas.");
       return;
     }
-    if (!formData.contrato_id) {
-      alert("Selecione o contrato ao qual essa despesa pertence.");
-      return;
-    }
+    // Contrato não é mais obrigatório
   }
 
   const payload: any = {
@@ -473,6 +479,245 @@ export default function LancamentosPage() {
       console.error("Erro ao alterar status:", error);
       alert("Erro ao alterar status: " + error.message);
     }
+  }
+
+  // Iniciar edição inline de um campo
+  function iniciarEdicaoInline(id: string, field: string, valorAtual: string) {
+    setEditingField({ id, field });
+    setEditingValue(valorAtual);
+  }
+
+  // Salvar edição inline
+  async function salvarEdicaoInline() {
+    if (!editingField) return;
+
+    try {
+      const payload: any = {};
+
+      if (editingField.field === 'descricao') {
+        payload.descricao = editingValue;
+      } else if (editingField.field === 'valor') {
+        payload.valor_total = parseFloat(editingValue) || 0;
+      } else if (editingField.field === 'categoria_id') {
+        payload.categoria_id = editingValue || null;
+      } else if (editingField.field === 'vencimento') {
+        payload.vencimento = editingValue || null;
+      }
+
+      await atualizarLancamento(editingField.id, payload);
+      setEditingField(null);
+      setEditingValue("");
+      setRefreshKey((k) => k + 1);
+    } catch (error: any) {
+      console.error("Erro ao salvar:", error);
+      alert("Erro ao salvar: " + error.message);
+    }
+  }
+
+  // Cancelar edição inline
+  function cancelarEdicaoInline() {
+    setEditingField(null);
+    setEditingValue("");
+  }
+
+  // Gerar PDF do relatório com timbrado
+  function gerarPDFRelatorio() {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Permita pop-ups para gerar o PDF');
+      return;
+    }
+
+    const dataAtual = new Date().toLocaleDateString('pt-BR');
+    const horaAtual = new Date().toLocaleTimeString('pt-BR');
+
+    // Filtrar apenas os lançamentos visíveis (aplicando os mesmos filtros)
+    const dadosRelatorio = lancamentos;
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <title>Relatório Financeiro - Grupo WG Almeida</title>
+        <style>
+          @page { size: A4 landscape; margin: 15mm; }
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 10px; color: #333; }
+
+          .header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 3px solid #F25C26; padding-bottom: 15px; margin-bottom: 20px;
+          }
+          .logo-area { display: flex; align-items: center; gap: 15px; }
+          .logo { width: 60px; height: 60px; background: linear-gradient(135deg, #F25C26, #d94d1f);
+                  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+                  color: white; font-weight: bold; font-size: 18px; }
+          .company-info h1 { font-size: 18px; color: #2B4580; margin-bottom: 3px; }
+          .company-info p { font-size: 9px; color: #666; }
+          .doc-info { text-align: right; }
+          .doc-info h2 { font-size: 14px; color: #F25C26; margin-bottom: 5px; }
+          .doc-info p { font-size: 9px; color: #666; }
+
+          .summary {
+            display: flex; gap: 20px; margin-bottom: 20px; padding: 15px;
+            background: #f8f9fa; border-radius: 8px;
+          }
+          .summary-item { flex: 1; text-align: center; padding: 10px; background: white; border-radius: 6px; }
+          .summary-item.entrada { border-left: 4px solid #22c55e; }
+          .summary-item.saida { border-left: 4px solid #ef4444; }
+          .summary-item.resultado { border-left: 4px solid #F25C26; }
+          .summary-label { font-size: 9px; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+          .summary-value { font-size: 16px; font-weight: bold; }
+          .summary-value.green { color: #22c55e; }
+          .summary-value.red { color: #ef4444; }
+
+          .filters-applied { font-size: 9px; color: #666; margin-bottom: 15px; }
+
+          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+          th { background: #2B4580; color: white; padding: 8px 6px; text-align: left; font-size: 9px; text-transform: uppercase; }
+          td { padding: 6px; border-bottom: 1px solid #eee; font-size: 9px; }
+          tr:nth-child(even) { background: #f8f9fa; }
+          tr:hover { background: #fff3e0; }
+
+          .tipo-entrada { color: #22c55e; font-weight: bold; }
+          .tipo-saida { color: #ef4444; font-weight: bold; }
+          .status-pago { background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 10px; }
+          .status-pendente { background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 10px; }
+          .status-atrasado { background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 10px; }
+
+          .footer {
+            position: fixed; bottom: 0; left: 0; right: 0; padding: 10px 15mm;
+            border-top: 2px solid #F25C26; background: white; font-size: 8px; color: #666;
+            display: flex; justify-content: space-between;
+          }
+
+          @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo-area">
+            <div class="logo">WG</div>
+            <div class="company-info">
+              <h1>GRUPO WG ALMEIDA</h1>
+              <p>Arquitetura | Engenharia | Marcenaria | Design de Interiores</p>
+              <p>CNPJ: 14.540.890/0001-39 | contato@wgalmeida.com.br</p>
+            </div>
+          </div>
+          <div class="doc-info">
+            <h2>RELATÓRIO FINANCEIRO</h2>
+            <p>Emitido em: ${dataAtual} às ${horaAtual}</p>
+            <p>Total de registros: ${dadosRelatorio.length}</p>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="summary-item entrada">
+            <div class="summary-label">Total Entradas</div>
+            <div class="summary-value green">R$ ${resumoFinanceiro.entradas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+          </div>
+          <div class="summary-item saida">
+            <div class="summary-label">Total Saídas</div>
+            <div class="summary-value red">R$ ${resumoFinanceiro.saidas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+          </div>
+          <div class="summary-item resultado">
+            <div class="summary-label">Resultado</div>
+            <div class="summary-value ${resumoFinanceiro.resultado >= 0 ? 'green' : 'red'}">
+              R$ ${resumoFinanceiro.resultado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </div>
+          </div>
+        </div>
+
+        ${filtrosAtivos > 0 ? `<div class="filters-applied">Filtros aplicados: ${filtrosAtivos}</div>` : ''}
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Descrição</th>
+              <th>Centro de Custo</th>
+              <th>Categoria</th>
+              <th style="text-align: right">Valor</th>
+              <th>Criação</th>
+              <th>Vencimento</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${dadosRelatorio.map(l => `
+              <tr>
+                <td class="${l.tipo === 'entrada' ? 'tipo-entrada' : 'tipo-saida'}">${l.tipo === 'entrada' ? '↑ ENT' : '↓ SAÍ'}</td>
+                <td>${l.descricao}</td>
+                <td>${l.pessoa?.nome || l.contrato?.numero || '-'}</td>
+                <td>${todasCategorias.find(c => c.id === l.categoria_id)?.name || '-'}</td>
+                <td style="text-align: right" class="${l.tipo === 'entrada' ? 'tipo-entrada' : 'tipo-saida'}">
+                  ${l.tipo === 'entrada' ? '+' : '-'}R$ ${Number(l.valor_total).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </td>
+                <td>${l.data_competencia ? new Date(l.data_competencia).toLocaleDateString('pt-BR') : '-'}</td>
+                <td>${l.vencimento ? new Date(l.vencimento).toLocaleDateString('pt-BR') : '-'}</td>
+                <td><span class="status-${l.status === 'pago' ? 'pago' : l.status === 'atrasado' ? 'atrasado' : 'pendente'}">${l.status || 'previsto'}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <div class="footer">
+          <span>Grupo WG Almeida - Sistema WG Easy</span>
+          <span>Documento gerado automaticamente - ${dataAtual}</span>
+        </div>
+
+        <script>window.onload = function() { window.print(); }</script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  }
+
+  // Enviar relatório por Email
+  function enviarPorEmail() {
+    const assunto = encodeURIComponent(`Relatório Financeiro - Grupo WG Almeida - ${new Date().toLocaleDateString('pt-BR')}`);
+    const corpo = encodeURIComponent(`
+Relatório Financeiro - Grupo WG Almeida
+========================================
+
+Total de Entradas: R$ ${resumoFinanceiro.entradas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+Total de Saídas: R$ ${resumoFinanceiro.saidas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+Resultado: R$ ${resumoFinanceiro.resultado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+
+Total de registros: ${lancamentos.length}
+
+Para visualizar o relatório completo, acesse o sistema WG Easy.
+
+--
+Grupo WG Almeida
+Sistema WG Easy
+    `);
+
+    window.open(`mailto:?subject=${assunto}&body=${corpo}`, '_blank');
+  }
+
+  // Enviar relatório por WhatsApp
+  function enviarPorWhatsApp() {
+    const texto = encodeURIComponent(`
+*Relatório Financeiro - Grupo WG Almeida*
+📅 ${new Date().toLocaleDateString('pt-BR')}
+
+💰 *Resumo:*
+✅ Entradas: R$ ${resumoFinanceiro.entradas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+❌ Saídas: R$ ${resumoFinanceiro.saidas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📊 Resultado: R$ ${resumoFinanceiro.resultado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+
+📋 Total de registros: ${lancamentos.length}
+
+_Sistema WG Easy - Grupo WG Almeida_
+    `);
+
+    window.open(`https://wa.me/?text=${texto}`, '_blank');
   }
 
   // Duplicar lançamento (útil para reembolsos)
@@ -648,6 +893,40 @@ export default function LancamentosPage() {
               Limpar
             </button>
           )}
+
+          {/* Separador */}
+          <div className="h-6 w-px bg-gray-200 mx-1" />
+
+          {/* Botões de Ação/Exportação */}
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={gerarPDFRelatorio}
+              className="px-2.5 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors"
+              title="Gerar PDF do relatório"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={enviarPorEmail}
+              className="px-2.5 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors"
+              title="Enviar por Email"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              Email
+            </button>
+            <button
+              type="button"
+              onClick={enviarPorWhatsApp}
+              className="px-2.5 py-1.5 bg-green-50 text-green-600 hover:bg-green-100 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors"
+              title="Enviar por WhatsApp"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              WhatsApp
+            </button>
+          </div>
 
           {/* Contagem */}
           <span className="text-xs text-gray-400 ml-auto">
@@ -829,9 +1108,37 @@ export default function LancamentosPage() {
                               <ArrowDownCircle className="w-3.5 h-3.5 text-red-500 mt-0.5 flex-shrink-0" title="Saída" />
                             )}
                             <div className="min-w-0">
-                              <div className="font-medium text-gray-800 text-[11px] truncate" title={l.descricao}>
-                                {l.descricao}
-                              </div>
+                              {editingField?.id === l.id && editingField?.field === 'descricao' ? (
+                                <div className="flex items-center gap-1">
+                                  <input
+                                    type="text"
+                                    value={editingValue}
+                                    onChange={(e) => setEditingValue(e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') salvarEdicaoInline();
+                                      if (e.key === 'Escape') cancelarEdicaoInline();
+                                    }}
+                                    autoFocus
+                                    title="Editar descrição"
+                                    placeholder="Digite a descrição"
+                                    className="w-full px-1.5 py-0.5 text-[11px] border border-[#F25C26] rounded bg-white focus:outline-none"
+                                  />
+                                  <button type="button" onClick={salvarEdicaoInline} className="p-0.5 text-green-600 hover:bg-green-50 rounded" title="Salvar">
+                                    <Check className="w-3 h-3" />
+                                  </button>
+                                  <button type="button" onClick={cancelarEdicaoInline} className="p-0.5 text-red-600 hover:bg-red-50 rounded" title="Cancelar">
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              ) : (
+                                <div
+                                  className="font-medium text-gray-800 text-[11px] truncate cursor-pointer hover:bg-orange-50 hover:text-[#F25C26] px-1 -mx-1 rounded transition-colors"
+                                  title={`${l.descricao} (clique para editar)`}
+                                  onClick={() => iniciarEdicaoInline(l.id!, 'descricao', l.descricao)}
+                                >
+                                  {l.descricao}
+                                </div>
+                              )}
                               {nucleo && (
                                 <span
                                   className="text-[10px] font-medium"
@@ -882,11 +1189,40 @@ export default function LancamentosPage() {
                         </td>
                         {/* Valor */}
                         <td className="px-2 py-1.5 text-right whitespace-nowrap">
-                          <span className={`font-semibold text-[11px] ${
-                            l.tipo === "entrada" ? "text-green-600" : "text-red-600"
-                          }`}>
-                            {l.tipo === "entrada" ? "+" : "-"}R$ {Number(l.valor_total).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                          </span>
+                          {editingField?.id === l.id && editingField?.field === 'valor' ? (
+                            <div className="flex items-center justify-end gap-1">
+                              <input
+                                type="number"
+                                step="0.01"
+                                value={editingValue}
+                                onChange={(e) => setEditingValue(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') salvarEdicaoInline();
+                                  if (e.key === 'Escape') cancelarEdicaoInline();
+                                }}
+                                autoFocus
+                                title="Editar valor"
+                                placeholder="0.00"
+                                className="w-20 px-1.5 py-0.5 text-[11px] border border-[#F25C26] rounded bg-white focus:outline-none text-right"
+                              />
+                              <button type="button" onClick={salvarEdicaoInline} className="p-0.5 text-green-600 hover:bg-green-50 rounded" title="Salvar">
+                                <Check className="w-3 h-3" />
+                              </button>
+                              <button type="button" onClick={cancelarEdicaoInline} className="p-0.5 text-red-600 hover:bg-red-50 rounded" title="Cancelar">
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <span
+                              className={`font-semibold text-[11px] cursor-pointer hover:bg-orange-50 px-1 rounded transition-colors ${
+                                l.tipo === "entrada" ? "text-green-600" : "text-red-600"
+                              }`}
+                              title="Clique para editar valor"
+                              onClick={() => iniciarEdicaoInline(l.id!, 'valor', String(l.valor_total || 0))}
+                            >
+                              {l.tipo === "entrada" ? "+" : "-"}R$ {Number(l.valor_total).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                            </span>
+                          )}
                         </td>
                         {/* Data Criação */}
                         <td className="px-1 py-1.5 text-center text-gray-500 text-[10px] whitespace-nowrap">
@@ -1205,10 +1541,7 @@ export default function LancamentosPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Contrato{" "}
-                    {formData.tipo === "saida" && (
-                      <span className="text-red-500">*</span>
-                    )}
+                    Contrato
                   </label>
                   <select
                     value={formData.contrato_id}
@@ -1216,7 +1549,6 @@ export default function LancamentosPage() {
                       setFormData((p) => ({ ...p, contrato_id: e.target.value }))
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    required={formData.tipo === "saida"}
                     title="Selecionar contrato"
                   >
                     <option value="">Selecione um contrato</option>
