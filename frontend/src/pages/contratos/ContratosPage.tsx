@@ -14,6 +14,7 @@ import {
 } from "@/types/contratos";
 import ResponsiveTable from "@/components/ResponsiveTable";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useSwipe } from "@/hooks/useSwipe";
 
 export default function ContratosPage() {
   const [contratos, setContratos] = useState<Contrato[]>([]);
@@ -21,6 +22,10 @@ export default function ContratosPage() {
   const [filtroStatus, setFiltroStatus] = useState<string>("todos");
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { onTouchStart, onTouchEnd } = useSwipe({
+    onSwipeLeft: () => navigate("/dashboard"),
+    onSwipeRight: () => navigate(-1),
+  });
 
   const columns = [
     {
@@ -91,7 +96,11 @@ export default function ContratosPage() {
       : contratos.filter((c) => c.status === filtroStatus);
 
   return (
-    <div className="p-6 space-y-4">
+    <div
+      className="p-6 space-y-4"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

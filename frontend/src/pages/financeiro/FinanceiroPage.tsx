@@ -1,5 +1,6 @@
 // src/pages/FinanceiroPage.tsx
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   listarFinanceiro,
   deletarLancamento,
@@ -15,12 +16,18 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/AuthContext";
 import ResponsiveTable from "@/components/ResponsiveTable";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useSwipe } from "@/hooks/useSwipe";
 
 export default function FinanceiroPage() {
   const [dados, setDados] = useState<LancamentoFinanceiro[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { onTouchStart, onTouchEnd } = useSwipe({
+    onSwipeLeft: () => navigate("/dashboard"),
+    onSwipeRight: () => navigate(-1),
+  });
 
   const columns = [
     { label: "Descrição", key: "descricao" },
@@ -114,7 +121,11 @@ export default function FinanceiroPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div
+      className="space-y-6"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>

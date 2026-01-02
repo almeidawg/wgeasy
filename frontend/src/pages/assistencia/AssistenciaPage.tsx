@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   listarOS,
   deletarOS,
@@ -21,6 +21,7 @@ import {
 } from "@/types/assistenciaTecnica";
 import ResponsiveTable from "@/components/ResponsiveTable";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useSwipe } from "@/hooks/useSwipe";
 
 export default function AssistenciaPage() {
   const [ordens, setOrdens] = useState<OrdemServicoCompleta[]>([]);
@@ -29,6 +30,11 @@ export default function AssistenciaPage() {
   const [filtroStatus, setFiltroStatus] = useState<string>("");
   const [filtroPrioridade, setFiltroPrioridade] = useState<string>("");
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const navigate = useNavigate();
+  const { onTouchStart, onTouchEnd } = useSwipe({
+    onSwipeLeft: () => navigate("/dashboard"),
+    onSwipeRight: () => navigate(-1),
+  });
 
   const columns = [
     {
@@ -150,7 +156,11 @@ export default function AssistenciaPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div
+      className="space-y-6"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>

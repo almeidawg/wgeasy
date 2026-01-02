@@ -10,6 +10,7 @@ import { listarOrcamentos, type Orcamento } from "@/lib/orcamentoApi";
 import { formatarMoeda } from "@/lib/utils";
 import { supabaseRaw as supabase } from "@/lib/supabaseClient";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { useSwipe } from "@/hooks/useSwipe";
 
 interface OrcamentoComCliente extends Orcamento {
   cliente?: {
@@ -34,8 +35,16 @@ export default function OrcamentosPage() {
   const [loading, setLoading] = useState(true);
   const [busca, setBusca] = useState("");
   const [filtroStatus, setFiltroStatus] = useState<string>("todos");
-  const [gruposExpandidos, setGruposExpandidos] = useState<Set<string>>(new Set());
-  const [modoVisualizacao, setModoVisualizacao] = useState<"agrupado" | "individual">("agrupado");
+  const [gruposExpandidos, setGruposExpandidos] = useState<Set<string>>(
+    new Set()
+  );
+  const [modoVisualizacao, setModoVisualizacao] = useState<
+    "agrupado" | "individual"
+  >("agrupado");
+  const { onTouchStart, onTouchEnd } = useSwipe({
+    onSwipeLeft: () => navigate("/dashboard"),
+    onSwipeRight: () => navigate(-1),
+  });
 
   useEffect(() => {
     carregarOrcamentos();
@@ -48,11 +57,13 @@ export default function OrcamentosPage() {
       // Buscar orçamentos com dados de cliente
       const { data, error } = await supabase
         .from("orcamentos")
-        .select(`
+        .select(
+          `
           *,
           cliente:pessoas!cliente_id(nome)
-          
-        `)
+
+        `
+        )
         .order("criado_em", { ascending: false });
 
       if (error) throw error;
@@ -126,7 +137,9 @@ export default function OrcamentosPage() {
 
   // Expandir todos
   function expandirTodos() {
-    setGruposExpandidos(new Set(gruposOrcamentos.map(g => g.cliente_id || "sem_cliente")));
+    setGruposExpandidos(
+      new Set(gruposOrcamentos.map((g) => g.cliente_id || "sem_cliente"))
+    );
   }
 
   // Colapsar todos
@@ -146,9 +159,8 @@ export default function OrcamentosPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <div className="max-w-7xl mx-auto">
-
         {/* Header */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -164,8 +176,18 @@ export default function OrcamentosPage() {
             onClick={handleNovoOrcamento}
             className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#F25C26] text-white rounded-lg hover:bg-[#e04a1a] font-medium flex items-center justify-center gap-2 shadow-md transition-colors whitespace-nowrap shrink-0"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             <span>Novo Orçamento</span>
           </button>
@@ -240,7 +262,9 @@ export default function OrcamentosPage() {
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <div className="text-6xl mb-4">📋</div>
             <h2 className="text-xl font-semibold text-gray-700 mb-2">
-              {busca ? "Nenhum orçamento encontrado" : "Nenhum orçamento cadastrado"}
+              {busca
+                ? "Nenhum orçamento encontrado"
+                : "Nenhum orçamento cadastrado"}
             </h2>
             <p className="text-gray-500 mb-6">
               {busca
@@ -253,8 +277,18 @@ export default function OrcamentosPage() {
                 onClick={handleNovoOrcamento}
                 className="px-6 py-3 bg-[#F25C26] text-white rounded-lg hover:bg-[#e04a1a] font-medium inline-flex items-center gap-2"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
                 Criar Primeiro Orçamento
               </button>
@@ -288,7 +322,8 @@ export default function OrcamentosPage() {
                           {grupo.cliente_nome}
                         </h3>
                         <p className="text-sm opacity-90">
-                          {grupo.quantidade} orçamento{grupo.quantidade > 1 ? "s" : ""}
+                          {grupo.quantidade} orçamento
+                          {grupo.quantidade > 1 ? "s" : ""}
                         </p>
                       </div>
                     </div>
@@ -308,7 +343,9 @@ export default function OrcamentosPage() {
                           <div
                             key={orcamento.id}
                             className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 overflow-hidden"
-                            onClick={() => handleVisualizarOrcamento(orcamento.id)}
+                            onClick={() =>
+                              handleVisualizarOrcamento(orcamento.id)
+                            }
                           >
                             <div className="p-4 space-y-3">
                               <h4 className="font-semibold text-gray-900 truncate">
@@ -317,16 +354,30 @@ export default function OrcamentosPage() {
 
                               {orcamento.obra?.nome && (
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                    />
                                   </svg>
-                                  <span className="truncate">{orcamento.obra.nome}</span>
+                                  <span className="truncate">
+                                    {orcamento.obra.nome}
+                                  </span>
                                 </div>
                               )}
 
                               <div className="pt-3 border-t border-gray-200">
                                 <div className="flex items-center justify-between mb-1">
-                                  <span className="text-sm text-gray-600">Valor</span>
+                                  <span className="text-sm text-gray-600">
+                                    Valor
+                                  </span>
                                   <span className="text-lg font-bold text-gray-900">
                                     {formatarMoeda(orcamento.valor_total || 0)}
                                   </span>
@@ -334,7 +385,9 @@ export default function OrcamentosPage() {
 
                                 {orcamento.margem !== null && (
                                   <div className="flex items-center justify-between text-sm">
-                                    <span className="text-gray-600">Margem</span>
+                                    <span className="text-gray-600">
+                                      Margem
+                                    </span>
                                     <span className="font-semibold text-green-600">
                                       {orcamento.margem.toFixed(2)}%
                                     </span>
@@ -343,7 +396,9 @@ export default function OrcamentosPage() {
                               </div>
 
                               <div className="text-xs text-gray-500">
-                                {new Date(orcamento.criado_em || "").toLocaleDateString("pt-BR")}
+                                {new Date(
+                                  orcamento.criado_em || ""
+                                ).toLocaleDateString("pt-BR")}
                               </div>
                             </div>
 
@@ -387,8 +442,18 @@ export default function OrcamentosPage() {
                 <div className="p-4 space-y-3">
                   {orcamento.obra?.nome && (
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        />
                       </svg>
                       <span className="truncate">{orcamento.obra.nome}</span>
                     </div>
@@ -415,7 +480,10 @@ export default function OrcamentosPage() {
                   <div className="pt-3 border-t border-gray-200">
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>
-                        Criado em {new Date(orcamento.criado_em || "").toLocaleDateString("pt-BR")}
+                        Criado em{" "}
+                        {new Date(orcamento.criado_em || "").toLocaleDateString(
+                          "pt-BR"
+                        )}
                       </span>
                     </div>
                   </div>
@@ -423,7 +491,10 @@ export default function OrcamentosPage() {
 
                 {/* Footer do Card */}
                 <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
-                  <button type="button" className="w-full px-4 py-2 text-sm font-medium text-[#F25C26] hover:bg-[#F25C26] hover:text-white rounded-lg transition-colors border border-[#F25C26]">
+                  <button
+                    type="button"
+                    className="w-full px-4 py-2 text-sm font-medium text-[#F25C26] hover:bg-[#F25C26] hover:text-white rounded-lg transition-colors border border-[#F25C26]"
+                  >
                     Ver Detalhes
                   </button>
                 </div>
@@ -438,13 +509,25 @@ export default function OrcamentosPage() {
             <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-blue-100 rounded-lg">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <svg
+                    className="w-6 h-6 text-blue-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Total de Orçamentos</p>
-                  <p className="text-2xl font-bold text-gray-900">{orcamentos.length}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {orcamentos.length}
+                  </p>
                 </div>
               </div>
             </div>
@@ -452,15 +535,28 @@ export default function OrcamentosPage() {
             <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-green-100 rounded-lg">
-                  <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-6 h-6 text-green-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Valor Total</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {formatarMoeda(
-                      orcamentos.reduce((sum, orc) => sum + (orc.valor_total || 0), 0)
+                      orcamentos.reduce(
+                        (sum, orc) => sum + (orc.valor_total || 0),
+                        0
+                      )
                     )}
                   </p>
                 </div>
@@ -470,8 +566,18 @@ export default function OrcamentosPage() {
             <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-purple-100 rounded-lg">
-                  <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  <svg
+                    className="w-6 h-6 text-purple-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    />
                   </svg>
                 </div>
                 <div>
@@ -480,11 +586,12 @@ export default function OrcamentosPage() {
                     {orcamentos.length > 0
                       ? (
                           orcamentos
-                            .filter(o => o.margem !== null)
+                            .filter((o) => o.margem !== null)
                             .reduce((sum, orc) => sum + (orc.margem || 0), 0) /
-                          orcamentos.filter(o => o.margem !== null).length
+                          orcamentos.filter((o) => o.margem !== null).length
                         ).toFixed(2)
-                      : "0.00"}%
+                      : "0.00"}
+                    %
                   </p>
                 </div>
               </div>
