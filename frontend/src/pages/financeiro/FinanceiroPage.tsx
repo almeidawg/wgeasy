@@ -6,15 +6,48 @@ import {
   LancamentoFinanceiro,
 } from "@/lib/financeiroApi";
 import { atualizarStatusAprovacao } from "@/lib/financeiroWorkflow";
-import { exportarFinanceiroPDF, exportarFinanceiroExcel } from "@/lib/financeiroExport";
+import {
+  exportarFinanceiroPDF,
+  exportarFinanceiroExcel,
+} from "@/lib/financeiroExport";
 import { downloadFinanceiroTemplate } from "@/lib/templates/financeiroTemplate";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/AuthContext";
+import ResponsiveTable from "@/components/ResponsiveTable";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function FinanceiroPage() {
   const [dados, setDados] = useState<LancamentoFinanceiro[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const columns = [
+    { label: "Descrição", key: "descricao" },
+    {
+      label: "Valor",
+      key: "valor_total",
+      render: (val: any) => `R$ ${Number(val || 0).toFixed(2)}`,
+    },
+    {
+      label: "Tipo",
+      key: "tipo",
+      render: (val: any) => val?.charAt(0).toUpperCase() + val?.slice(1),
+    },
+    {
+      label: "Status",
+      key: "status",
+      render: (val: any) => val?.charAt(0).toUpperCase() + val?.slice(1) ?? "-",
+    },
+    { label: "Vencimento", key: "vencimento" },
+    { label: "Núcleo", key: "nucleo" },
+    {
+      label: "Aprovação",
+      key: "approval_status",
+      render: (val: any) =>
+        val?.charAt(0).toUpperCase() + val?.slice(1) ?? "Pendente",
+    },
+  ];
 
   async function carregar() {
     setLoading(true);
@@ -82,7 +115,6 @@ export default function FinanceiroPage() {
 
   return (
     <div className="space-y-6">
-
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
@@ -135,75 +167,44 @@ export default function FinanceiroPage() {
 
       {/* TABELA */}
       <div className="bg-white rounded-xl shadow-md border border-[#E5E5E5] overflow-hidden">
-        <table className="w-full text-xs md:text-sm">
-          <thead className="bg-[#F3F3F3] text-[#2E2E2E]">
-            <tr>
-              <th className="p-3 text-left">Descrição</th>
-              <th className="p-3 text-left">Valor</th>
-              <th className="p-3 text-left">Tipo</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Vencimento</th>
-              <th className="p-3 text-left">Núcleo</th>
-              <th className="p-3 text-left">Aprovação</th>
-              <th className="p-3 text-left">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dados.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-[#fafafa]">
-                <td className="p-3">{item.descricao}</td>
-                <td className="p-3">R$ {Number(item.valor_total || 0).toFixed(2)}</td>
-                <td className="p-3 capitalize">{item.tipo}</td>
-                <td className="p-3 capitalize">{item.status ?? "-"}</td>
-                <td className="p-3">{item.vencimento ?? "-"}</td>
-                <td className="p-3">{item.nucleo ?? "-"}</td>
-                <td className="p-3 capitalize">
-                  {item.approval_status ?? "pendente"}
-                </td>
-                <td className="p-3 space-x-2">
-                  <Link
-                    to={`/financeiro/editar/${item.id}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Editar
-                  </Link>
-                  <button
-                    onClick={() => remover(item.id!)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Excluir
-                  </button>
-                  {item.approval_status !== "aprovado" && (
-                    <button
-                      onClick={() => aprovar(item.id!)}
-                      className="text-green-700 hover:underline"
-                    >
-                      Aprovar
-                    </button>
-                  )}
-                  {item.approval_status !== "rejeitado" && (
-                    <button
-                      onClick={() => rejeitar(item.id!)}
-                      className="text-yellow-700 hover:underline"
-                    >
-                      Rejeitar
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-
-            {dados.length === 0 && (
-              <tr>
-                <td colSpan={8} className="p-4 text-center text-[#4C4C4C]">
-                  Nenhum registro encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <ResponsiveTable
+          columns={columns}
+          data={dados}
+          emptyMessage="Nenhum registro encontrado."
+          actions={(item: LancamentoFinanceiro) => (
+            <div className="flex gap-2 flex-wrap">
+              <Link
+                to={`/financeiro/editar/${item.id}`}
+                className="text-blue-600 hover:underline text-xs md:text-sm"
+              >
+                Editar
+              </Link>
+              <button
+                onClick={() => remover(item.id!)}
+                className="text-red-600 hover:underline text-xs md:text-sm"
+              >
+                Excluir
+              </button>
+              {item.approval_status !== "aprovado" && (
+                <button
+                  onClick={() => aprovar(item.id!)}
+                  className="text-green-700 hover:underline text-xs md:text-sm"
+                >
+                  Aprovar
+                </button>
+              )}
+              {item.approval_status !== "rejeitado" && (
+                <button
+                  onClick={() => rejeitar(item.id!)}
+                  className="text-yellow-700 hover:underline text-xs md:text-sm"
+                >
+                  Rejeitar
+                </button>
+              )}
+            </div>
+          )}
+        />
       </div>
-
     </div>
   );
 }

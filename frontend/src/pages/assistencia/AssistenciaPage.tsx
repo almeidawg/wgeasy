@@ -19,6 +19,8 @@ import {
   getPrioridadeIcon,
   getUrgenciaOS,
 } from "@/types/assistenciaTecnica";
+import ResponsiveTable from "@/components/ResponsiveTable";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function AssistenciaPage() {
   const [ordens, setOrdens] = useState<OrdemServicoCompleta[]>([]);
@@ -26,6 +28,66 @@ export default function AssistenciaPage() {
   const [loading, setLoading] = useState(true);
   const [filtroStatus, setFiltroStatus] = useState<string>("");
   const [filtroPrioridade, setFiltroPrioridade] = useState<string>("");
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const columns = [
+    {
+      label: "Número",
+      key: "numero",
+      render: (val: any, row: OrdemServicoCompleta) => (
+        <div className="flex items-center gap-2">
+          <span>{getStatusOSIcon(row.status)}</span>
+          <span className="font-mono">{val}</span>
+        </div>
+      ),
+    },
+    {
+      label: "Cliente",
+      key: "cliente",
+      render: (val: any) => val?.nome || "-",
+    },
+    { label: "Título", key: "titulo" },
+    {
+      label: "Técnico",
+      key: "tecnico",
+      render: (val: any) => val?.nome || "-",
+    },
+    {
+      label: "Status",
+      key: "status",
+      render: (val: any) => (
+        <span
+          className="px-2 py-1 rounded text-xs text-white"
+          style={{ backgroundColor: STATUS_OS_COLORS[val] }}
+        >
+          {STATUS_OS_LABELS[val]}
+        </span>
+      ),
+    },
+    {
+      label: "Prioridade",
+      key: "prioridade",
+      render: (val: any) => (
+        <span
+          className="px-2 py-1 rounded text-xs text-white flex items-center gap-1 w-fit"
+          style={{ backgroundColor: PRIORIDADE_COLORS[val] }}
+        >
+          <span>{getPrioridadeIcon(val)}</span>
+          <span>{PRIORIDADE_LABELS[val]}</span>
+        </span>
+      ),
+    },
+    {
+      label: "Abertura",
+      key: "data_abertura",
+      render: (val: any) => formatarData(val),
+    },
+    {
+      label: "Valor",
+      key: "valor_total",
+      render: (val: any) => formatarValor(val),
+    },
+  ];
 
   async function carregar() {
     setLoading(true);
@@ -69,10 +131,14 @@ export default function AssistenciaPage() {
 
   let ordensFiltradas = ordens;
   if (filtroStatus) {
-    ordensFiltradas = ordensFiltradas.filter((os) => os.status === filtroStatus);
+    ordensFiltradas = ordensFiltradas.filter(
+      (os) => os.status === filtroStatus
+    );
   }
   if (filtroPrioridade) {
-    ordensFiltradas = ordensFiltradas.filter((os) => os.prioridade === filtroPrioridade);
+    ordensFiltradas = ordensFiltradas.filter(
+      (os) => os.prioridade === filtroPrioridade
+    );
   }
 
   if (loading) {
@@ -111,23 +177,33 @@ export default function AssistenciaPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E5E5E5]">
             <div className="text-xs text-[#4C4C4C] mb-1">Total de OS</div>
-            <div className="text-2xl font-bold text-[#2E2E2E]">{stats.total_os}</div>
+            <div className="text-2xl font-bold text-[#2E2E2E]">
+              {stats.total_os}
+            </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E5E5E5]">
             <div className="text-xs text-[#4C4C4C] mb-1">Abertas</div>
-            <div className="text-2xl font-bold text-[#F59E0B]">{stats.os_abertas}</div>
+            <div className="text-2xl font-bold text-[#F59E0B]">
+              {stats.os_abertas}
+            </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E5E5E5]">
             <div className="text-xs text-[#4C4C4C] mb-1">Em Atendimento</div>
-            <div className="text-2xl font-bold text-[#3B82F6]">{stats.os_em_atendimento}</div>
+            <div className="text-2xl font-bold text-[#3B82F6]">
+              {stats.os_em_atendimento}
+            </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E5E5E5]">
             <div className="text-xs text-[#4C4C4C] mb-1">Concluídas</div>
-            <div className="text-2xl font-bold text-[#10B981]">{stats.os_concluidas}</div>
+            <div className="text-2xl font-bold text-[#10B981]">
+              {stats.os_concluidas}
+            </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E5E5E5]">
             <div className="text-xs text-[#4C4C4C] mb-1">Valor Mês</div>
-            <div className="text-xl font-bold text-[#10B981]">{formatarValor(stats.valor_total_mes)}</div>
+            <div className="text-xl font-bold text-[#10B981]">
+              {formatarValor(stats.valor_total_mes)}
+            </div>
           </div>
         </div>
       )}
@@ -136,7 +212,9 @@ export default function AssistenciaPage() {
       <div className="bg-white p-4 rounded-lg shadow-sm border border-[#E5E5E5]">
         <div className="space-y-3">
           <div>
-            <div className="text-xs font-semibold text-[#4C4C4C] mb-2">Status</div>
+            <div className="text-xs font-semibold text-[#4C4C4C] mb-2">
+              Status
+            </div>
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setFiltroStatus("")}
@@ -182,7 +260,9 @@ export default function AssistenciaPage() {
           </div>
 
           <div>
-            <div className="text-xs font-semibold text-[#4C4C4C] mb-2">Prioridade</div>
+            <div className="text-xs font-semibold text-[#4C4C4C] mb-2">
+              Prioridade
+            </div>
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setFiltroPrioridade("")}
@@ -221,125 +301,50 @@ export default function AssistenciaPage() {
 
       {/* TABELA */}
       <div className="bg-white rounded-xl shadow-md border border-[#E5E5E5] overflow-hidden">
-        <table className="w-full text-xs md:text-sm">
-          <thead className="bg-[#F3F3F3] text-[#2E2E2E]">
-            <tr>
-              <th className="p-3 text-left">Número</th>
-              <th className="p-3 text-left">Cliente</th>
-              <th className="p-3 text-left">Título</th>
-              <th className="p-3 text-left">Técnico</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Prioridade</th>
-              <th className="p-3 text-left">Abertura</th>
-              <th className="p-3 text-left">Previsão</th>
-              <th className="p-3 text-left">Valor</th>
-              <th className="p-3 text-left">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ordensFiltradas.map((os) => {
-              const urgencia = getUrgenciaOS(os);
-              return (
-                <tr key={os.id} className="border-b hover:bg-[#fafafa]">
-                  <td className="p-3">
-                    <div className="flex items-center gap-2">
-                      <span>{getStatusOSIcon(os.status)}</span>
-                      <span className="font-mono">{os.numero}</span>
-                    </div>
-                  </td>
-                  <td className="p-3">{os.cliente?.nome || "-"}</td>
-                  <td className="p-3">
-                    <div>
-                      <div className="font-medium">{os.titulo}</div>
-                      <div className="text-xs text-[#4C4C4C]">{os.tipo_atendimento}</div>
-                    </div>
-                  </td>
-                  <td className="p-3">{os.tecnico?.nome || "-"}</td>
-                  <td className="p-3">
-                    <span
-                      className="px-2 py-1 rounded text-xs text-white"
-                      style={{ backgroundColor: STATUS_OS_COLORS[os.status] }}
-                    >
-                      {STATUS_OS_LABELS[os.status]}
-                    </span>
-                  </td>
-                  <td className="p-3">
-                    <span
-                      className="px-2 py-1 rounded text-xs text-white flex items-center gap-1 w-fit"
-                      style={{ backgroundColor: PRIORIDADE_COLORS[os.prioridade] }}
-                    >
-                      <span>{getPrioridadeIcon(os.prioridade)}</span>
-                      <span>{PRIORIDADE_LABELS[os.prioridade]}</span>
-                    </span>
-                  </td>
-                  <td className="p-3">{formatarData(os.data_abertura)}</td>
-                  <td className="p-3">
-                    {os.data_previsao ? (
-                      <div>
-                        <div>{formatarData(os.data_previsao)}</div>
-                        {urgencia.urgente && (
-                          <div
-                            className="text-xs font-medium"
-                            style={{ color: urgencia.color }}
-                          >
-                            {urgencia.label}
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td className="p-3 font-semibold">{formatarValor(os.valor_total)}</td>
-                  <td className="p-3 space-x-2">
-                    <Link
-                      to={`/assistencia/detalhe/${os.id}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Ver
-                    </Link>
-                    <Link
-                      to={`/assistencia/editar/${os.id}`}
-                      className="text-green-600 hover:underline"
-                    >
-                      Editar
-                    </Link>
-                    {os.status === "aberta" && (
-                      <button
-                        onClick={() => mudarStatus(os.id, "em_atendimento")}
-                        className="text-blue-700 hover:underline"
-                      >
-                        Iniciar
-                      </button>
-                    )}
-                    {(os.status === "em_atendimento" || os.status === "aguardando_cliente") && (
-                      <button
-                        onClick={() => mudarStatus(os.id, "concluida")}
-                        className="text-green-700 hover:underline"
-                      >
-                        Concluir
-                      </button>
-                    )}
-                    <button
-                      onClick={() => remover(os.id)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Excluir
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-
-            {ordensFiltradas.length === 0 && (
-              <tr>
-                <td colSpan={10} className="p-4 text-center text-[#4C4C4C]">
-                  Nenhuma ordem de serviço encontrada.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <ResponsiveTable
+          columns={columns}
+          data={ordensFiltradas}
+          emptyMessage="Nenhuma ordem de serviço encontrada."
+          actions={(os: OrdemServicoCompleta) => (
+            <div className="flex gap-2 flex-wrap">
+              <Link
+                to={`/assistencia/detalhe/${os.id}`}
+                className="text-blue-600 hover:underline text-xs md:text-sm"
+              >
+                Ver
+              </Link>
+              <Link
+                to={`/assistencia/editar/${os.id}`}
+                className="text-green-600 hover:underline text-xs md:text-sm"
+              >
+                Editar
+              </Link>
+              {os.status === "aberta" && (
+                <button
+                  onClick={() => mudarStatus(os.id, "em_atendimento")}
+                  className="text-blue-700 hover:underline text-xs md:text-sm"
+                >
+                  Iniciar
+                </button>
+              )}
+              {(os.status === "em_atendimento" ||
+                os.status === "aguardando_cliente") && (
+                <button
+                  onClick={() => mudarStatus(os.id, "concluida")}
+                  className="text-green-700 hover:underline text-xs md:text-sm"
+                >
+                  Concluir
+                </button>
+              )}
+              <button
+                onClick={() => remover(os.id)}
+                className="text-red-600 hover:underline text-xs md:text-sm"
+              >
+                Excluir
+              </button>
+            </div>
+          )}
+        />
       </div>
     </div>
   );

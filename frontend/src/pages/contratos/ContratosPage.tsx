@@ -12,12 +12,62 @@ import {
   getUnidadeNegocioColor,
   getUnidadeNegocioLabel,
 } from "@/types/contratos";
+import ResponsiveTable from "@/components/ResponsiveTable";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function ContratosPage() {
   const [contratos, setContratos] = useState<Contrato[]>([]);
   const [loading, setLoading] = useState(true);
   const [filtroStatus, setFiltroStatus] = useState<string>("todos");
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const columns = [
+    {
+      label: "Número",
+      key: "numero",
+      render: (val: any) => <span className="font-semibold">{val}</span>,
+    },
+    { label: "Cliente", key: "cliente_nome" },
+    {
+      label: "Unidade",
+      key: "unidade_negocio",
+      render: (val: any) => (
+        <span
+          className="px-2 py-1 rounded text-xs font-semibold text-white"
+          style={{ backgroundColor: getUnidadeNegocioColor(val) }}
+        >
+          {getUnidadeNegocioLabel(val)}
+        </span>
+      ),
+    },
+    {
+      label: "Valor",
+      key: "valor_total",
+      render: (val: any) =>
+        `R$ ${val.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
+    },
+    {
+      label: "Status",
+      key: "status",
+      render: (val: any) => (
+        <span
+          className="px-2 py-1 rounded-full text-xs font-medium"
+          style={{
+            backgroundColor: `${getStatusContratoColor(val)}20`,
+            color: getStatusContratoColor(val),
+          }}
+        >
+          {getStatusContratoLabel(val)}
+        </span>
+      ),
+    },
+    {
+      label: "Data",
+      key: "data_criacao",
+      render: (val: any) => new Date(val).toLocaleDateString("pt-BR"),
+    },
+  ];
 
   useEffect(() => {
     carregarContratos();
@@ -102,7 +152,9 @@ export default function ContratosPage() {
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >
-          Aguardando ({contratos.filter((c) => c.status === "aguardando_assinatura").length})
+          Aguardando (
+          {contratos.filter((c) => c.status === "aguardando_assinatura").length}
+          )
         </button>
         <button
           onClick={() => setFiltroStatus("ativo")}
@@ -121,140 +173,30 @@ export default function ContratosPage() {
         {loading ? (
           <div className="p-8 text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#F25C26]" />
-            <p className="text-sm text-gray-600 mt-2">Carregando contratos...</p>
+            <p className="text-sm text-gray-600 mt-2">
+              Carregando contratos...
+            </p>
           </div>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-[#F5F5F5] border-b border-gray-200">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Número
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Cliente
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Unidade
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Valor
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Indicação
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Data
-                </th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-gray-200">
-              {contratosFiltrados.map((contrato) => (
-                <tr
-                  key={contrato.id}
-                  className="hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => navigate(`/contratos/${contrato.id}`)}
-                >
-                  <td className="px-4 py-3">
-                    <span className="font-semibold text-gray-900">
-                      {contrato.numero}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-gray-700">{contrato.cliente_nome}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className="px-2 py-1 rounded text-xs font-semibold text-white"
-                      style={{
-                        backgroundColor: getUnidadeNegocioColor(
-                          contrato.unidade_negocio
-                        ),
-                      }}
-                    >
-                      {getUnidadeNegocioLabel(contrato.unidade_negocio)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="font-semibold text-gray-900">
-                      R${" "}
-                      {contrato.valor_total.toLocaleString("pt-BR", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className="px-2 py-1 rounded-full text-xs font-medium"
-                      style={{
-                        backgroundColor: `${getStatusContratoColor(contrato.status)}20`,
-                        color: getStatusContratoColor(contrato.status),
-                      }}
-                    >
-                      {getStatusContratoLabel(contrato.status)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    {(contrato as any).tem_especificador ? (
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
-                        {(contrato as any).especificador_nome || "Indicado"}
-                      </span>
-                    ) : (
-                      <span className="text-gray-400 text-xs">-</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-gray-600">
-                      {new Date(contrato.data_criacao).toLocaleDateString("pt-BR")}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/contratos/${contrato.id}`);
-                      }}
-                      className="text-[#F25C26] hover:text-[#e04a1a] font-medium"
-                    >
-                      Ver
-                    </button>
-                  </td>
-                </tr>
-              ))}
-
-              {contratosFiltrados.length === 0 && (
-                <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center">
-                    <div className="flex flex-col items-center gap-2">
-                      <svg
-                        className="w-12 h-12 text-gray-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                      <p className="text-gray-600 font-medium">
-                        Nenhum contrato encontrado
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Comece criando um novo contrato
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <ResponsiveTable
+            columns={columns}
+            data={contratosFiltrados}
+            emptyMessage="Nenhum contrato encontrado. Comece criando um novo contrato."
+            onRowClick={(contrato: Contrato) =>
+              navigate(`/contratos/${contrato.id}`)
+            }
+            actions={(contrato: Contrato) => (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/contratos/${contrato.id}`);
+                }}
+                className="text-[#F25C26] hover:text-[#e04a1a] font-medium text-xs md:text-sm"
+              >
+                Ver
+              </button>
+            )}
+          />
         )}
       </div>
 
