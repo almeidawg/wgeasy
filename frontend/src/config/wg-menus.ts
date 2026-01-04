@@ -69,16 +69,14 @@ const wgMenus: MenuSection[] = [
   {
     section: "Planejamento",
     icon: "📋",
-    maxVisible: 8,
+    path: "/planejamento", // Dashboard de Planejamento
+    maxVisible: 5,
     items: [
-      { label: "Pedido de Materiais", path: "/planejamento/pedido-materiais", icon: "🛒" },
-      { label: "Consolidação por Obra", path: "/planejamento/consolidacao", icon: "📦" },
-      { label: "Orçamento de Materiais", path: "/planejamento/orcamentos/materiais" },
-      { label: "Composições", path: "/planejamento/orcamentos/composicoes" },
-      { label: "Modelos de Orçamento", path: "/planejamento/orcamentos/modelos" },
-      { label: "Orçamentos", path: "/planejamento/orcamentos" },
-      { label: "Aprovações", path: "/planejamento/aprovacoes" },
-      { label: "Compras", path: "/compras" }
+      { label: "Novo Pedido", path: "/planejamento/novo", icon: "➕" },
+      { label: "Composições", path: "/planejamento/composicoes", icon: "🧩" },
+      { label: "Aprovações", path: "/planejamento/aprovacoes", icon: "✅" },
+      { label: "Orçamentos", path: "/planejamento/orcamentos", icon: "📄" },
+      { label: "Compras", path: "/compras", icon: "🛒" }
     ]
   },
   {
@@ -113,10 +111,12 @@ const wgMenus: MenuSection[] = [
   {
     section: "Jurídico",
     icon: "⚖️",
-    path: "/juridico", // Clique no título navega direto
+    path: "/juridico", // Clique no título navega direto (Dashboard com Clientes Ativos)
     items: [
-      { label: "Empresas do Grupo WG", path: "/juridico/empresas" },
-      { label: "Modelos de Contrato", path: "/juridico/modelos" }
+      { label: "Assistência Jurídica", path: "/juridico/assistencia", icon: "🆘" },
+      { label: "Financeiro Jurídico", path: "/juridico/financeiro", icon: "💰" },
+      { label: "Empresas do Grupo WG", path: "/juridico/empresas", icon: "🏢" },
+      { label: "Modelos de Contrato", path: "/juridico/modelos", icon: "📝" }
     ]
   },
   {
@@ -161,13 +161,12 @@ const wgMenus: MenuSection[] = [
   {
     section: "Sistema",
     icon: "🔧",
-    maxVisible: 12,
+    maxVisible: 11,
     items: [
       { label: "Cadastros Pendentes", path: "/sistema/cadastros-pendentes" },
       { label: "Central de Links", path: "/sistema/central-links" },
       { label: "Central Import/Export", path: "/sistema/importar-exportar" },
       { label: "Empresas do Grupo WG", path: "/empresas" },
-      { label: "Modelos de Contrato", path: "/modelos-contrato" },
       { label: "Planta do Sistema", path: "/sistema/planta" },
       { label: "Precificação", path: "/sistema/precificacao" },
       { label: "Price List", path: "/pricelist" },
